@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+message FedmlRequest {
+  int32 user_index = 1;
+  int32 batch_size = 2;
+  string dataset = 3;
+  int32 gpu = 4;
+  int32 round = 5;
+}
+message ManagementResponse {
+    // Response string of different management API calls.
+    string msg = 1;
+}
+service FedMlManagementService {
+  rpc UserIndex(FedmlRequest) returns (ManagementResponse) {}
+}

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+
+
+message FedmlRequest {
+    int32 user_index = 1;
+  string dataset = 2;
+  int32 gpu = 3;
+  int32 round = 4;
+}
+
+message ManagementResponse {
+    int32 user_index = 1;
+  string dataset = 2;
+  int32 gpu = 3;
+  int32 round = 4;
+}
+
+
+service GrpcfedMLService {
+  rpc grpcArgsParser(FedmlRequest) returns (ManagementResponse);
+}

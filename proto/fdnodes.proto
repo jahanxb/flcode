@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+message fdnode {
+  optional int32 nodeid = 1;
+}
+
+message args_data {
+  optional int32 user_index = 1;
+  optional string dataset = 2;
+  optional int32 gpu = 3;
+  optional int32 round = 4;
+
+}
+//message super_model_aggregator{
+//  //optional bytes s_md_aggr = 1;
+//}
+//
+//message model_aggregator{
+//  optional bytes md_aggr = 1;
+//}
+
+
+//
+//service ModelAggregate {
+//  rpc get_aggr (super_model_aggregator) returns (stream model_aggregator) {};
+//}
+
+service FileServer {
+  rpc upload(stream Chunk) returns (Reply) {}
+  rpc download(Request) returns (stream Chunk) {}
+}
+
+message Chunk {
+  bytes buffer = 1;
+}
+
+message Request {
+  string name = 1;
+}
+
+message Reply {
+  int32 length = 1;
+}
+
+
+service NodeExchange{
+  rpc get_args (fdnode) returns (args_data) {};
+}
