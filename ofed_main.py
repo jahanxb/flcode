@@ -68,20 +68,16 @@ if __name__ == '__main__':
     
     # initialize data loader
     data_loader_list = []
-    print(len(dict_users))
     for i in range(args.num_users):
-
         dataset = DatasetSplit(dataset_train, dict_users[i])
         ldr_train = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
         data_loader_list.append(ldr_train)
     ldr_train_public = DataLoader(val_set, batch_size=args.batch_size, shuffle=True)
     
     m = max(int(args.frac * args.num_users), 1)
-    #m = 10
     for t in range(args.round):
         args.local_lr = args.local_lr * args.decay_weight
         selected_idxs = list(np.random.choice(range(args.num_users), m, replace=False))
-        print(selected_idxs)
         num_selected_users = len(selected_idxs)
 
         ###################### local training : SGD for selected users ######################
@@ -115,7 +111,6 @@ if __name__ == '__main__':
             
             local_updates.append(model_update)
             loss_locals.append(loss)
-            print("local updates len",len(local_updates), "index",len(local_updates[0]))
         norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
 
         ##################### communication: avg for all groups #######################

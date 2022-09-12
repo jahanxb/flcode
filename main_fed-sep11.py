@@ -61,8 +61,6 @@ def serve(args):
         print('num. of testing data:{}'.format(len(dataset_test)))
         print('num. of classes:{}'.format(args.num_classes))
         print('num. of users:{}'.format(len(dict_users)))
-
-        print('arg.num_users:{}'.format(args.num_users))
         # sample_per_users = int(sum([ len(dict_users[i]) for i in range(len(dict_users))])/len(dict_users))
 
         sample_per_users = 0
@@ -104,19 +102,17 @@ def serve(args):
         # initialize data loader
         data_loader_list = []
         print("len(dict_user): ", len(dict_users))
-        index = args.num_users
-        for i in range(1):
+        for i in range(args.num_users):
             dataset = DatasetSplit(dataset_train, dict_users[i])
             ldr_train = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
             data_loader_list.append(ldr_train)
         ldr_train_public = DataLoader(val_set, batch_size=args.batch_size, shuffle=True)
 
-        m = max(int(args.frac * 1), 1)
-        print("m = ",m)
+        m = max(int(args.frac * args.num_users), 1)
         for t in range(args.round):
             args.local_lr = args.local_lr * args.decay_weight
-            selected_idxs = list(np.random.choice(range(1), m, replace=False))
-            print("In Round Loop: selected_idxs: ",selected_idxs)
+            selected_idxs = list(np.random.choice(range(args.num_users), m, replace=False))
+            print(selected_idxs)
             num_selected_users = len(selected_idxs)
 
             ###################### local training : SGD for selected users ######################
@@ -183,25 +179,25 @@ def serve(args):
                 for k in local_updates[0].keys()
             }
 
-            # torch.save(local_updates, "/mydata/flcode/models/pickles/node0.pkl")
-            # torch.save(loss_locals, "/mydata/flcode/models/pickles/node0-loss.pkl")
-            # print("local_updates len(): ",len(local_updates))
-            # node1 = "/mydata/flcode/models/pickles/node1.pkl"
-            # sm1 = torch.load(node1)
+            torch.save(local_updates, "/mydata/flcode/models/pickles/node0.pkl")
+            torch.save(loss_locals, "/mydata/flcode/models/pickles/node0-loss.pkl")
 
-            # node0 = "/mydata/flcode/models/pickles/node0.pkl"
-            # sm0 = torch.load(node0)
+            node1 = "/mydata/flcode/models/pickles/node1.pkl"
+            sm1 = torch.load(node1)
 
-            # ##node0_loss = loss_locals + node1[2]    
-            # local_updates = sm0 + sm1
+            node0 = "/mydata/flcode/models/pickles/node0.pkl"
+            sm0 = torch.load(node0)
 
-            # num_selected_users = len(local_updates)
+            ##node0_loss = loss_locals + node1[2]    
+            local_updates = sm0
+
+            num_selected_users = len(local_updates)
             
             # node1_loss = torch.load("/mydata/flcode/models/pickles/node1-loss.pkl")
 
             # loss_locals = loss_locals + node1_loss
             
-            # print("num_selected_users,",num_selected_users)
+            print("num_selected_users,",num_selected_users)
             for i in range(num_selected_users):
                 global_model = {
                     k: global_model[k] + local_updates[i][k] / num_selected_users
@@ -225,7 +221,7 @@ def serve(args):
             Here we should Catch the aggregator for the client model 
             
             '''
-            print('################## TrainingTest on node0 ######################')
+
             ##################### testing on global model #######################
             net_glob.load_state_dict(global_model)
             net_glob.eval()
@@ -254,64 +250,12 @@ def serve(args):
         # ##############################
         # ## End of Fedml
         # ###############################
-
-        torch.save(local_updates, "/mydata/flcode/models/pickles/node0.pkl")
-        torch.save(loss_locals, "/mydata/flcode/models/pickles/node0-loss.pkl")
-        print("local_updates len(): ",len(local_updates))
-        node1 = "/mydata/flcode/models/pickles/node1.pkl"
-        sm1 = torch.load(node1)
-
-        node0 = "/mydata/flcode/models/pickles/node0.pkl"
-        sm0 = torch.load(node0)
-
-        ##node0_loss = loss_locals + node1[2]    
-        local_updates = sm0 + sm1
-
-        num_selected_users = len(local_updates)
-            
-        node1_loss = torch.load("/mydata/flcode/models/pickles/node1-loss.pkl")
-
-        loss_locals = loss_locals + node1_loss
-            
-        print("num_selected_users,",num_selected_users)
-        for i in range(num_selected_users):
-                global_model = {
-                    k: global_model[k] + local_updates[i][k] / num_selected_users
-                    for k in global_model.keys()
-                }
-
-        print('################## TrainingTest on aggregated Model ######################')
-        ##################### testing on global model #######################
-        net_glob.load_state_dict(global_model)
-        net_glob.eval()
-        test_acc_, _ = test_img(net_glob, dataset_test, args)
-        test_acc.append(test_acc_)
-        train_local_loss.append(sum(loss_locals) / len(loss_locals))
-        # print('t {:3d}: '.format(t, ))
-        print('t {:3d}: train_loss = {:.3f}, norm = {:.3f}, test_acc = {:.3f}'.
-                  format(t, train_local_loss[-1], norm_med[-1], test_acc[-1]))
-
-        if math.isnan(train_local_loss[-1]) or train_local_loss[-1] > 1e8 or t == args.round - 1:
-            np.savetxt(log_path + "_test_acc_repeat_" + str(args.repeat) + ".csv",
-                           test_acc,
-                           delimiter=",")
-            np.savetxt(log_path + "_train_loss_repeat_" + str(args.repeat) + ".csv",
-                           train_local_loss,
-                           delimiter=",")
-            np.savetxt(log_path + "_norm__repeat_" + str(args.repeat) + ".csv", norm_med, delimiter=",")
-            #break;
-
-        t2 = time.time()
-        hours, rem = divmod(t2 - t1, 3600)
-        minutes, seconds = divmod(rem, 60)
-        print("training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
-
         # torch.save(local_updates, "/mydata/flcode/models/node0.pkl")
         # sm = torch.jit.script(model_update)
         # sm.save('/mydata/flcode/models/node0.pth')
         
 
-        #out_file_name = "/mydata/flcode/models/node1.pkl"
+        out_file_name = "/mydata/flcode/models/node1.pkl"
 
 
 
@@ -364,10 +308,10 @@ if __name__ == '__main__':
 
     server_args = {
         0: {
-            "user_index": user_counter, "dataset": "cifar", "gpu": -1, "round": 10
+            "user_index": user_counter, "dataset": "cifar", "gpu": -1, "round": 1
         },
         1: {
-            "user_index": args.num_users, "dataset": "cifar", "gpu": -1, "round": 10
+            "user_index": args.num_users, "dataset": "cifar", "gpu": -1, "round": 1
         }
     }
     args.num_users = user_counter
