@@ -57,7 +57,7 @@ def client_node():
             args.gpu = response_node1.gpu
             args.round = response_node0.round
             args.dataset = response_node0.dataset
-            args.tau = 10
+            args.tau = 1
 
             print("Active PID : %i" % pid)
             torch.manual_seed(args.seed + args.repeat)
@@ -72,12 +72,10 @@ def client_node():
             print('num. of testing data:{}'.format(len(dataset_test)))
             print('num. of classes:{}'.format(args.num_classes))
             print('num. of users:{}'.format(len(dict_users)))
-
-            print('arg.num_users:{}'.format(args.num_users))
             # sample_per_users = int(sum([ len(dict_users[i]) for i in range(len(dict_users))])/len(dict_users))
 
             sample_per_users = 0
-            for i in range(response_node1.user_index, len(dict_users)):
+            for i in range(response_node0.user_index, len(dict_users)):
                 sample_per_users += int(sum([len(dict_users[i]) / len(dict_users)]))
 
             sample_per_users = 5  # for two users , we take 25000 samples as per the loop
@@ -118,8 +116,8 @@ def client_node():
             # initialize data loader
             data_loader_list = []
             print(len(dict_users))
-            index = args.num_users
-            for i in range(1,2):
+            #args.num_users = 3
+            for i in range(args.num_users):
             # for i in range(response_node0.user_index,args.num_users):
                 print("broke here ")
                 dataset = DatasetSplit(dataset_train, dict_users[i])
@@ -127,12 +125,10 @@ def client_node():
                 data_loader_list.append(ldr_train)
             ldr_train_public = DataLoader(val_set, batch_size=args.batch_size, shuffle=True)
 
-            m = max(int(args.frac * 1), 1)
-            print("m = ",m)
+            m = max(int(args.frac * args.num_users), 1)
             for t in range(args.round):
                 args.local_lr = args.local_lr * args.decay_weight
-                selected_idxs = list(np.random.choice(range(1), m, replace=False))
-                print("In Round Loop: selected_idxs: ",selected_idxs)
+                selected_idxs = list(np.random.choice(range(args.num_users), m, replace=False))
                 num_selected_users = len(selected_idxs)
 
                 ###################### local training : SGD for selected users ######################
@@ -166,7 +162,6 @@ def client_node():
                     #         model_update[k] = model_update[k] / threshold
 
                     local_updates.append(model_update)
-                    print("local updates len",len(local_updates), "index",len(local_updates[0]))
                     loss_locals.append(loss)
                 norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
 
@@ -234,8 +229,8 @@ def client_node():
             final_update = []
             final_update = local_updates
             
-            print("local_updates len(): ",len(local_updates))
-            #final_update.append(loss_locals)
+            print("before",len(final_update))
+            final_update.append(loss_locals)
             torch.save(local_updates, "/mydata/flcode/models/pickles/node1.pkl")
             torch.save(loss_locals, "/mydata/flcode/models/pickles/node1-loss.pkl")
             #torch.save(final_update, "/mydata/flcode/models/pickles/node1.pkl")

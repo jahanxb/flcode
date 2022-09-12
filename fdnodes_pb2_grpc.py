@@ -5,117 +5,30 @@ import grpc
 import fdnodes_pb2 as fdnodes__pb2
 
 
-class FileServerStub(object):
-    """
-    service ModelAggregate {
-    rpc get_aggr (super_model_aggregator) returns (stream model_aggregator) {};
-    }
-
-    """
-
-    def __init__(self, channel):
-        """Constructor.
-
-        Args:
-            channel: A grpc.Channel.
-        """
-        self.upload = channel.stream_unary(
-                '/FileServer/upload',
-                request_serializer=fdnodes__pb2.Chunk.SerializeToString,
-                response_deserializer=fdnodes__pb2.Reply.FromString,
-                )
-        self.download = channel.unary_stream(
-                '/FileServer/download',
-                request_serializer=fdnodes__pb2.Request.SerializeToString,
-                response_deserializer=fdnodes__pb2.Chunk.FromString,
-                )
-
-
-class FileServerServicer(object):
-    """
-    service ModelAggregate {
-    rpc get_aggr (super_model_aggregator) returns (stream model_aggregator) {};
-    }
-
-    """
-
-    def upload(self, request_iterator, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def download(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-
-def add_FileServerServicer_to_server(servicer, server):
-    rpc_method_handlers = {
-            'upload': grpc.stream_unary_rpc_method_handler(
-                    servicer.upload,
-                    request_deserializer=fdnodes__pb2.Chunk.FromString,
-                    response_serializer=fdnodes__pb2.Reply.SerializeToString,
-            ),
-            'download': grpc.unary_stream_rpc_method_handler(
-                    servicer.download,
-                    request_deserializer=fdnodes__pb2.Request.FromString,
-                    response_serializer=fdnodes__pb2.Chunk.SerializeToString,
-            ),
-    }
-    generic_handler = grpc.method_handlers_generic_handler(
-            'FileServer', rpc_method_handlers)
-    server.add_generic_rpc_handlers((generic_handler,))
-
-
- # This class is part of an EXPERIMENTAL API.
-class FileServer(object):
-    """
-    service ModelAggregate {
-    rpc get_aggr (super_model_aggregator) returns (stream model_aggregator) {};
-    }
-
-    """
-
-    @staticmethod
-    def upload(request_iterator,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.stream_unary(request_iterator, target, '/FileServer/upload',
-            fdnodes__pb2.Chunk.SerializeToString,
-            fdnodes__pb2.Reply.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def download(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/FileServer/download',
-            fdnodes__pb2.Request.SerializeToString,
-            fdnodes__pb2.Chunk.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-
 class NodeExchangeStub(object):
-    """Missing associated documentation comment in .proto file."""
+    """
+    service ModelAggregate {
+    rpc get_aggr (super_model_aggregator) returns (stream model_aggregator) {};
+    }
+
+    service FileServer {
+    rpc upload(stream Chunk) returns (Reply) {}
+    rpc download(Request) returns (stream Chunk) {}
+    }
+
+    message Chunk {
+    bytes buffer = 1;
+    }
+
+    message Request {
+    string name = 1;
+    }
+
+    message Reply {
+    int32 length = 1;
+    }
+
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -131,7 +44,29 @@ class NodeExchangeStub(object):
 
 
 class NodeExchangeServicer(object):
-    """Missing associated documentation comment in .proto file."""
+    """
+    service ModelAggregate {
+    rpc get_aggr (super_model_aggregator) returns (stream model_aggregator) {};
+    }
+
+    service FileServer {
+    rpc upload(stream Chunk) returns (Reply) {}
+    rpc download(Request) returns (stream Chunk) {}
+    }
+
+    message Chunk {
+    bytes buffer = 1;
+    }
+
+    message Request {
+    string name = 1;
+    }
+
+    message Reply {
+    int32 length = 1;
+    }
+
+    """
 
     def get_args(self, request, context):
         """Missing associated documentation comment in .proto file."""
@@ -155,7 +90,29 @@ def add_NodeExchangeServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class NodeExchange(object):
-    """Missing associated documentation comment in .proto file."""
+    """
+    service ModelAggregate {
+    rpc get_aggr (super_model_aggregator) returns (stream model_aggregator) {};
+    }
+
+    service FileServer {
+    rpc upload(stream Chunk) returns (Reply) {}
+    rpc download(Request) returns (stream Chunk) {}
+    }
+
+    message Chunk {
+    bytes buffer = 1;
+    }
+
+    message Request {
+    string name = 1;
+    }
+
+    message Reply {
+    int32 length = 1;
+    }
+
+    """
 
     @staticmethod
     def get_args(request,

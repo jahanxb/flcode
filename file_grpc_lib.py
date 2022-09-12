@@ -4,8 +4,9 @@ from concurrent import futures
 import grpc
 import time
 
-import fdnodes_pb2 as pb2
-import fdnodes_pb2_grpc as pb2_grpc
+import filetrans_pb2 as pb2
+import filetrans_pb2_grpc as pb2_grpc
+import random,string
 
 # CHUNK_SIZE = 1024 * 1024  # 1MB
 CHUNK_SIZE = 2154387
@@ -28,7 +29,7 @@ def save_chunks_to_file(chunks, filename):
 
 class FileClient:
     def __init__(self, address):
-        channel = grpc.insecure_channel("localhost:9999")
+        channel = grpc.insecure_channel("10.10.1.2:9991")
         self.stub = pb2_grpc.FileServerStub(channel)
 
     def upload(self, in_file_name):
@@ -46,7 +47,8 @@ class FileServer(pb2_grpc.FileServerServicer):
 
         class Servicer(pb2_grpc.FileServerServicer):
             def __init__(self):
-                self.tmp_file_name = '/home/jahanxb/PycharmProjects/FLcode/models/recv.pkl'
+                
+                self.tmp_file_name = '/mydata/flcode/models/pickles/n1.pkl'
 
             def upload(self, request_iterator, context):
                 save_chunks_to_file(request_iterator, self.tmp_file_name)
