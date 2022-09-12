@@ -200,6 +200,8 @@ def serve(args):
         # ## End of Fedml
         # ###############################
         torch.save(model_update, "/home/jahanxb/PycharmProjects/FLcode/models/node0.pkl")
+        # sm = torch.jit.script(model_update)
+        # sm.save()
 
         import file_grpc_lib as lib
         fsl = lib.FileServer()
