@@ -58,6 +58,7 @@ def client_node():
             args.round = response_node0.round
             args.dataset = response_node0.dataset
             args.tau = 10
+            args.frac = 1
 
             print("Active PID : %i" % pid)
             torch.manual_seed(args.seed + args.repeat)
@@ -217,6 +218,12 @@ def client_node():
                                delimiter=",")
                     np.savetxt(log_path + "_norm__repeat_" + str(args.repeat) + ".csv", norm_med, delimiter=",")
                     break;
+                #################################
+                t2 = time.time()
+                hours, rem = divmod(t2 - t1, 3600)
+                minutes, seconds = divmod(rem, 60)
+                print("Local training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
+                #################################
 
             t2 = time.time()
             hours, rem = divmod(t2 - t1, 3600)
