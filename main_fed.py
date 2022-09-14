@@ -91,6 +91,7 @@ def serve(args):
         ###################################### model initialization ###########################
         print("{:<50}".format("=" * 15 + " training... " + "=" * 50)[0:60])
         t1 = time.time()
+
         net_glob.train()
 
         # copy weights
@@ -245,6 +246,13 @@ def serve(args):
                            delimiter=",")
                 np.savetxt(log_path + "_norm__repeat_" + str(args.repeat) + ".csv", norm_med, delimiter=",")
                 break;
+            #################################
+
+            t2 = time.time()
+            hours, rem = divmod(t2 - t1, 3600)
+            minutes, seconds = divmod(rem, 60)
+            print("Local training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
+            #################################
 
         t2 = time.time()
         hours, rem = divmod(t2 - t1, 3600)
@@ -280,7 +288,7 @@ def serve(args):
                     for k in global_model.keys()
                 }
 
-        print('################## TrainingTest on aggregated Model ######################')
+        print('################## TrainingTest onum_selected_usersn aggregated Model ######################')
         ##################### testing on global model #######################
         net_glob.load_state_dict(global_model)
         net_glob.eval()
