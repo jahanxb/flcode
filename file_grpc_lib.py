@@ -28,7 +28,7 @@ def save_chunks_to_file(chunks, filename):
 
 class FileClient:
     def __init__(self, address):
-        channel = grpc.insecure_channel("10.10.1.2:9991")
+        channel = grpc.insecure_channel("10.10.1.3:9991")
         self.stub = pb2_grpc.FileServerStub(channel)
 
     def upload(self, in_file_name):
@@ -46,10 +46,9 @@ class FileServer(pb2_grpc.FileServerServicer):
 
         class Servicer(pb2_grpc.FileServerServicer):
             def __init__(self):
+                self.tmp_file_name = ''
                 # letters = string.ascii_lowercase
                 # ''.join(random.choice(letters) for i in range(10))
-
-                self.tmp_file_name = '/mydata/flcode/models/pickles/node1.pkl'
 
             def upload(self, request_iterator, context):
                 save_chunks_to_file(request_iterator, self.tmp_file_name)
@@ -63,8 +62,9 @@ class FileServer(pb2_grpc.FileServerServicer):
         pb2_grpc.add_FileServerServicer_to_server(Servicer(), self.server)
 
     def start(self):
+        self.tmp_file_name = ''
         # self.server.add_insecure_port(f'[::]:{port}')
-        self.server.add_insecure_port("10.10.1.2:9991")
+        self.server.add_insecure_port("10.10.1.3:9991")
         self.server.start()
 
         try:
