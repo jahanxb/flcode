@@ -27,21 +27,11 @@ torch.cuda.is_available()
 import fdnodes_pb2_grpc as pb2_grpc
 import fdnodes_pb2 as pb2
 
-
-# class FetchArgs(object):
-#     def __int__(self):
-#         self.channel = grpc.insecure_channel("localhost:9999")
-#         self.stub = pb2_grpc.NodeExchangeStub(self.channel)
-#
-#     def get_args(self,nodeid):
-#         request = pb2.fdnode(nodeid=nodeid)
-#         response = self.stub.get_args(request)
-#         return response
-
+import file_grpc_lib as lib
 
 def client_node():
     pid = os.getpid()
-    with grpc.insecure_channel("10.10.1.2:9999") as channel:
+    with grpc.insecure_channel("10.10.1.3:9999") as channel:
         stub = pb2_grpc.NodeExchangeStub(channel)
         request = pb2.fdnode(nodeid=0)
         response_node0 = stub.get_args(request)
@@ -78,7 +68,7 @@ def client_node():
             # sample_per_users = int(sum([ len(dict_users[i]) for i in range(len(dict_users))])/len(dict_users))
 
             sample_per_users = 0
-            for i in range(response_node1.user_index, len(dict_users)):
+            for i in range(0, len(dict_users)):
                 sample_per_users += int(sum([len(dict_users[i]) / len(dict_users)]))
 
             sample_per_users = 5  # for two users , we take 25000 samples as per the loop
@@ -106,7 +96,7 @@ def client_node():
             print("Training starting....")
             net_glob.train()
             print("Training completed...")
-            print(net_glob.cpu())
+            
 
             # copy weights
             global_model = copy.deepcopy(net_glob.state_dict())
@@ -120,7 +110,7 @@ def client_node():
             data_loader_list = []
             print(len(dict_users))
             index = args.num_users
-            for i in range(1,2):
+            for i in range(0,1):
             # for i in range(response_node0.user_index,args.num_users):
                 print("broke here ")
                 dataset = DatasetSplit(dataset_train, dict_users[i])
@@ -171,24 +161,7 @@ def client_node():
                     loss_locals.append(loss)
                 norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
 
-                '''
-                Here we can send model update back to node0:server:Aggregator 
                 
-                '''
-                # import file_grpc_lib as lib
-                #
-                # torch.save(model_update,"/home/jahanxb/PycharmProjects/FLcode/models/node1.pkl")
-                # fsl = lib.FileServer()
-                # fsl.start()
-                # lib.FileServer.start()
-
-                # f = open("/home/jahanxb/PycharmProjects/FLcode/models/node1.pkl", 'rb')\
-                #
-                # content = f.read()
-                # pb2.model_aggregator(md_aggr=content)
-                
-                ##################### communication: avg for all groups #######################
-
                 model_update = {
                     k: local_updates[0][k] * 0.0
                     for k in local_updates[0].keys()
@@ -199,68 +172,30 @@ def client_node():
                         for k in global_model.keys()
                     }
 
-                ##################### testing on global model #######################
-                net_glob.load_state_dict(global_model)
-                net_glob.eval()
-                test_acc_, _ = test_img(net_glob, dataset_test, args)
-                test_acc.append(test_acc_)
-                train_local_loss.append(sum(loss_locals) / len(loss_locals))
-                # print('t {:3d}: '.format(t, ))
-                print('t {:3d}: train_loss = {:.3f}, norm = {:.3f}, test_acc = {:.3f}'.
-                      format(t, train_local_loss[-1], norm_med[-1], test_acc[-1]))
-
-                if math.isnan(train_local_loss[-1]) or train_local_loss[-1] > 1e8 or t == args.round - 1:
-                    np.savetxt(log_path + "_test_acc_repeat_" + str(args.repeat) + ".csv",
-                               test_acc,
-                               delimiter=",")
-                    np.savetxt(log_path + "_train_loss_repeat_" + str(args.repeat) + ".csv",
-                               train_local_loss,
-                               delimiter=",")
-                    np.savetxt(log_path + "_norm__repeat_" + str(args.repeat) + ".csv", norm_med, delimiter=",")
-                    break;
-                #################################
                 t2 = time.time()
                 hours, rem = divmod(t2 - t1, 3600)
                 minutes, seconds = divmod(rem, 60)
                 print("Local training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
                 #################################
 
-            t2 = time.time()
-            hours, rem = divmod(t2 - t1, 3600)
-            minutes, seconds = divmod(rem, 60)
-            print("training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
-
-            ##############################
-            ## End of Fedml
-            ###############################
-
-            import file_grpc_lib as lib
-            # print("model update:", model_update)
-            # print("local update: ",local_updates)
-            # print("local loss,:",loss_locals)
-            final_update = []
-            final_update = local_updates
             
-            print("local_updates len(): ",len(local_updates))
-            #final_update.append(loss_locals)
-            torch.save(local_updates, "/mydata/flcode/models/pickles/node1.pkl")
-            torch.save(loss_locals, "/mydata/flcode/models/pickles/node1-loss.pkl")
-            #torch.save(final_update, "/mydata/flcode/models/pickles/node1.pkl")
-            print("after",len(final_update))
-            # sm = torch.jit.script(model_update)
-            # sm.save('/mydata/flcode/models/node1.pth')
-            #time.sleep(60)
-            client = lib.FileClient("10.10.1.2:9991")
-            in_file_name = "/mydata/flcode/models/pickles/node1.pkl"
-            client.upload(in_file_name)
+                print("local_updates len(): ",len(local_updates))
+                #final_update.append(loss_locals)
+                torch.save(local_updates, f"/mydata/flcode/models/pickles/node1[{t}][{i}].pkl")
+                torch.save(loss_locals, f"/mydata/flcode/models/pickles/node1-loss[{t}][{i}].pkl")
+                try:
+                    
+                    client = lib.FileClient("10.10.1.3:9991")
+                    in_file_name = f"/mydata/flcode/models/pickles/node1[{t}][{i}].pkl"
+                    client.upload(in_file_name)
+                    print('Transfer Completed...')
+                except Exception as e:
+                    print(f'file transfer failed: node1[{t}][{i}].pkl')
+                    print(str(e))
+                    pass
 
 
-            # client = lib.FileClient("10.10.1.2:9991")
-            # in_file_name = "/mydata/flcode/models/node1-loss.pkl"
-            # client.upload(in_file_name)
-            # fsl = lib.FileServer()
-            # fsl.start()
-
+            
         except Exception as e:
             print(f"Exception Thrown: {e}")
             channel.unsubscribe(close)
