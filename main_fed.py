@@ -280,7 +280,7 @@ def serve(args):
         node1_loss = torch.load("/mydata/flcode/models/pickles/node1-loss.pkl")
 
         loss_locals = loss_locals + node1_loss
-            
+        print("local updates:",local_updates)
         print("num_selected_users,",num_selected_users)
         for i in range(num_selected_users):
                 global_model = {

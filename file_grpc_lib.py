@@ -28,7 +28,7 @@ def save_chunks_to_file(chunks, filename):
 
 class FileClient:
     def __init__(self, address):
-        channel = grpc.insecure_channel("10.10.1.2:9991")
+        channel = grpc.insecure_channel("10.10.1.3:9991")
         self.stub = pb2_grpc.FileServerStub(channel)
 
     def upload(self, in_file_name):
@@ -64,7 +64,7 @@ class FileServer(pb2_grpc.FileServerServicer):
 
     def start(self):
         # self.server.add_insecure_port(f'[::]:{port}')
-        self.server.add_insecure_port("10.10.1.2:9991")
+        self.server.add_insecure_port("10.10.1.3:9991")
         self.server.start()
 
         try:
