@@ -1,0 +1,87 @@
+user counter :  2
+Files already downloaded and verified
+Files already downloaded and verified
+=============== data setup =================================
+length of dataset:60000
+num. of training data:50000
+num. of testing data:10000
+num. of classes:10
+num. of users:2
+arg.num_users:2
+./log/cifar/fedavg/cnn/round_10_tau_10_frac_1.0
+9000 1000
+len(dict_user):  2
+m =  2
+In Round Loop: selected_idxs:  [1, 0]
+1
+loss:  1.7618006108760833
+local updates len 1 index 12
+0
+loss:  1.767768166255951
+local updates len 2 index 12
+################## TrainingTest on node0 ######################
+t   0: train_loss = , norm = 4.272, test_acc = 51.000
+Local training time: 00:03:40.57
+In Round Loop: selected_idxs:  [0, 1]
+0
+loss:  1.2227697066783905
+local updates len 1 index 12
+1
+loss:  1.2163659051895142
+local updates len 2 index 12
+################## TrainingTest on node0 ######################
+t   1: train_loss = , norm = 3.861, test_acc = 66.922
+Local training time: 00:07:31.46
+In Round Loop: selected_idxs:  [1, 0]
+1
+loss:  0.9662501705884934
+local updates len 1 index 12
+0
+loss:  0.9693806633472443
+local updates len 2 index 12
+################## TrainingTest on node0 ######################
+t   2: train_loss = , norm = 3.306, test_acc = 72.211
+Local training time: 00:11:10.77
+In Round Loop: selected_idxs:  [0, 1]
+0
+loss:  0.8075865947842598
+local updates len 1 index 12
+1
+loss:  0.8037145932674408
+local updates len 2 index 12
+################## TrainingTest on node0 ######################
+t   3: train_loss = , norm = 3.006, test_acc = 75.622
+Local training time: 00:14:47.57
+In Round Loop: selected_idxs:  [0, 1]
+0
+loss:  0.6995015577077865
+local updates len 1 index 12
+1
+loss:  0.6946570332527161
+local updates len 2 index 12
+################## TrainingTest on node0 ######################
+t   4: train_loss = , norm = 2.802, test_acc = 78.744
+Local training time: 00:18:27.93
+In Round Loop: selected_idxs:  [1, 0]
+1
+loss:  0.6125828535676002
+local updates len 1 index 12
+0
+loss:  0.6183222462892533
+local updates len 2 index 12
+################## TrainingTest on node0 ######################
+t   5: train_loss = , norm = 2.687, test_acc = 80.022
+Local training time: 00:21:59.73
+In Round Loop: selected_idxs:  [1, 0]
+1
+loss:  0.5526503511667251
+local updates len 1 index 12
+0
+loss:  0.556715322124958
+local updates len 2 index 12
+################## TrainingTest on node0 ######################
+t   6: train_loss = , norm = 2.630, test_acc = 81.200
+Local training time: 00:26:01.39
+In Round Loop: selected_idxs:  [1, 0]
+1
+KeyboardInterrupt

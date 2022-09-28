@@ -1,0 +1,89 @@
+Files already downloaded and verified
+Files already downloaded and verified
+=============== data setup =================================
+length of dataset:60000
+num. of training data:50000
+num. of testing data:10000
+num. of classes:10
+num. of users:2
+num. of samples per user:25000
+9000 1000
+=============== log path ===================================
+./log/cifar/fedavg/cnn/round_10_tau_10_frac_1.0
+=============== model setup ================================
+=============== training... ================================
+2
+[1, 0]
+local updates len 1 index 12
+local updates len 2 index 12
+t   0: train_loss = 1.749, norm = 4.330, test_acc = 51.967
+training time: 00:04:09.50
+[0, 1]
+local updates len 1 index 12
+local updates len 2 index 12
+t   1: train_loss = 1.212, norm = 3.817, test_acc = 66.733
+training time: 00:08:07.60
+[1, 0]
+local updates len 1 index 12
+local updates len 2 index 12
+t   2: train_loss = 0.971, norm = 3.286, test_acc = 72.689
+training time: 00:11:51.52
+[0, 1]
+local updates len 1 index 12
+local updates len 2 index 12
+t   3: train_loss = 0.808, norm = 3.026, test_acc = 75.556
+training time: 00:16:04.33
+[0, 1]
+local updates len 1 index 12
+local updates len 2 index 12
+t   4: train_loss = 0.698, norm = 2.826, test_acc = 79.178
+training time: 00:19:57.17
+[1, 0]
+local updates len 1 index 12
+local updates len 2 index 12
+t   5: train_loss = 0.615, norm = 2.696, test_acc = 80.811
+training time: 00:23:58.87
+[1, 0]
+local updates len 1 index 12
+local updates len 2 index 12
+t   6: train_loss = 0.552, norm = 2.615, test_acc = 82.033
+training time: 00:28:03.26
+[1, 0]
+local updates len 1 index 12
+local updates len 2 index 12
+t   7: train_loss = 0.502, norm = 2.598, test_acc = 83.011
+training time: 00:31:41.67
+[0, 1]
+local updates len 1 index 12
+local updates len 2 index 12
+t   8: train_loss = 0.459, norm = 2.580, test_acc = 83.644
+training time: 00:35:53.19
+[0, 1]
+local updates len 1 index 12
+local updates len 2 index 12
+t   9: train_loss = 0.421, norm = 2.573, test_acc = 83.522
+appending node00
+appending node01
+appending node02
+appending node03
+appending node04
+appending node05
+appending node06
+appending node07
+appending node08
+appending node09
+appending node10
+appending node11
+appending node12
+appending node13
+appending node14
+appending node15
+appending node16
+appending node17
+appending node18
+appending node19
+len:  20
+################## TrainingTest onum_selected_usersn aggregated Model ######################
+t   9: 
+t   9: train_loss = 0.668, norm = 2.573, test_acc = 81.000
+training time: 00:39:55.57
