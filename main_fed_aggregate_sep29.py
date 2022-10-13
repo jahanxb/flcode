@@ -75,7 +75,97 @@ def serve(args):
     train_local_loss = []
     test_acc = []
     norm_med = []
+    ####################################### run experiment ##########################
     
+    # # initialize data loader
+    # data_loader_list = []
+    # print(len(dict_users))
+    # for i in range(args.num_users):
+
+    #     dataset = DatasetSplit(dataset_train, dict_users[i])
+    #     ldr_train = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
+    #     data_loader_list.append(ldr_train)
+    # ldr_train_public = DataLoader(val_set, batch_size=args.batch_size, shuffle=True)
+    
+    # m = max(int(args.frac * args.num_users), 1)
+    # #m = 10
+    # for t in range(args.round):
+    #     args.local_lr = args.local_lr * args.decay_weight
+    #     selected_idxs = list(np.random.choice(range(args.num_users), m, replace=False))
+    #     print(selected_idxs)
+    #     num_selected_users = len(selected_idxs)
+
+    #     ###################### local training : SGD for selected users ######################
+    #     loss_locals = []
+    #     local_updates = []
+    #     delta_norms = []
+    #     for i in selected_idxs:
+    #         l_solver = LocalUpdate(args=args)
+    #         net_glob.load_state_dict(global_model)
+    #         # choose local solver
+    #         if args.local_solver == 'local_sgd':
+    #             new_model, loss = l_solver.local_sgd(
+    #                 net=copy.deepcopy(net_glob).to(args.device),
+    #                 ldr_train=data_loader_list[i])
+    #         # compute local delta
+    #         model_update = {k: new_model[k] - global_model[k] for k in global_model.keys()}
+
+    #         # compute local model norm
+    #         delta_norm = torch.norm(
+    #             torch.cat([
+    #                 torch.flatten(model_update[k])
+    #                 for k in model_update.keys()
+    #             ]))
+    #         delta_norms.append(delta_norm)
+            
+    #         # clipping local model or not ? : no clip for cifar10
+    #         # threshold = delta_norm / args.clip
+    #         # if threshold > 1.0:
+    #         #     for k in model_update.keys():
+    #         #         model_update[k] = model_update[k] / threshold
+            
+    #         local_updates.append(model_update)
+    #         loss_locals.append(loss)
+    #         print("local updates len",len(local_updates), "index",len(local_updates[0]))
+    #     norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
+
+    #     ##################### communication: avg for all groups #######################
+    #     model_update = {
+    #         k: local_updates[0][k] * 0.0
+    #         for k in local_updates[0].keys()
+    #     }
+    #     for i in range(num_selected_users):
+    #         global_model = {
+    #             k: global_model[k] + local_updates[i][k] / num_selected_users
+    #             for k in global_model.keys()
+    #         }
+        
+        
+    #     ##################### testing on global model #######################
+    #     net_glob.load_state_dict(global_model)
+    #     net_glob.eval()
+    #     test_acc_, _ = test_img(net_glob, dataset_test, args)
+    #     test_acc.append(test_acc_)
+    #     train_local_loss.append(sum(loss_locals) / len(loss_locals))
+    #     # print('t {:3d}: '.format(t, ))
+    #     print('t {:3d}: train_loss = {:.3f}, norm = {:.3f}, test_acc = {:.3f}'.
+    #             format(t, train_local_loss[-1], norm_med[-1], test_acc[-1]))
+
+    #     if math.isnan(train_local_loss[-1]) or train_local_loss[-1] > 1e8 or t == args.round - 1:
+    #         np.savetxt(log_path + "_test_acc_repeat_" + str(args.repeat) + ".csv",
+    #                     test_acc,
+    #                     delimiter=",")
+    #         np.savetxt(log_path + "_train_loss_repeat_" + str(args.repeat) + ".csv",
+    #                     train_local_loss,
+    #                     delimiter=",")
+    #         np.savetxt(log_path + "_norm__repeat_" + str(args.repeat) + ".csv", norm_med, delimiter=",")
+    #         break;
+
+    #     t2 = time.time()
+    #     hours, rem = divmod(t2-t1, 3600)
+    #     minutes, seconds = divmod(rem, 60)
+    #     print("training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours),int(minutes),seconds))
+
     nodes = 2
     local_updates = []
     loss_locals = []
@@ -155,17 +245,17 @@ def aggregation_avg(global_model, local_updates):
 if __name__ == '__main__':
     args = call_parser()
 
-    #user_counter = int(args.num_users / 2)
-    user_counter = 2
-    print("user counter : ", user_counter)
+    # #user_counter = int(args.num_users / 2)
+    # user_counter = 2
+    # print("user counter : ", user_counter)
 
-    server_args = {
-        0: {
-            "user_index": user_counter, "dataset": "cifar", "gpu": -1, "round": 3
-        },
-        1: {
-            "user_index": args.num_users, "dataset": "cifar", "gpu": -1, "round": 3
-        }
-    }
-    args.num_users = user_counter
+    # server_args = {
+    #     0: {
+    #         "user_index": user_counter, "dataset": "cifar", "gpu": -1, "round": 10
+    #     },
+    #     1: {
+    #         "user_index": args.num_users, "dataset": "cifar", "gpu": -1, "round": 10
+    #     }
+    # }
+    # args.num_users = user_counter
     serve(args)
