@@ -29,6 +29,15 @@ import fdnodes_pb2 as pb2
 
 import file_grpc_lib as lib
 
+from kafka import KafkaProducer, KafkaConsumer
+
+import pika
+
+from celery import Celery
+
+import pickle, json
+
+
 def client_node():
     pid = os.getpid()
     # with grpc.insecure_channel("10.10.1.3:9999") as channel:
@@ -65,134 +74,295 @@ def client_node():
             print('num. of users:{}'.format(len(dict_users)))
 
             print('arg.num_users:{}'.format(args.num_users))
+            
+            # producer = KafkaProducer(bootstrap_servers='10.10.1.3:9092')
+            # for i in range(1,100):
+            #     producer.send('foobar',b'message bytes')
+            
+            
             # sample_per_users = int(sum([ len(dict_users[i]) for i in range(len(dict_users))])/len(dict_users))
 
-            sample_per_users = 0
-            for i in range(0, len(dict_users)):
-                sample_per_users += int(sum([len(dict_users[i]) / len(dict_users)]))
+            # sample_per_users = 0
+            # for i in range(response_node1.user_index, len(dict_users)):
+            #     sample_per_users += int(sum([len(dict_users[i]) / len(dict_users)]))
 
             sample_per_users = 5  # for two users , we take 25000 samples as per the loop
 
-            # print('num. of samples per user:{}'.format(sample_per_users))
-            # if args.dataset == 'fmnist' or args.dataset == 'cifar':
-            #     dataset_test, val_set = torch.utils.data.random_split(
-            #         dataset_test, [9000, 1000])
-            #     print(len(dataset_test), len(val_set))
-            # elif args.dataset == 'svhn':
-            #     dataset_test, val_set = torch.utils.data.random_split(
-            #         dataset_test, [len(dataset_test) - 2000, 2000])
-            #     print(len(dataset_test), len(val_set))
+            print('num. of samples per user:{}'.format(sample_per_users))
+            if args.dataset == 'fmnist' or args.dataset == 'cifar':
+                dataset_test, val_set = torch.utils.data.random_split(
+                    dataset_test, [9000, 1000])
+                print(len(dataset_test), len(val_set))
+            elif args.dataset == 'svhn':
+                dataset_test, val_set = torch.utils.data.random_split(
+                    dataset_test, [len(dataset_test) - 2000, 2000])
+                print(len(dataset_test), len(val_set))
 
-            # print("{:<50}".format("=" * 15 + " log path " + "=" * 50)[0:60])
-            # log_path = set_log_path(args)
-            # print(log_path)
+            print("{:<50}".format("=" * 15 + " log path " + "=" * 50)[0:60])
+            log_path = set_log_path(args)
+            print(log_path)
 
-            # args, net_glob = model_setup(args)
-            # print("{:<50}".format("=" * 15 + " model setup " + "=" * 50)[0:60])
+            args, net_glob = model_setup(args)
+            print("{:<50}".format("=" * 15 + " model setup " + "=" * 50)[0:60])
 
-            # ###################################### model initialization ###########################
-            # print("{:<50}".format("=" * 15 + " training... " + "=" * 50)[0:60])
-            # t1 = time.time()
-            # print("Training starting....")
-            # net_glob.train()
-            # print("Training completed...")
+            ###################################### model initialization ###########################
+            print("{:<50}".format("=" * 15 + " training... " + "=" * 50)[0:60])
+            t1 = time.time()
+            print("Training starting....")
+            net_glob.train()
+            print("Training completed...")
+            print(net_glob.cpu())
+
+            # copy weights
+            global_model = copy.deepcopy(net_glob.state_dict())
+            local_m = []
+            train_local_loss = []
+            test_acc = []
+            norm_med = []
             
+            def pdf_process_function(msg):
+                print("processing")
+                #print(" [x] Received " + str(msg))
 
-            # # copy weights
-            # global_model = copy.deepcopy(net_glob.state_dict())
-            # local_m = []
-            # train_local_loss = []
-            # test_acc = []
-            # norm_med = []
-            # ####################################### run experiment ##########################
-
-            # # initialize data loader
-            # data_loader_list = []
-            # print(len(dict_users))
-            # index = args.num_users
-            # for i in range(0,1):
-            # # for i in range(response_node0.user_index,args.num_users):
-            #     print("broke here ")
-            #     dataset = DatasetSplit(dataset_train, dict_users[i])
-            #     ldr_train = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
-            #     data_loader_list.append(ldr_train)
-            # ldr_train_public = DataLoader(val_set, batch_size=args.batch_size, shuffle=True)
-
-            # m = max(int(args.frac * 1), 1)
-            # print("m = ",m)
-            # for t in range(args.round):
-            #     args.local_lr = args.local_lr * args.decay_weight
-            #     selected_idxs = list(np.random.choice(range(1), m, replace=False))
-            #     print("In Round Loop: selected_idxs: ",selected_idxs)
-            #     num_selected_users = len(selected_idxs)
-
-            #     ###################### local training : SGD for selected users ######################
-            #     loss_locals = []
-            #     local_updates = []
-            #     delta_norms = []
-            #     for i in selected_idxs:
-            #         print("selected_idx",i)
-            #         l_solver = LocalUpdate(args=args)
-            #         net_glob.load_state_dict(global_model)
-            #         # choose local solver
-            #         if args.local_solver == 'local_sgd':
-            #             new_model, loss = l_solver.local_sgd(
-            #                 net=copy.deepcopy(net_glob).to(args.device),
-            #                 ldr_train=data_loader_list[i])
-            #         # compute local delta
-            #         model_update = {k: new_model[k] - global_model[k] for k in global_model.keys()}
-
-            #         # compute local model norm
-            #         delta_norm = torch.norm(
-            #             torch.cat([
-            #                 torch.flatten(model_update[k])
-            #                 for k in model_update.keys()
-            #             ]))
-            #         delta_norms.append(delta_norm)
-
-            #         # clipping local model or not ? : no clip for cifar10
-            #         # threshold = delta_norm / args.clip
-            #         # if threshold > 1.0:
-            #         #     for k in model_update.keys():
-            #         #         model_update[k] = model_update[k] / threshold
-
-            #         local_updates.append(model_update)
-            #         print("local updates len",len(local_updates), "index",len(local_updates[0]))
-            #         loss_locals.append(loss)
-            #     norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
+                print('pickle loading started...')
+                gmdl = pickle.loads(msg)
+                #global_model = gmdl
+                print('pickle loading completed...')
 
                 
-            #     model_update = {
-            #         k: local_updates[0][k] * 0.0
-            #         for k in local_updates[0].keys()
-            #     }
-            #     for i in range(num_selected_users):
-            #         global_model = {
-            #             k: global_model[k] + local_updates[i][k] / num_selected_users
-            #             for k in global_model.keys()
-            #         }
+                
+                time.sleep(5) # delays for 5 seconds
+                print("processing finished");
+                return gmdl
 
-            #     t2 = time.time()
-            #     hours, rem = divmod(t2 - t1, 3600)
-            #     minutes, seconds = divmod(rem, 60)
-            #     print("Local training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
-            #     #################################
+            # Access the CLODUAMQP_URL environment variable and parse it (fallback to localhost)
+            url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+            params = pika.URLParameters(url)
+            connection = pika.BlockingConnection(params)
+            channel = connection.channel() # start a channel
+            #channel.queue_declare(queue='global_model_round_queue_[0][0]') # Declare a queue
+
+            # create a function which is called on incoming messages
+            def callback(ch, method, properties, body):
+                gdm = pdf_process_function(body)
+                time.sleep(5)
+                print('[x] press ctrl+c to move to next step')
+                
+                global_model = gdm
+            # set up subscription on the queue
+            channel.basic_consume('global_model_round_queue_[1][0]',
+            callback,
+            auto_ack=True)
 
             
-            #     print("local_updates len(): ",len(local_updates))
-            #     #final_update.append(loss_locals)
-            #     torch.save(local_updates, f"/mydata/flcode/models/pickles/node1[{t}][{i}].pkl")
-            #     torch.save(loss_locals, f"/mydata/flcode/models/pickles/node1-loss[{t}][{i}].pkl")
-            #     try:
+            print("global_model: ",global_model)
+            # start consuming (blocks)
+            #channel.start_consuming()
+            
+            #connection.close()
+            
+            try:
+                
+                channel.start_consuming()
+            except KeyboardInterrupt:
+                channel.stop_consuming()
+                connection.close()
+            
+            
+            #global_model = gmdl
+            
+            
+            
+            credentials = pika.PlainCredentials('jahanxb', 'phdunr')
+            parameters = pika.ConnectionParameters('130.127.134.6',
+                                   5672,
+                                   '/',
+                                   credentials)
+
+            connection = pika.BlockingConnection(parameters)
+            #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
+            channel = connection.channel()
+
+            
+            #channel.queue_declare(queue='global_model_round_queue_[0][0]',durable=True)
+            #print(' [*] Waiting for messages. To exit press')
+            
+    
+
+    # channel.basic_qos(prefetch_count=1)
+    # channel.basic_consume(queue='task_queue', on_message_callback=callback)
+
+    # channel.start_consuming()
+            
+            
+    
+            
+            
+            ###################################### run experiment ##########################
+
+            # initialize data loader
+            data_loader_list = []
+            print(len(dict_users))
+            index = args.num_users
+            for i in range(1,2):
+            # for i in range(response_node0.user_index,args.num_users):
+                print("broke here ")
+                dataset = DatasetSplit(dataset_train, dict_users[i])
+                ldr_train = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
+                data_loader_list.append(ldr_train)
+            ldr_train_public = DataLoader(val_set, batch_size=args.batch_size, shuffle=True)
+
+            m = max(int(args.frac * 1), 1)
+            print("m = ",m)
+            for t in range(args.round):
+                
+                if t==1:
+                    break
+                
+                args.local_lr = args.local_lr * args.decay_weight
+                selected_idxs = list(np.random.choice(range(1), m, replace=False))
+                print("In Round Loop: selected_idxs: ",selected_idxs)
+                num_selected_users = len(selected_idxs)
+
+                ###################### local training : SGD for selected users ######################
+                loss_locals = []
+                local_updates = []
+                delta_norms = []
+                for i in selected_idxs:
+                    print("selected_idx",i)
+                    l_solver = LocalUpdate(args=args)
+                    net_glob.load_state_dict(global_model)
+                    # choose local solver
+                    if args.local_solver == 'local_sgd':
+                        new_model, loss = l_solver.local_sgd(
+                            net=copy.deepcopy(net_glob).to(args.device),
+                            ldr_train=data_loader_list[i])
+                    # compute local delta
+                    model_update = {k: new_model[k] - global_model[k] for k in global_model.keys()}
+
+                    # compute local model norm
+                    delta_norm = torch.norm(
+                        torch.cat([
+                            torch.flatten(model_update[k])
+                            for k in model_update.keys()
+                        ]))
+                    delta_norms.append(delta_norm)
+
+                    # clipping local model or not ? : no clip for cifar10
+                    # threshold = delta_norm / args.clip
+                    # if threshold > 1.0:
+                    #     for k in model_update.keys():
+                    #         model_update[k] = model_update[k] / threshold
+
+                    local_updates.append(model_update)
+                    print("local updates len",len(local_updates), "index",len(local_updates[0]))
+                    loss_locals.append(loss)
+                norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
+
+                
+                model_update = {
+                    k: local_updates[0][k] * 0.0
+                    for k in local_updates[0].keys()
+                }
+                for i in range(num_selected_users):
+                    global_model = {
+                        k: global_model[k] + local_updates[i][k] / num_selected_users
+                        for k in global_model.keys()
+                    }
+
+                t2 = time.time()
+                hours, rem = divmod(t2 - t1, 3600)
+                minutes, seconds = divmod(rem, 60)
+                print("Local training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
+                #################################
+
+                node = 1
+                print("local_updates len(): ",len(local_updates))
+                
+                task_queue = f'node_local_round_queue_[{node}][{t}]'
+                channel.queue_declare(queue=task_queue, durable=True)
+                #models/pickles/test
+                #torch.save(local_updates, f"/mydata/flcode/models/pickles/test/node0[{t}][{i}].pkl")
+                #msg1 = (torch.load(f"/mydata/flcode/models/pickles/test/node0[{t}][{i}].pkl"))
+                
+                
+                msg = pickle.dumps(local_updates)
+                
+                
+                message = msg
+                
+                #print('task_queue',task_queue)
+                
+                channel.basic_publish(
+                exchange='',
+                routing_key=task_queue,
+                body=message,
+                properties=pika.BasicProperties(delivery_mode=2)
+                )
+                
+                
+                
+                #### Global Model
+                
+                task_queue = f'node_global_round_queue_[{node}][{t}]'
+                channel.queue_declare(queue=task_queue, durable=True)
+                msg = pickle.dumps(global_model)
+                
+                
+                message = msg
+                
+                #print('task_queue',task_queue)
+                
+                channel.basic_publish(
+                exchange='',
+                routing_key=task_queue,
+                body=message,
+                properties=pika.BasicProperties(delivery_mode=2)
+                )
+                
+
+                print(" [x] Sent Round=",t)
+
+                
+                # local Loss loss_locals
+                
+                task_queue = f'node_local_loss_queue_[{node}][{t}]'
+                channel.queue_declare(queue=task_queue, durable=True)
+                msg = pickle.dumps(loss_locals)
+                
+                
+                message = msg
+                
+                #print('task_queue',task_queue)
+                
+                channel.basic_publish(
+                exchange='',
+                routing_key=task_queue,
+                body=message,
+                properties=pika.BasicProperties(delivery_mode=2)
+                )
+                
+
+                print(" [x] local Loss sent Queue=",t)
+
+                
+                
+            connection.close()
+                
+                
+                #final_update.append(loss_locals)
+                # torch.save(local_updates, f"/mydata/flcode/models/pickles/node0[{t}][{i}].pkl")
+                # torch.save(loss_locals, f"/mydata/flcode/models/pickles/node0-loss[{t}][{i}].pkl")
+                # try:
                     
-            #         client = lib.FileClient("10.10.1.3:9991")
-            #         in_file_name = f"/mydata/flcode/models/pickles/node1[{t}][{i}].pkl"
-            #         client.upload(in_file_name)
-            #         print('Transfer Completed...')
-            #     except Exception as e:
-            #         print(f'file transfer failed: node1[{t}][{i}].pkl')
-            #         print(str(e))
-            #         pass
+                #     client = lib.FileClient("10.10.1.3:9991")
+                #     in_file_name = f"/mydata/flcode/models/pickles/node0[{t}][{i}].pkl"
+                #     client.upload(in_file_name)
+                #     print('Transfer Completed...')
+                # except Exception as e:
+                #     print(f'file transfer failed: node0[{t}][{i}].pkl')
+                #     print(str(e))
+                #     pass
 
 
             

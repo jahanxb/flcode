@@ -110,7 +110,7 @@ def client_node():
             data_loader_list = []
             print(len(dict_users))
             index = args.num_users
-            for i in range(0,1):
+            for i in range(1,2):
             # for i in range(response_node0.user_index,args.num_users):
                 print("broke here ")
                 dataset = DatasetSplit(dataset_train, dict_users[i])
