@@ -35,6 +35,9 @@ import pika
 
 from celery import Celery
 
+import pickle, json
+
+
 def client_node():
     pid = os.getpid()
     # with grpc.insecure_channel("10.10.1.3:9999") as channel:
@@ -71,21 +74,6 @@ def client_node():
             print('num. of users:{}'.format(len(dict_users)))
 
             print('arg.num_users:{}'.format(args.num_users))
-            
-            
-            
-            credentials = pika.PlainCredentials('jahanxb', 'phdunr')
-            parameters = pika.ConnectionParameters('130.127.134.6',
-                                   5672,
-                                   '/',
-                                   credentials)
-
-            connection = pika.BlockingConnection(parameters)
-            #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
-            channel = connection.channel()
-
-            
-    
             
             # producer = KafkaProducer(bootstrap_servers='10.10.1.3:9092')
             # for i in range(1,100):
@@ -131,13 +119,92 @@ def client_node():
             train_local_loss = []
             test_acc = []
             norm_med = []
+            
+            def pdf_process_function(msg):
+                print("processing")
+                #print(" [x] Received " + str(msg))
+
+                print('pickle loading started...')
+                gmdl = pickle.loads(msg)
+                #global_model = gmdl
+                print('pickle loading completed...')
+
+                
+                
+                time.sleep(5) # delays for 5 seconds
+                print("processing finished");
+                return gmdl
+
+            # Access the CLODUAMQP_URL environment variable and parse it (fallback to localhost)
+            url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+            params = pika.URLParameters(url)
+            connection = pika.BlockingConnection(params)
+            channel = connection.channel() # start a channel
+            #channel.queue_declare(queue='global_model_round_queue_[0][0]') # Declare a queue
+
+            # create a function which is called on incoming messages
+            def callback(ch, method, properties, body):
+                gdm = pdf_process_function(body)
+                time.sleep(5)
+                print('[x] press ctrl+c to move to next step')
+                
+                global_model = gdm
+            # set up subscription on the queue
+            channel.basic_consume('global_model_round_queue_[0][0]',
+            callback,
+            auto_ack=True)
+
+            
+            print("global_model: ",global_model)
+            # start consuming (blocks)
+            #channel.start_consuming()
+            
+            #connection.close()
+            
+            try:
+                
+                channel.start_consuming()
+            except KeyboardInterrupt:
+                channel.stop_consuming()
+                connection.close()
+            
+            
+            #global_model = gmdl
+            
+            
+            
+            # credentials = pika.PlainCredentials('jahanxb', 'phdunr')
+            # parameters = pika.ConnectionParameters('130.127.134.6',
+            #                        5672,
+            #                        '/',
+            #                        credentials)
+
+            # connection = pika.BlockingConnection(parameters)
+            # #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
+            # channel = connection.channel()
+
+            
+            #channel.queue_declare(queue='global_model_round_queue_[0][0]',durable=True)
+            #print(' [*] Waiting for messages. To exit press')
+            
+    
+
+    # channel.basic_qos(prefetch_count=1)
+    # channel.basic_consume(queue='task_queue', on_message_callback=callback)
+
+    # channel.start_consuming()
+            
+            
+    
+            
+            
             ###################################### run experiment ##########################
 
             # initialize data loader
             data_loader_list = []
             print(len(dict_users))
             index = args.num_users
-            for i in range(1,2):
+            for i in range(0,1):
             # for i in range(response_node0.user_index,args.num_users):
                 print("broke here ")
                 dataset = DatasetSplit(dataset_train, dict_users[i])
@@ -148,6 +215,10 @@ def client_node():
             m = max(int(args.frac * 1), 1)
             print("m = ",m)
             for t in range(args.round):
+                
+                if t==1:
+                    break
+                
                 args.local_lr = args.local_lr * args.decay_weight
                 selected_idxs = list(np.random.choice(range(1), m, replace=False))
                 print("In Round Loop: selected_idxs: ",selected_idxs)
@@ -208,14 +279,51 @@ def client_node():
             
                 print("local_updates len(): ",len(local_updates))
                 
-                task_queue = f'node_round_queue_[{0}][{t}]'
+                ################### Local Model ###################
+                
+                url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                params = pika.URLParameters(url)
+                connection = pika.BlockingConnection(params)
+                channel = connection.channel() # start a channel
+                
+                task_queue = f'node_local_round_queue_[{0}][{t}]'
                 channel.queue_declare(queue=task_queue, durable=True)
                 #models/pickles/test
                 #torch.save(local_updates, f"/mydata/flcode/models/pickles/test/node0[{t}][{i}].pkl")
                 #msg1 = (torch.load(f"/mydata/flcode/models/pickles/test/node0[{t}][{i}].pkl"))
                 
-                import json,pickle
+                
                 msg = pickle.dumps(local_updates)
+                
+                
+                message = msg
+                
+                #print('task_queue',task_queue)
+                
+                
+                
+                
+                channel.basic_publish(
+                exchange='',
+                routing_key=task_queue,
+                body=message,
+                properties=pika.BasicProperties(delivery_mode=2)
+                )
+                
+                connection.close()
+                
+                
+                #### Global Model
+                
+                
+                url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                params = pika.URLParameters(url)
+                connection = pika.BlockingConnection(params)
+                channel = connection.channel() # start a channel
+                
+                task_queue = f'node_global_round_queue_[{0}][{t}]'
+                channel.queue_declare(queue=task_queue, durable=True)
+                msg = pickle.dumps(global_model)
                 
                 
                 message = msg
@@ -229,11 +337,44 @@ def client_node():
                 properties=pika.BasicProperties(delivery_mode=2)
                 )
                 
+                connection.close()
+                print(" [x] Sent Round=",t)
+
+                
+                # local Loss loss_locals
+                
+                url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                params = pika.URLParameters(url)
+                connection = pika.BlockingConnection(params)
+                channel = connection.channel() # start a channel
+                
+                
+                
+                
+                task_queue = f'node_local_loss_queue_[{0}][{t}]'
+                channel.queue_declare(queue=task_queue, durable=True)
+                msg = pickle.dumps(loss_locals)
+                
+                
+                message = msg
+                
+                #print('task_queue',task_queue)
+                
+                channel.basic_publish(
+                exchange='',
+                routing_key=task_queue,
+                body=message,
+                properties=pika.BasicProperties(delivery_mode=2)
+                )
                 
 
-                print(" [x] Sent Round=",t)
-        
-            connection.close()
+                print(" [x] local Loss sent Queue=",t)
+
+                # threads = []
+                # for thread in threads:
+                #     thread.join()   
+                
+                connection.close()
                 
                 
                 #final_update.append(loss_locals)
