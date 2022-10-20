@@ -33,6 +33,7 @@ from kafka import KafkaProducer, KafkaConsumer
 from multiprocessing import Pool, Process, ProcessError, Queue
 import pika
 from celery import Celery
+import pickle,json
 
 def arrange_round_train(args):
     pass
@@ -47,6 +48,121 @@ def ack_agent():
 
 def something_something():
     pass
+
+
+
+nodes = 2
+# global local_updates
+# global loss_locals
+local_updates = []
+loss_locals = []
+
+
+def pdf_process_function(msg):
+        print("processing")
+        print('pickle loading started...')
+        gmdl = pickle.loads(msg)
+        #global_model = gmdl
+        print('pickle loading completed...')
+
+                
+                
+        time.sleep(5) # delays for 5 seconds
+        print("processing finished");
+        return gmdl
+
+
+
+
+def callback_local_loss(ch, method, properties, body):
+        bodytag = 0
+        gdm = pdf_process_function(body)
+        time.sleep(5)
+        print('[x] press ctrl+c to move to next step')
+        print('bodytag value now: ',bodytag)
+        #global loss_locals
+        loss_locals = gdm
+        print('loss_locals:[inside Func] ',loss_locals)
+        
+        torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node{bodytag}-loss[{bodytag}][{0}].pkl")
+        # set up subscription on the queue
+        input('Press Any Key to Move to next step')
+        #print('[x] press ctrl+c to move to next step')
+        #return loss_locals
+
+
+def callback_global(ch, method, properties, body):
+        bodytag = 0
+        gdm = pdf_process_function(body)
+        time.sleep(5)
+        print('[x] press ctrl+c to move to next step')
+        print('bodytag value now: ',bodytag)
+        global_model = gdm
+        torch.save(global_model, f"/mydata/flcode/models/rabbitmq-queues/pickles/node{bodytag}-global[{bodytag}][{0}].pkl")
+        # set up subscription on the queue
+        #return global_model
+
+
+def callback_local(ch, method, properties, body):
+        bodytag = 0
+        gdm = pdf_process_function(body)
+        time.sleep(5)
+        print('[x] press ctrl+c to move to next step')
+        print('bodytag value now: ',bodytag)
+        #global local_updates
+        local_updates = gdm
+        torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node{bodytag}[{bodytag}][{0}].pkl")
+        # set up subscription on the queue
+        #return local_updates
+
+
+
+
+
+def callback_local_loss_1(ch, method, properties, body):
+        bodytag = 1
+        gdm = pdf_process_function(body)
+        time.sleep(5)
+        print('[x] press ctrl+c to move to next step')
+        print('bodytag value now: ',bodytag)
+        #global loss_locals
+        loss_locals = gdm
+        print('loss_locals:[inside Func] ',loss_locals)
+        
+        torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node{bodytag}-loss[{bodytag}][{0}].pkl")
+        # set up subscription on the queue
+        input('Press Any Key to Move to next step')
+        #print('[x] press ctrl+c to move to next step')
+        #return loss_locals
+
+
+def callback_global_1(ch, method, properties, body):
+        bodytag = 1
+        gdm = pdf_process_function(body)
+        time.sleep(5)
+        print('[x] press ctrl+c to move to next step')
+        print('bodytag value now: ',bodytag)
+        global_model = gdm
+        torch.save(global_model, f"/mydata/flcode/models/rabbitmq-queues/pickles/node{bodytag}-global[{bodytag}][{0}].pkl")
+        # set up subscription on the queue
+        #return global_model
+
+
+def callback_local_1(ch, method, properties, body):
+        bodytag = 1
+        gdm = pdf_process_function(body)
+        time.sleep(5)
+        print('[x] press ctrl+c to move to next step')
+        print('bodytag value now: ',bodytag)
+        #global local_updates
+        local_updates = gdm
+        torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node{bodytag}[{bodytag}][{0}].pkl")
+        # set up subscription on the queue
+        #return local_updates
+
+
+
+
 
 
 def callback(ch, method, properties, body):
@@ -99,26 +215,32 @@ def serve(args):
     # connection.close()
     
     
+    '''
+    yaha se connection pakrna ha 
     
-    credentials = pika.PlainCredentials('jahanxb', 'phdunr')
-    parameters = pika.ConnectionParameters('130.127.134.6',
-                                   5672,
-                                   '/',
-                                   credentials)
-    # ye wala code waise master node p hone chaiyee ab , q k ye ab receive kare ga round 
-    connection = pika.BlockingConnection(parameters)
-    channel = connection.channel()
+    '''
+    # credentials = pika.PlainCredentials('jahanxb', 'phdunr')
+    # parameters = pika.ConnectionParameters('130.127.134.6',
+    #                                5672,
+    #                                '/',
+    #                                credentials)
+    # # ye wala code waise master node p hone chaiyee ab , q k ye ab receive kare ga round 
+    # connection = pika.BlockingConnection(parameters)
+    # channel = connection.channel()
             
-    channel.queue_declare(queue='task_queue',durable=True)
-    print(' [*] Waiting for messages. To exit press')
+    # channel.queue_declare(queue='task_queue',durable=True)
+    # print(' [*] Waiting for messages. To exit press')
             
     
 
-    channel.basic_qos(prefetch_count=1)
-    channel.basic_consume(queue='task_queue', on_message_callback=callback)
+    # channel.basic_qos(prefetch_count=1)
+    # channel.basic_consume(queue='task_queue', on_message_callback=callback)
 
-    channel.start_consuming()
-        
+    # channel.start_consuming()
+    '''
+    chalo idr end kar do icay 
+    
+    '''
     
     if args.dataset == 'fmnist' or args.dataset == 'cifar':
         dataset_test, val_set = torch.utils.data.random_split(
@@ -147,43 +269,108 @@ def serve(args):
     test_acc = []
     norm_med = []
     
+    
+    
+    credentials = pika.PlainCredentials('jahanxb', 'phdunr')
+    parameters = pika.ConnectionParameters('130.127.134.6',
+                                   5672,
+                                   '/',
+                                   credentials)
+
+    connection = pika.BlockingConnection(parameters)
+    #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
+    channel = connection.channel()
+
     nodes = 2
-    local_updates = []
-    loss_locals = []
-    
-    
-    # consumer = KafkaConsumer('my_favorite_topic', group_id='my_favorite_group')
-    # for msg in consumer:
-    #     print("kafka consumer msg: ",msg)
     
     
     
-    
-    for n in range(nodes):
-        for t in range(args.round):
-            print(f'appending node{n}{t}')
-            #localupdates = torch.load(f'/mydata/flcode/models/pickles/node{n}[{t}][0].pkl')
-            #lossy = torch.load(f'/mydata/flcode/models/pickles/node{n}-loss[{t}][0].pkl')
-            lossy = [[1,2,3]]
-            localupdates = [1,2,3]
-            local_updates.append(localupdates)
-            loss_locals.append(lossy[0])
-            print('')
+    for t in range(args.round):
+        if t==0:
+                print('Initial Global Model...')
+                print('Queue Preparation for Global Model')
+                task_queue = f'global_model_round_queue_[{0}][{t}]'
+                channel.queue_declare(queue=task_queue, durable=True)
+                msg = pickle.dumps(global_model)
+                channel.basic_publish(
+                exchange='',
+                routing_key=task_queue,
+                body=msg,
+                properties=pika.BasicProperties(delivery_mode=2)
+                )
+                
+                task_queue = f'global_model_round_queue_[{1}][{t}]'
+                channel.queue_declare(queue=task_queue, durable=True)
+                msg = pickle.dumps(global_model)
+                channel.basic_publish(
+                exchange='',
+                routing_key=task_queue,
+                body=msg,
+                properties=pika.BasicProperties(delivery_mode=2)
+                )
+                
+                
+                
+                print(" [x] Sent Round=",t)
+
+        else:
+                
+                print(f'Next Iteration Node_{0} round: {t}')
+                print('Waiting for the Client/Slave Node to complete the Process...')
+                
+                
             
-    # #print("len: ",len(local_updates))
-    # print("local update: ",local_updates[10][0].get('fc3.bias'))
-    # num_selected_users = 2
+    input('Press any key:')
+    
+    # for n in range(nodes):
+    #     for t in range(args.round):
+    #         print(f'appending node{n}{t}')
+    #         #localupdates = torch.load(f'/mydata/flcode/models/pickles/node{n}[{t}][0].pkl')
+    #         #lossy = torch.load(f'/mydata/flcode/models/pickles/node{n}-loss[{t}][0].pkl')
+    #         lossy = [[1,2,3]]
+    #         localupdates = [1,2,3]
+    #         local_updates.append(localupdates)
+    #         loss_locals.append(lossy[0])
+    #         print('')
+            
+    #print("len: ",len(local_updates))
+    #print("local update: ",local_updates[10][0].get('fc3.bias'))
+    num_selected_users = 2
 
     
     
-    # for t in range(args.round):
-    #     for i in range(num_selected_users):
-    #         global_model = {
-    #                 k: global_model[k] + local_updates[t][0].get(k) / num_selected_users
-    #                 #k: localupdates[0].get(k) - global_model[k] for k in global_model.keys()
-    #                 #k: global_model[k] + local_updates[i][k] / num_selected_users
-    #                 for k in global_model.keys()
-    #             }
+    for t in range(args.round):
+        for i in range(num_selected_users):
+            pass
+            # global_model = {
+            #         k: global_model[k] + local_updates[t][0].get(k) / num_selected_users
+            #         #k: localupdates[0].get(k) - global_model[k] for k in global_model.keys()
+            #         #k: global_model[k] + local_updates[i][k] / num_selected_users
+            #         for k in global_model.keys()
+            #     }
+            
+            # task_queue = f'master_round_queue_[{i}][{t}]'
+            # channel.queue_declare(queue=task_queue, durable=True)
+            # msg = pickle.dumps(local_updates)
+                
+
+            # message = msg
+                
+            # print('task_queue',task_queue)
+                
+            # channel.basic_publish(
+            #     exchange='',
+            #     routing_key=task_queue,
+            #     body=message,
+            #     properties=pika.BasicProperties(delivery_mode=2)
+            #     )
+                
+                
+
+            #print(" [x] Sent Round=",t)
+        
+        #connection.close()
+                
 
 
     # # for i in range(num_selected_users):
@@ -197,14 +384,168 @@ def serve(args):
 
     print('################## TrainingTest onum_selected_usersn aggregated Model ######################')
     ##################### testing on global model #######################
+    
+
+    # Access the CLODUAMQP_URL environment variable and parse it (fallback to localhost)
+    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+    params = pika.URLParameters(url)
+    connection = pika.BlockingConnection(params)
+    channel = connection.channel() # start a channel
+    
+    
+    gc = [0,1]
+    
+    bodytag = 0
+    for glc in gc:
+        
+        if glc == 1:
+            bodytag = 1
+            ################### callback global #################
+        
+            channel.basic_consume(f'node_global_round_queue_[{glc}][{0}]',
+                callback_global_1,
+                auto_ack=True)
+            
+            
+            ##################### callback local #################
+            
+            channel.basic_consume(f'node_local_round_queue_[{glc}][{0}]',
+                callback_local_1,
+                auto_ack=True)
+            
+            
+            ################### callback Local Loss #################
+            
+            channel.basic_consume(f'node_local_loss_queue_[{glc}][{0}]',
+                callback_local_loss_1,
+                auto_ack=True)
+            
+            
+            
+            
+            
+            #######################################################
+            
+            channel.basic_consume(f'node_global_round_queue_[{glc}][{0}]',
+                callback_local_loss,
+                auto_ack=True)
+            
+        else:
+            bodytag = 0
+            ################### callback global #################
+            
+            channel.basic_consume(f'node_global_round_queue_[{glc}][{0}]',
+                callback_global,
+                auto_ack=True)
+            
+            
+            ##################### callback local #################
+            
+            channel.basic_consume(f'node_local_round_queue_[{glc}][{0}]',
+                callback_local,
+                auto_ack=True)
+            
+            
+            ################### callback Local Loss #################
+            
+            channel.basic_consume(f'node_local_loss_queue_[{glc}][{0}]',
+                callback_local_loss,
+                auto_ack=True)
+            
+            
+            
+            
+            
+            #######################################################
+            
+            channel.basic_consume(f'node_global_round_queue_[{glc}][{0}]',
+                callback_local_loss,
+                auto_ack=True)
+            
+    print("global_model: ",global_model)
+    try:
+                
+        channel.start_consuming()
+    except KeyboardInterrupt:
+        channel.stop_consuming()
+        connection.close()
+            
+            
+            #global_model = gmdl
+            
+        
+      
+      
+          
+    # credentials = pika.PlainCredentials('jahanxb', 'phdunr')
+    # parameters = pika.ConnectionParameters('130.127.134.6',
+    #                                5672,
+    #                                '/',
+    #                                credentials)
+
+    # connection = pika.BlockingConnection(parameters)
+    # #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
+    # channel = connection.channel()
+
+    
+    local_updates = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node{0}[{0}][0].pkl')
+    loss_locals = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node{0}-loss[{0}][0].pkl')
+    global_model = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node{0}-global[{0}][0].pkl')
+    
+    global_counter = 1
+    
     net_glob.load_state_dict(global_model)
     net_glob.eval()
-    # test_acc_, _ = test_img(net_glob, dataset_test, args)
-    # test_acc.append(test_acc_)
-    # train_local_loss.append(sum(loss_locals) / len(loss_locals))
+    test_acc_, _ = test_img(net_glob, dataset_test, args)
+    test_acc.append(test_acc_)
+    
+    
+    # for n in range(nodes):
+    #     localupdates = torch.load(f'/mydata/flcode/models/pickles/node{n}[{0}][0].pkl')
+    #     lossy = torch.load(f'/mydata/flcode/models/pickles/node{n}-loss[{0}][0].pkl')
+    #     local_updates.append(localupdates)
+    #     loss_locals.append(lossy[0])
+    #     print("loss_locals: ",loss_locals)
+    
+    
+    print('loss_locals:[outside Func] ',loss_locals)
+    
+    
+    train_local_loss.append(sum(loss_locals) / len(loss_locals))
     # print('t {:3d}: '.format(t, ))
-    # print('t {:3d}: train_loss = {:.3f}, norm = Not Recording, test_acc = {:.3f}'.
-    #               format(t, train_local_loss[0], test_acc[0]))
+    print('t {:3d}: train_loss = {:.3f}, norm = Not Recording, test_acc = {:.3f}'.
+                  format(t, train_local_loss[0], test_acc[0]))
+
+
+    
+    print('Submitting new global model: .....')
+    
+    
+    credentials = pika.PlainCredentials('jahanxb', 'phdunr')
+    parameters = pika.ConnectionParameters('130.127.134.6',
+                                   5672,
+                                   '/',
+                                   credentials)
+
+    connection = pika.BlockingConnection(parameters)
+    #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
+    channel = connection.channel()
+    
+    
+    print('Initial Global Model...')
+    print('Queue Preparation for Global Model')
+    task_queue = f'global_model_round_queue_[{0}][{global_counter}]'
+    channel.queue_declare(queue=task_queue, durable=True)
+    msg = pickle.dumps(global_model)
+    channel.basic_publish(
+                exchange='',
+                routing_key=task_queue,
+                body=msg,
+                properties=pika.BasicProperties(delivery_mode=2)
+                )
+    print(" [x] Sent Round=",global_counter)
+    
+    
 
     # if math.isnan(train_local_loss[-1]) or train_local_loss[-1] > 1e8 or t == args.round - 1:
     #     np.savetxt(log_path + "_test_acc_repeat_" + str(args.repeat) + ".csv",
