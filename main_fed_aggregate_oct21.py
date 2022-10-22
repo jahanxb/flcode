@@ -76,7 +76,7 @@ def serve(args):
     test_acc = []
     norm_med = []
     ####################################### run experiment ##########################
-    
+    num_selected_users = 2
     nodes = 2
     local_updates = []
     loss_locals = []
@@ -88,57 +88,50 @@ def serve(args):
     #         local_updates.append(localupdates)
     #         loss_locals.append(lossy[0])
     
-    t = 0
-    lp0 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[0]_local_round[{t}].pkl')
-    lp1 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_local_round[{t}].pkl')
-    local_updates.append(lp0)
-    local_updates.append(lp1)
+    for t in range(10):
+        lp0 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[0]_local_round[{t}].pkl')
+        lp1 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_local_round[{t}].pkl')
+        local_updates.append(lp0)
+        local_updates.append(lp1)
     
     
-    lp0_loss = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[0]_local_loss_round[{t}].pkl')
-    lp1_loss = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_local_loss_round[{t}].pkl')
+        lp0_loss = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[0]_local_loss_round[{t}].pkl')
+        lp1_loss = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_local_loss_round[{t}].pkl')
     
-    gm = []
-    gm0 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[0]_global_round[{t}].pkl')
-    gm1 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_global_round[{t}].pkl')
+        gm = []
+        gm0 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[0]_global_round[{t}].pkl')
+        gm1 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_global_round[{t}].pkl')
     
-    gm.append(gm0)
-    gm.append(gm1)
-    num_selected_users = 2
-    
-    print("gm: ",gm[0].get('fc3.bias'))
-    print("gm: ",gm[1].get('fc3.bias'))
+        gm.append(gm0)
+        gm.append(gm1)
     
     
+        print("gm: ",gm[0].get('fc3.bias'))
+        print("gm: ",gm[1].get('fc3.bias'))
     
-    for i in range(num_selected_users):
-        global_model = {
+    
+    
+        for i in range(num_selected_users):
+            global_model = {
                     k: global_model[k] + gm[i][k]
                     for k in global_model.keys()
                 }
     
-    loss_locals.append(lp0_loss[0])
-    loss_locals.append(lp1_loss[0])
+        loss_locals.append(lp0_loss[0])
+        loss_locals.append(lp1_loss[0])
     
-    print("global_model: ",global_model.get('fc3.bias'))
+        print("global_model: ",global_model.get('fc3.bias'))
     
     
-    #print("len: ",len(local_updates))
-    #print("local update: ",local_updates[10][0].get('fc3.bias'))
-    
-
-    
-    #args.round = 1
-    
-    for i in range(num_selected_users):
-        global_model = {
+        for i in range(num_selected_users):
+            global_model = {
                     k: global_model[k] + local_updates[i][0][k] / num_selected_users
                     for k in global_model.keys()
                 }
     
-    for t in range(args.round):
-        for i in range(num_selected_users):
-            pass
+        for t in range(args.round):
+            for i in range(num_selected_users):
+                pass
             # global_model = {
             #         k: global_model[k] + local_updates[t][0].get(k) / num_selected_users
             #         #k: localupdates[0].get(k) - global_model[k] for k in global_model.keys()
@@ -146,38 +139,38 @@ def serve(args):
             #         for k in global_model.keys()
             #     }
 
-    # print("local_loss",loss_locals)
+        # print("local_loss",loss_locals)
 
-    # for i in range(num_selected_users):
-    #     global_model = {
-    #                 k: global_model[k] + local_updates[i][0][k] / num_selected_users
-    #                 for k in global_model.keys()
-    #             }
-    #print("global_modeL: ",global_model)
+        # for i in range(num_selected_users):
+            #     global_model = {
+            #                 k: global_model[k] + local_updates[i][0][k] / num_selected_users
+            #                 for k in global_model.keys()
+            #             }
+        #print("global_modeL: ",global_model)
 
 
 
-    print('################## TrainingTest onum_selected_usersn aggregated Model ######################')
-    ##################### testing on global model #######################
-    net_glob.load_state_dict(global_model)
-    net_glob.eval()
-    test_acc_, _ = test_img(net_glob, dataset_test, args)
-    test_acc.append(test_acc_)
-    train_local_loss.append(sum(loss_locals) / len(loss_locals))
-    print('t {:3d}: '.format(t, ))
-    print('t {:3d}: train_loss = {:.3f}, norm = Not Recording, test_acc = {:.3f}'.
+        print('################## TrainingTest onum_selected_usersn aggregated Model ######################')
+        ##################### testing on global model #######################
+        net_glob.load_state_dict(global_model)
+        net_glob.eval()
+        test_acc_, _ = test_img(net_glob, dataset_test, args)
+        test_acc.append(test_acc_)
+        train_local_loss.append(sum(loss_locals) / len(loss_locals))
+        print('t {:3d}: '.format(t, ))
+        print('t {:3d}: train_loss = {:.3f}, norm = Not Recording, test_acc = {:.3f}'.
                   format(t, train_local_loss[0], test_acc[0]))
 
-    if math.isnan(train_local_loss[-1]) or train_local_loss[-1] > 1e8 or t == args.round - 1:
-        np.savetxt(log_path + "_test_acc_repeat_" + str(args.repeat) + ".csv",
+        if math.isnan(train_local_loss[-1]) or train_local_loss[-1] > 1e8 or t == args.round - 1:
+            np.savetxt(log_path + "_test_acc_repeat_" + str(args.repeat) + ".csv",
                            test_acc,
                            delimiter=",")
-        np.savetxt(log_path + "_train_loss_repeat_" + str(args.repeat) + ".csv",
+            np.savetxt(log_path + "_train_loss_repeat_" + str(args.repeat) + ".csv",
                            train_local_loss,
                            delimiter=",")
-        np.savetxt(log_path + "_norm__repeat_" + str(args.repeat) + ".csv", norm_med, delimiter=",")
+            np.savetxt(log_path + "_norm__repeat_" + str(args.repeat) + ".csv", norm_med, delimiter=",")
             #break;
-    print(f't {t}: train_loss = {train_local_loss}, norm = {norm_med}, test_acc = {test_acc}')
+        print(f't {t}: train_loss = {train_local_loss}, norm = {norm_med}, test_acc = {test_acc}')
     
 
     t2 = time.time()
