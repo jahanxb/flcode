@@ -37,6 +37,32 @@ from celery import Celery
 
 import pickle, json
 
+from queues_func_list import Node0RabbitQueues as rq0
+
+
+# def pdf_process_function(msg):
+#     print("processing")
+#     #print(" [x] Received " + str(msg))
+
+#     print('pickle loading started...')
+#     gmdl = pickle.loads(msg)
+#     #global_model = gmdl
+#     print('pickle loading completed...')
+
+#     time.sleep(5) # delays for 5 seconds
+#     print("processing finished");
+#     return gmdl
+
+
+# # create a function which is called on incoming messages
+# def callback(ch, method, properties, body):
+#     gdm = pdf_process_function(body)
+#     time.sleep(5)
+#     print('[x] press ctrl+c to move to next step')            
+#     global_model = gdm
+#     #torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_loss_round[{bodytag}].pkl")
+    
+#     # set up subscription on the queue
 
 def client_node():
     pid = os.getpid()
@@ -119,85 +145,7 @@ def client_node():
             train_local_loss = []
             test_acc = []
             norm_med = []
-            
-            def pdf_process_function(msg):
-                print("processing")
-                #print(" [x] Received " + str(msg))
-
-                print('pickle loading started...')
-                gmdl = pickle.loads(msg)
-                #global_model = gmdl
-                print('pickle loading completed...')
-
-                
-                
-                time.sleep(5) # delays for 5 seconds
-                print("processing finished");
-                return gmdl
-
-            # Access the CLODUAMQP_URL environment variable and parse it (fallback to localhost)
-            url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
-            params = pika.URLParameters(url)
-            connection = pika.BlockingConnection(params)
-            channel = connection.channel() # start a channel
-            #channel.queue_declare(queue='global_model_round_queue_[0][0]') # Declare a queue
-
-            # create a function which is called on incoming messages
-            def callback(ch, method, properties, body):
-                gdm = pdf_process_function(body)
-                time.sleep(5)
-                print('[x] press ctrl+c to move to next step')
-                
-                global_model = gdm
-            # set up subscription on the queue
-            channel.basic_consume('global_model_round_queue_[0][0]',
-            callback,
-            auto_ack=True)
-
-            
-            print("global_model: ",global_model)
-            # start consuming (blocks)
-            #channel.start_consuming()
-            
-            #connection.close()
-            
-            try:
-                
-                channel.start_consuming()
-            except KeyboardInterrupt:
-                channel.stop_consuming()
-                connection.close()
-            
-            
-            #global_model = gmdl
-            
-            
-            
-            # credentials = pika.PlainCredentials('jahanxb', 'phdunr')
-            # parameters = pika.ConnectionParameters('130.127.134.6',
-            #                        5672,
-            #                        '/',
-            #                        credentials)
-
-            # connection = pika.BlockingConnection(parameters)
-            # #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
-            # channel = connection.channel()
-
-            
-            #channel.queue_declare(queue='global_model_round_queue_[0][0]',durable=True)
-            #print(' [*] Waiting for messages. To exit press')
-            
-    
-
-    # channel.basic_qos(prefetch_count=1)
-    # channel.basic_consume(queue='task_queue', on_message_callback=callback)
-
-    # channel.start_consuming()
-            
-            
-    
-            
-            
+          
             ###################################### run experiment ##########################
 
             # initialize data loader
@@ -216,183 +164,725 @@ def client_node():
             print("m = ",m)
             for t in range(args.round):
                 
-                if t==1:
-                    break
-                
-                args.local_lr = args.local_lr * args.decay_weight
-                selected_idxs = list(np.random.choice(range(1), m, replace=False))
-                print("In Round Loop: selected_idxs: ",selected_idxs)
-                num_selected_users = len(selected_idxs)
+                if t==0:
+                    # Access the CLODUAMQP_URL environment variable and parse it (fallback to localhost)
+                    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                    params = pika.URLParameters(url)
+                    connection = pika.BlockingConnection(params)
+                    channel = connection.channel() # start a channel
+                    #channel.queue_declare(queue='global_model_round_queue_[0][0]') # Declare a queue
 
-                ###################### local training : SGD for selected users ######################
-                loss_locals = []
-                local_updates = []
-                delta_norms = []
-                for i in selected_idxs:
-                    print("selected_idx",i)
-                    l_solver = LocalUpdate(args=args)
-                    net_glob.load_state_dict(global_model)
-                    # choose local solver
-                    if args.local_solver == 'local_sgd':
-                        new_model, loss = l_solver.local_sgd(
+            
+                    new_global_model_queue_id = f'master_global_for_node[{0}]_round[{t}]'
+                    channel.basic_consume(new_global_model_queue_id,
+                    callback,
+                    auto_ack=True)
+
+                    
+                    print("t=",t ," | global_model: ",global_model.get('fc3.bias'))
+                    
+                    try:
+                        channel.start_consuming()
+                    except KeyboardInterrupt:
+                        channel.stop_consuming()
+                        connection.close()
+                    
+                    
+                    
+                    args.local_lr = args.local_lr * args.decay_weight
+                    selected_idxs = list(np.random.choice(range(1), m, replace=False))
+                    print("In Round Loop: selected_idxs: ",selected_idxs)
+                    num_selected_users = len(selected_idxs)
+
+                    ###################### local training : SGD for selected users ######################
+                    loss_locals = []
+                    local_updates = []
+                    delta_norms = []
+                    for i in selected_idxs:
+                        print("selected_idx",i)
+                        l_solver = LocalUpdate(args=args)
+                        net_glob.load_state_dict(global_model)
+                        # choose local solver
+                        if args.local_solver == 'local_sgd':
+                            new_model, loss = l_solver.local_sgd(
                             net=copy.deepcopy(net_glob).to(args.device),
                             ldr_train=data_loader_list[i])
-                    # compute local delta
-                    model_update = {k: new_model[k] - global_model[k] for k in global_model.keys()}
+                        # compute local delta
+                        model_update = {k: new_model[k] - global_model[k] for k in global_model.keys()}
 
-                    # compute local model norm
-                    delta_norm = torch.norm(
+                        # compute local model norm
+                        delta_norm = torch.norm(
                         torch.cat([
                             torch.flatten(model_update[k])
                             for k in model_update.keys()
                         ]))
-                    delta_norms.append(delta_norm)
+                        delta_norms.append(delta_norm)
 
-                    # clipping local model or not ? : no clip for cifar10
-                    # threshold = delta_norm / args.clip
-                    # if threshold > 1.0:
-                    #     for k in model_update.keys():
-                    #         model_update[k] = model_update[k] / threshold
-
-                    local_updates.append(model_update)
-                    print("local updates len",len(local_updates), "index",len(local_updates[0]))
-                    loss_locals.append(loss)
-                norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
-
-                
-                model_update = {
-                    k: local_updates[0][k] * 0.0
-                    for k in local_updates[0].keys()
-                }
-                for i in range(num_selected_users):
-                    global_model = {
-                        k: global_model[k] + local_updates[i][k] / num_selected_users
-                        for k in global_model.keys()
-                    }
-
-                t2 = time.time()
-                hours, rem = divmod(t2 - t1, 3600)
-                minutes, seconds = divmod(rem, 60)
-                print("Local training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
-                #################################
-
-            
-                print("local_updates len(): ",len(local_updates))
-                
-                ################### Local Model ###################
-                
-                url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
-                params = pika.URLParameters(url)
-                connection = pika.BlockingConnection(params)
-                channel = connection.channel() # start a channel
-                
-                task_queue = f'node_local_round_queue_[{0}][{t}]'
-                channel.queue_declare(queue=task_queue, durable=True)
-                #models/pickles/test
-                #torch.save(local_updates, f"/mydata/flcode/models/pickles/test/node0[{t}][{i}].pkl")
-                #msg1 = (torch.load(f"/mydata/flcode/models/pickles/test/node0[{t}][{i}].pkl"))
-                
-                
-                msg = pickle.dumps(local_updates)
-                
-                
-                message = msg
-                
-                #print('task_queue',task_queue)
-                
-                
-                
-                
-                channel.basic_publish(
-                exchange='',
-                routing_key=task_queue,
-                body=message,
-                properties=pika.BasicProperties(delivery_mode=2)
-                )
-                
-                connection.close()
-                
-                
-                #### Global Model
-                
-                
-                url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
-                params = pika.URLParameters(url)
-                connection = pika.BlockingConnection(params)
-                channel = connection.channel() # start a channel
-                
-                task_queue = f'node_global_round_queue_[{0}][{t}]'
-                channel.queue_declare(queue=task_queue, durable=True)
-                msg = pickle.dumps(global_model)
-                
-                
-                message = msg
-                
-                #print('task_queue',task_queue)
-                
-                channel.basic_publish(
-                exchange='',
-                routing_key=task_queue,
-                body=message,
-                properties=pika.BasicProperties(delivery_mode=2)
-                )
-                
-                connection.close()
-                print(" [x] Sent Round=",t)
-
-                
-                # local Loss loss_locals
-                
-                url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
-                params = pika.URLParameters(url)
-                connection = pika.BlockingConnection(params)
-                channel = connection.channel() # start a channel
-                
-                
-                
-                
-                task_queue = f'node_local_loss_queue_[{0}][{t}]'
-                channel.queue_declare(queue=task_queue, durable=True)
-                msg = pickle.dumps(loss_locals)
-                
-                
-                message = msg
-                
-                #print('task_queue',task_queue)
-                
-                channel.basic_publish(
-                exchange='',
-                routing_key=task_queue,
-                body=message,
-                properties=pika.BasicProperties(delivery_mode=2)
-                )
-                
-
-                print(" [x] local Loss sent Queue=",t)
-
-                # threads = []
-                # for thread in threads:
-                #     thread.join()   
-                
-                connection.close()
-                
-                
-                #final_update.append(loss_locals)
-                # torch.save(local_updates, f"/mydata/flcode/models/pickles/node0[{t}][{i}].pkl")
-                # torch.save(loss_locals, f"/mydata/flcode/models/pickles/node0-loss[{t}][{i}].pkl")
-                # try:
                     
-                #     client = lib.FileClient("10.10.1.3:9991")
-                #     in_file_name = f"/mydata/flcode/models/pickles/node0[{t}][{i}].pkl"
-                #     client.upload(in_file_name)
-                #     print('Transfer Completed...')
-                # except Exception as e:
-                #     print(f'file transfer failed: node0[{t}][{i}].pkl')
-                #     print(str(e))
-                #     pass
+                        local_updates.append(model_update)
+                        print("local updates len",len(local_updates), "index",len(local_updates[0]))
+                        loss_locals.append(loss)
+                    norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
 
+                
+                    model_update = {
+                        k: local_updates[0][k] * 0.0
+                        for k in local_updates[0].keys()
+                    }
+                    for i in range(num_selected_users):
+                        global_model = {
+                            k: global_model[k] + local_updates[i][k] / num_selected_users
+                            for k in global_model.keys()
+                        }
+
+                    t2 = time.time()
+                    hours, rem = divmod(t2 - t1, 3600)
+                    minutes, seconds = divmod(rem, 60)
+                    print("Local training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
+                    #################################
 
             
+                    print("local_updates len(): ",len(local_updates))
+                
+                    ################### Local Model ###################
+                
+                    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                    params = pika.URLParameters(url)
+                    connection = pika.BlockingConnection(params)
+                    channel = connection.channel() # start a channel
+                
+                    task_queue = f'node[{0}]_local_round[{t}]'
+                    channel.queue_declare(queue=task_queue, durable=True)
+                    
+                
+                
+                    msg = pickle.dumps(local_updates)
+                
+                
+                    message = msg
+                
+                    #print('task_queue',task_queue)
+            
+                    channel.basic_publish(
+                        exchange='',
+                        routing_key=task_queue,
+                        body=message,
+                        properties=pika.BasicProperties(delivery_mode=2)
+                    )
+                
+                    connection.close()
+                
+                
+                    #### Global Model
+                    
+                    
+                    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                    params = pika.URLParameters(url)
+                    connection = pika.BlockingConnection(params)
+                    channel = connection.channel() # start a channel
+                    
+                    task_queue = f'node[{0}]_global_round[{t}]'
+                    channel.queue_declare(queue=task_queue, durable=True)
+                    msg = pickle.dumps(global_model)
+                    
+                    
+                    message = msg
+                    
+                    #print('task_queue',task_queue)
+                    
+                    channel.basic_publish(
+                    exchange='',
+                    routing_key=task_queue,
+                    body=message,
+                    properties=pika.BasicProperties(delivery_mode=2)
+                    )
+                    
+                    connection.close()
+                    print(" [x] Sent Round=",t)
+
+                    
+                    # local Loss loss_locals
+                    
+                    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                    params = pika.URLParameters(url)
+                    connection = pika.BlockingConnection(params)
+                    channel = connection.channel() # start a channel
+                    
+                    
+                    
+                    
+                    task_queue = f'node[{0}]_local_loss_round[{0}]'
+                    channel.queue_declare(queue=task_queue, durable=True)
+                    msg = pickle.dumps(loss_locals)
+                    
+                    
+                    message = msg
+                    
+                    #print('task_queue',task_queue)
+                    
+                    channel.basic_publish(
+                    exchange='',
+                    routing_key=task_queue,
+                    body=message,
+                    properties=pika.BasicProperties(delivery_mode=2)
+                    )
+                    
+
+                    print(" [x] local Loss sent Queue=",t)
+
+                
+                    connection.close()
+                
+                    print(f'Moving to next iteration round t+1:[{t}+1] = {t+1} ')
+                    input('Press Any key to start: ')
+                
+                elif t==1:
+                    #### Get aggregated Global Model #####
+                    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                    params = pika.URLParameters(url)
+                    connection = pika.BlockingConnection(params)
+                    channel = connection.channel() # start a channel
+                    #channel.queue_declare(queue='global_model_round_queue_[0][0]') # Declare a queue
+
+                    new_global_model_queue_id = f'master_global_for_node[{0}]_round[{t}]'
+                    channel.basic_consume(new_global_model_queue_id,
+                    callback,
+                    auto_ack=True)
+
+                    
+                    print("t=",t ," | global_model: ",global_model.get('fc3.bias'))
+                    # start consuming (blocks)
+                    #channel.start_consuming()
+                    
+                    #connection.close()
+                    
+                    try:
+                        
+                        channel.start_consuming()
+                    except KeyboardInterrupt:
+                        channel.stop_consuming()
+                        connection.close()
+
+                    
+                    
+                    #####################################
+                    
+                    
+                    args.local_lr = args.local_lr * args.decay_weight
+                    selected_idxs = list(np.random.choice(range(1), m, replace=False))
+                    print("In Round Loop: selected_idxs: ",selected_idxs)
+                    num_selected_users = len(selected_idxs)
+
+                    ###################### local training : SGD for selected users ######################
+                    loss_locals = []
+                    local_updates = []
+                    delta_norms = []
+                    for i in selected_idxs:
+                        print("selected_idx",i)
+                        l_solver = LocalUpdate(args=args)
+                        net_glob.load_state_dict(global_model)
+                        # choose local solver
+                        if args.local_solver == 'local_sgd':
+                            new_model, loss = l_solver.local_sgd(
+                            net=copy.deepcopy(net_glob).to(args.device),
+                            ldr_train=data_loader_list[i])
+                        # compute local delta
+                        model_update = {k: new_model[k] - global_model[k] for k in global_model.keys()}
+
+                        # compute local model norm
+                        delta_norm = torch.norm(
+                        torch.cat([
+                            torch.flatten(model_update[k])
+                            for k in model_update.keys()
+                        ]))
+                        delta_norms.append(delta_norm)
+
+                    
+                        local_updates.append(model_update)
+                        print("local updates len",len(local_updates), "index",len(local_updates[0]))
+                        loss_locals.append(loss)
+                    norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
+
+                
+                    model_update = {
+                        k: local_updates[0][k] * 0.0
+                        for k in local_updates[0].keys()
+                    }
+                    for i in range(num_selected_users):
+                        global_model = {
+                            k: global_model[k] + local_updates[i][k] / num_selected_users
+                            for k in global_model.keys()
+                        }
+
+                    t2 = time.time()
+                    hours, rem = divmod(t2 - t1, 3600)
+                    minutes, seconds = divmod(rem, 60)
+                    print("Local training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
+                    #################################
+
+            
+                    print("local_updates len(): ",len(local_updates))
+                
+                    ################### Local Model ###################
+                
+                    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                    params = pika.URLParameters(url)
+                    connection = pika.BlockingConnection(params)
+                    channel = connection.channel() # start a channel
+                
+                    task_queue = f'node[{0}]_local_round[{t}]'
+                    channel.queue_declare(queue=task_queue, durable=True)
+                    
+                
+                
+                    msg = pickle.dumps(local_updates)
+                
+                
+                    message = msg
+                
+                    #print('task_queue',task_queue)
+                
+                
+                
+                
+                    channel.basic_publish(
+                        exchange='',
+                        routing_key=task_queue,
+                        body=message,
+                        properties=pika.BasicProperties(delivery_mode=2)
+                    )
+                
+                    connection.close()
+                
+                
+                    #### Global Model
+                    
+                    
+                    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                    params = pika.URLParameters(url)
+                    connection = pika.BlockingConnection(params)
+                    channel = connection.channel() # start a channel
+                    
+                    task_queue = f'node[{0}]_global_round[{t}]'
+                    channel.queue_declare(queue=task_queue, durable=True)
+                    msg = pickle.dumps(global_model)
+                    
+                    
+                    message = msg
+                    
+                    #print('task_queue',task_queue)
+                    
+                    channel.basic_publish(
+                    exchange='',
+                    routing_key=task_queue,
+                    body=message,
+                    properties=pika.BasicProperties(delivery_mode=2)
+                    )
+                    
+                    connection.close()
+                    print(" [x] Sent Round=",t)
+
+                    
+                    # local Loss loss_locals
+                    
+                    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                    params = pika.URLParameters(url)
+                    connection = pika.BlockingConnection(params)
+                    channel = connection.channel() # start a channel
+                    
+                    
+                    
+                    
+                    task_queue = f'node[{0}]_local_loss_round[{t}]'
+                    channel.queue_declare(queue=task_queue, durable=True)
+                    msg = pickle.dumps(loss_locals)
+                    
+                    
+                    message = msg
+                    
+                    #print('task_queue',task_queue)
+                    
+                    channel.basic_publish(
+                    exchange='',
+                    routing_key=task_queue,
+                    body=message,
+                    properties=pika.BasicProperties(delivery_mode=2)
+                    )
+                    
+
+                    print(" [x] local Loss sent Queue=",t)
+
+                
+                    connection.close()
+
+                    print(f'Moving to next iteration round t+1:[{t}+1] = {t+1} ')
+                    input('Press Any key to start: ')
+                
+                elif t==2:
+                    #### Get aggregated Global Model #####
+                    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                    params = pika.URLParameters(url)
+                    connection = pika.BlockingConnection(params)
+                    channel = connection.channel() # start a channel
+                    #channel.queue_declare(queue='global_model_round_queue_[0][0]') # Declare a queue
+
+                    new_global_model_queue_id = f'master_global_for_node[{0}]_round[{t}]'
+                    channel.basic_consume(new_global_model_queue_id,
+                    callback,
+                    auto_ack=True)
+
+                    
+                    print("t=",t ," | global_model: ",global_model.get('fc3.bias'))
+                    # start consuming (blocks)
+                    #channel.start_consuming()
+                    
+                    #connection.close()
+                    
+                    try:
+                        
+                        channel.start_consuming()
+                    except KeyboardInterrupt:
+                        channel.stop_consuming()
+                        connection.close()
+
+                    
+                    
+                    #####################################
+                    
+                    
+                    args.local_lr = args.local_lr * args.decay_weight
+                    selected_idxs = list(np.random.choice(range(1), m, replace=False))
+                    print("In Round Loop: selected_idxs: ",selected_idxs)
+                    num_selected_users = len(selected_idxs)
+
+                    ###################### local training : SGD for selected users ######################
+                    loss_locals = []
+                    local_updates = []
+                    delta_norms = []
+                    for i in selected_idxs:
+                        print("selected_idx",i)
+                        l_solver = LocalUpdate(args=args)
+                        net_glob.load_state_dict(global_model)
+                        # choose local solver
+                        if args.local_solver == 'local_sgd':
+                            new_model, loss = l_solver.local_sgd(
+                            net=copy.deepcopy(net_glob).to(args.device),
+                            ldr_train=data_loader_list[i])
+                        # compute local delta
+                        model_update = {k: new_model[k] - global_model[k] for k in global_model.keys()}
+
+                        # compute local model norm
+                        delta_norm = torch.norm(
+                        torch.cat([
+                            torch.flatten(model_update[k])
+                            for k in model_update.keys()
+                        ]))
+                        delta_norms.append(delta_norm)
+
+                    
+                        local_updates.append(model_update)
+                        print("local updates len",len(local_updates), "index",len(local_updates[0]))
+                        loss_locals.append(loss)
+                    norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
+
+                
+                    model_update = {
+                        k: local_updates[0][k] * 0.0
+                        for k in local_updates[0].keys()
+                    }
+                    for i in range(num_selected_users):
+                        global_model = {
+                            k: global_model[k] + local_updates[i][k] / num_selected_users
+                            for k in global_model.keys()
+                        }
+
+                    t2 = time.time()
+                    hours, rem = divmod(t2 - t1, 3600)
+                    minutes, seconds = divmod(rem, 60)
+                    print("Local training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
+                    #################################
+
+            
+                    print("local_updates len(): ",len(local_updates))
+                
+                    ################### Local Model ###################
+                
+                    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                    params = pika.URLParameters(url)
+                    connection = pika.BlockingConnection(params)
+                    channel = connection.channel() # start a channel
+                
+                    task_queue = f'node[{0}]_local_round[{t}]'
+                    channel.queue_declare(queue=task_queue, durable=True)
+                    
+                
+                
+                    msg = pickle.dumps(local_updates)
+                
+                
+                    message = msg
+                
+                    #print('task_queue',task_queue)
+                
+                
+                
+                
+                    channel.basic_publish(
+                        exchange='',
+                        routing_key=task_queue,
+                        body=message,
+                        properties=pika.BasicProperties(delivery_mode=2)
+                    )
+                
+                    connection.close()
+                
+                
+                    #### Global Model
+                    
+                    
+                    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                    params = pika.URLParameters(url)
+                    connection = pika.BlockingConnection(params)
+                    channel = connection.channel() # start a channel
+                    
+                    task_queue = f'node[{0}]_global_round[{t}]'
+                    channel.queue_declare(queue=task_queue, durable=True)
+                    msg = pickle.dumps(global_model)
+                    
+                    
+                    message = msg
+                    
+                    #print('task_queue',task_queue)
+                    
+                    channel.basic_publish(
+                    exchange='',
+                    routing_key=task_queue,
+                    body=message,
+                    properties=pika.BasicProperties(delivery_mode=2)
+                    )
+                    
+                    connection.close()
+                    print(" [x] Sent Round=",t)
+
+                    
+                    # local Loss loss_locals
+                    
+                    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                    params = pika.URLParameters(url)
+                    connection = pika.BlockingConnection(params)
+                    channel = connection.channel() # start a channel
+                    
+                    
+                    
+                    
+                    task_queue = f'node[{0}]_local_loss_round[{t}]'
+                    channel.queue_declare(queue=task_queue, durable=True)
+                    msg = pickle.dumps(loss_locals)
+                    
+                    
+                    message = msg
+                    
+                    #print('task_queue',task_queue)
+                    
+                    channel.basic_publish(
+                    exchange='',
+                    routing_key=task_queue,
+                    body=message,
+                    properties=pika.BasicProperties(delivery_mode=2)
+                    )
+                    
+
+                    print(" [x] local Loss sent Queue=",t)
+
+                
+                    connection.close()
+
+                    print(f'Moving to next iteration round t+1:[{t}+1] = {t+1} ')
+                    input('Press Any key to start: ')                
+
+                
+                else:
+                    #### Get aggregated Global Model #####
+                    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                    params = pika.URLParameters(url)
+                    connection = pika.BlockingConnection(params)
+                    channel = connection.channel() # start a channel
+                    #channel.queue_declare(queue='global_model_round_queue_[0][0]') # Declare a queue
+
+                    new_global_model_queue_id = f'master_global_for_node[{0}]_round[{t}]'
+                    channel.basic_consume(new_global_model_queue_id,
+                    callback,
+                    auto_ack=True)
+
+                    
+                    print("t=",t ," | global_model: ",global_model.get('fc3.bias'))
+                    # start consuming (blocks)
+                    #channel.start_consuming()
+                    
+                    #connection.close()
+                    
+                    try:
+                        
+                        channel.start_consuming()
+                    except KeyboardInterrupt:
+                        channel.stop_consuming()
+                        connection.close()
+
+                    
+                    
+                    #####################################
+                    
+                    
+                    args.local_lr = args.local_lr * args.decay_weight
+                    selected_idxs = list(np.random.choice(range(1), m, replace=False))
+                    print("In Round Loop: selected_idxs: ",selected_idxs)
+                    num_selected_users = len(selected_idxs)
+
+                    ###################### local training : SGD for selected users ######################
+                    loss_locals = []
+                    local_updates = []
+                    delta_norms = []
+                    for i in selected_idxs:
+                        print("selected_idx",i)
+                        l_solver = LocalUpdate(args=args)
+                        net_glob.load_state_dict(global_model)
+                        # choose local solver
+                        if args.local_solver == 'local_sgd':
+                            new_model, loss = l_solver.local_sgd(
+                            net=copy.deepcopy(net_glob).to(args.device),
+                            ldr_train=data_loader_list[i])
+                        # compute local delta
+                        model_update = {k: new_model[k] - global_model[k] for k in global_model.keys()}
+
+                        # compute local model norm
+                        delta_norm = torch.norm(
+                        torch.cat([
+                            torch.flatten(model_update[k])
+                            for k in model_update.keys()
+                        ]))
+                        delta_norms.append(delta_norm)
+
+                    
+                        local_updates.append(model_update)
+                        print("local updates len",len(local_updates), "index",len(local_updates[0]))
+                        loss_locals.append(loss)
+                    norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
+
+                
+                    model_update = {
+                        k: local_updates[0][k] * 0.0
+                        for k in local_updates[0].keys()
+                    }
+                    for i in range(num_selected_users):
+                        global_model = {
+                            k: global_model[k] + local_updates[i][k] / num_selected_users
+                            for k in global_model.keys()
+                        }
+
+                    t2 = time.time()
+                    hours, rem = divmod(t2 - t1, 3600)
+                    minutes, seconds = divmod(rem, 60)
+                    print("Local training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
+                    #################################
+
+            
+                    print("local_updates len(): ",len(local_updates))
+                
+                    ################### Local Model ###################
+                
+                    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                    params = pika.URLParameters(url)
+                    connection = pika.BlockingConnection(params)
+                    channel = connection.channel() # start a channel
+                
+                    task_queue = f'node[{0}]_local_round[{t}]'
+                    channel.queue_declare(queue=task_queue, durable=True)
+                    
+                
+                
+                    msg = pickle.dumps(local_updates)
+                
+                
+                    message = msg
+                
+                    #print('task_queue',task_queue)
+                
+                
+                
+                
+                    channel.basic_publish(
+                        exchange='',
+                        routing_key=task_queue,
+                        body=message,
+                        properties=pika.BasicProperties(delivery_mode=2)
+                    )
+                
+                    connection.close()
+                
+                
+                    #### Global Model
+                    
+                    
+                    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                    params = pika.URLParameters(url)
+                    connection = pika.BlockingConnection(params)
+                    channel = connection.channel() # start a channel
+                    
+                    task_queue = f'node[{0}]_global_round[{t}]'
+                    channel.queue_declare(queue=task_queue, durable=True)
+                    msg = pickle.dumps(global_model)
+                    
+                    
+                    message = msg
+                    
+                    #print('task_queue',task_queue)
+                    
+                    channel.basic_publish(
+                    exchange='',
+                    routing_key=task_queue,
+                    body=message,
+                    properties=pika.BasicProperties(delivery_mode=2)
+                    )
+                    
+                    connection.close()
+                    print(" [x] Sent Round=",t)
+
+                    
+                    # local Loss loss_locals
+                    
+                    url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
+                    params = pika.URLParameters(url)
+                    connection = pika.BlockingConnection(params)
+                    channel = connection.channel() # start a channel
+                    
+                    
+                    
+                    
+                    task_queue = f'node[{0}]_local_loss_round[{t}]'
+                    channel.queue_declare(queue=task_queue, durable=True)
+                    msg = pickle.dumps(loss_locals)
+                    
+                    
+                    message = msg
+                    
+                    #print('task_queue',task_queue)
+                    
+                    channel.basic_publish(
+                    exchange='',
+                    routing_key=task_queue,
+                    body=message,
+                    properties=pika.BasicProperties(delivery_mode=2)
+                    )
+                    
+
+                    print(" [x] local Loss sent Queue=",t)
+
+                
+                    connection.close()
+
+                    print(f'Moving to next iteration round t+1:[{t}+1] = {t+1} ')
+                    input('Press Any key to start: ')
+                    
     except Exception as e:
             print(f"Exception Thrown: {e}")
             #channel.unsubscribe(close)
