@@ -67,7 +67,7 @@ class Node0RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -120,7 +120,6 @@ class Node0RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
 
@@ -138,7 +137,7 @@ class Node0RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -191,7 +190,6 @@ class Node0RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
         
@@ -211,7 +209,7 @@ class Node0RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -266,7 +264,6 @@ class Node0RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
 
@@ -284,7 +281,7 @@ class Node0RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -337,7 +334,6 @@ class Node0RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
 
@@ -355,7 +351,7 @@ class Node0RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -408,7 +404,6 @@ class Node0RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
         
@@ -426,7 +421,7 @@ class Node0RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -481,7 +476,6 @@ class Node0RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
 
@@ -499,7 +493,7 @@ class Node0RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -553,7 +547,6 @@ class Node0RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
 
@@ -571,7 +564,7 @@ class Node0RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -624,7 +617,6 @@ class Node0RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
 
@@ -642,7 +634,7 @@ class Node0RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -697,7 +689,6 @@ class Node0RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
 
@@ -715,7 +706,7 @@ class Node0RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -769,7 +760,6 @@ class Node0RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node0}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
 
@@ -789,7 +779,7 @@ class Node1RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -843,7 +833,6 @@ class Node1RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
 
@@ -861,7 +850,7 @@ class Node1RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -915,7 +904,6 @@ class Node1RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
         
@@ -935,7 +923,7 @@ class Node1RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -989,7 +977,6 @@ class Node1RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
 
@@ -1007,7 +994,7 @@ class Node1RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -1063,7 +1050,6 @@ class Node1RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
 
@@ -1080,7 +1066,7 @@ class Node1RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -1134,7 +1120,6 @@ class Node1RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
 
@@ -1152,7 +1137,7 @@ class Node1RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -1206,7 +1191,6 @@ class Node1RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
 
@@ -1223,7 +1207,7 @@ class Node1RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -1278,7 +1262,6 @@ class Node1RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
 
@@ -1296,7 +1279,7 @@ class Node1RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -1351,7 +1334,6 @@ class Node1RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
 
@@ -1369,7 +1351,7 @@ class Node1RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -1425,7 +1407,6 @@ class Node1RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
 
@@ -1443,7 +1424,7 @@ class Node1RabbitQueues:
         
         torch.save(loss_locals, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_loss_round[{bodytag}].pkl")
         # set up subscription on the queue
-        #input('Press Any Key to Move to next step')
+        input('Press Any Key to Move to next step')
         #print('[x] press ctrl+c to move to next step')
         #return loss_locals
 
@@ -1499,6 +1480,5 @@ class Node1RabbitQueues:
         #global local_updates
         local_updates = gdm
         torch.save(local_updates, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{node1}]_local_round[{bodytag}].pkl")
-        raise KeyboardInterrupt
         # set up subscription on the queue
         #return local_updates
