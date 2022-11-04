@@ -185,6 +185,12 @@ def serve(args):
     num_selected_users = 2
     
     for t in range(args.round):
+        m = max(int(args.frac * args.num_users), 1)
+        args.local_lr = args.local_lr * args.decay_weight
+        selected_idxs = list(np.random.choice(range(args.num_users), m, replace=False))
+        print(selected_idxs)
+        num_selected_users = len(selected_idxs)
+        
         if t==0:
             print('Initial Global Model...')
             print('Queue Preparation for Global Model')
@@ -389,40 +395,40 @@ def serve(args):
             print('Initial Global Model...')
             print('Queue Preparation for Global Model')
             
-            credentials = pika.PlainCredentials('jahanxb', 'phdunr')
-            parameters = pika.ConnectionParameters('130.127.134.6',
-                                   5672,
-                                   '/',
-                                   credentials)
+            # credentials = pika.PlainCredentials('jahanxb', 'phdunr')
+            # parameters = pika.ConnectionParameters('130.127.134.6',
+            #                        5672,
+            #                        '/',
+            #                        credentials)
 
-            connection = pika.BlockingConnection(parameters)
-            #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
-            channel = connection.channel()
+            # connection = pika.BlockingConnection(parameters)
+            # #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
+            # channel = connection.channel()
             
-            master_global_for_node0_round = f'master_global_for_node[{0}]_round[{t}]'
+            # master_global_for_node0_round = f'master_global_for_node[{0}]_round[{t}]'
             
-            task_queue = master_global_for_node0_round
+            # task_queue = master_global_for_node0_round
             
-            channel.queue_declare(queue=task_queue, durable=True)
-            msg = pickle.dumps(global_model)
-            channel.basic_publish(
-                exchange='',
-                routing_key=task_queue,
-                body=msg,
-                properties=pika.BasicProperties(delivery_mode=2)
-                )
+            # channel.queue_declare(queue=task_queue, durable=True)
+            # msg = pickle.dumps(global_model)
+            # channel.basic_publish(
+            #     exchange='',
+            #     routing_key=task_queue,
+            #     body=msg,
+            #     properties=pika.BasicProperties(delivery_mode=2)
+            #     )
                 
-            master_global_for_node1_round = f'master_global_for_node[{1}]_round[{t}]'
+            # master_global_for_node1_round = f'master_global_for_node[{1}]_round[{t}]'
             
-            task_queue = master_global_for_node1_round
-            channel.queue_declare(queue=task_queue, durable=True)
-            msg = pickle.dumps(global_model)
-            channel.basic_publish(
-                exchange='',
-                routing_key=task_queue,
-                body=msg,
-                properties=pika.BasicProperties(delivery_mode=2)
-                )
+            # task_queue = master_global_for_node1_round
+            # channel.queue_declare(queue=task_queue, durable=True)
+            # msg = pickle.dumps(global_model)
+            # channel.basic_publish(
+            #     exchange='',
+            #     routing_key=task_queue,
+            #     body=msg,
+            #     properties=pika.BasicProperties(delivery_mode=2)
+            #     )
                 
                 
                 
@@ -591,6 +597,7 @@ def serve(args):
             connection.close()
             
         elif t==2:
+            
             print(f'Next Iteration round: {t}')
             print('Waiting for the Client/Slave Node to complete the Process...')
             input('enter something to exit:')
@@ -598,40 +605,40 @@ def serve(args):
             print('Initial Global Model...')
             print('Queue Preparation for Global Model')
             
-            credentials = pika.PlainCredentials('jahanxb', 'phdunr')
-            parameters = pika.ConnectionParameters('130.127.134.6',
-                                   5672,
-                                   '/',
-                                   credentials)
+            # credentials = pika.PlainCredentials('jahanxb', 'phdunr')
+            # parameters = pika.ConnectionParameters('130.127.134.6',
+            #                        5672,
+            #                        '/',
+            #                        credentials)
 
-            connection = pika.BlockingConnection(parameters)
-            #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
-            channel = connection.channel()
+            # connection = pika.BlockingConnection(parameters)
+            # #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
+            # channel = connection.channel()
             
-            master_global_for_node0_round = f'master_global_for_node[{0}]_round[{t}]'
+            # master_global_for_node0_round = f'master_global_for_node[{0}]_round[{t}]'
             
-            task_queue = master_global_for_node0_round
+            # task_queue = master_global_for_node0_round
             
-            channel.queue_declare(queue=task_queue, durable=True)
-            msg = pickle.dumps(global_model)
-            channel.basic_publish(
-                exchange='',
-                routing_key=task_queue,
-                body=msg,
-                properties=pika.BasicProperties(delivery_mode=2)
-                )
+            # channel.queue_declare(queue=task_queue, durable=True)
+            # msg = pickle.dumps(global_model)
+            # channel.basic_publish(
+            #     exchange='',
+            #     routing_key=task_queue,
+            #     body=msg,
+            #     properties=pika.BasicProperties(delivery_mode=2)
+            #     )
                 
-            master_global_for_node1_round = f'master_global_for_node[{1}]_round[{t}]'
+            # master_global_for_node1_round = f'master_global_for_node[{1}]_round[{t}]'
             
-            task_queue = master_global_for_node1_round
-            channel.queue_declare(queue=task_queue, durable=True)
-            msg = pickle.dumps(global_model)
-            channel.basic_publish(
-                exchange='',
-                routing_key=task_queue,
-                body=msg,
-                properties=pika.BasicProperties(delivery_mode=2)
-                )
+            # task_queue = master_global_for_node1_round
+            # channel.queue_declare(queue=task_queue, durable=True)
+            # msg = pickle.dumps(global_model)
+            # channel.basic_publish(
+            #     exchange='',
+            #     routing_key=task_queue,
+            #     body=msg,
+            #     properties=pika.BasicProperties(delivery_mode=2)
+            #     )
                 
                 
                 
@@ -801,6 +808,7 @@ def serve(args):
         
         
         elif t==3:
+            break
             print(f'Next Iteration round: {t}')
             print('Waiting for the Client/Slave Node to complete the Process...')
             input('enter something to exit:')
@@ -808,40 +816,40 @@ def serve(args):
             print('Initial Global Model...')
             print('Queue Preparation for Global Model')
             
-            credentials = pika.PlainCredentials('jahanxb', 'phdunr')
-            parameters = pika.ConnectionParameters('130.127.134.6',
-                                   5672,
-                                   '/',
-                                   credentials)
+            # credentials = pika.PlainCredentials('jahanxb', 'phdunr')
+            # parameters = pika.ConnectionParameters('130.127.134.6',
+            #                        5672,
+            #                        '/',
+            #                        credentials)
 
-            connection = pika.BlockingConnection(parameters)
-            #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
-            channel = connection.channel()
+            # connection = pika.BlockingConnection(parameters)
+            # #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
+            # channel = connection.channel()
             
-            master_global_for_node0_round = f'master_global_for_node[{0}]_round[{t}]'
+            # master_global_for_node0_round = f'master_global_for_node[{0}]_round[{t}]'
             
-            task_queue = master_global_for_node0_round
+            # task_queue = master_global_for_node0_round
             
-            channel.queue_declare(queue=task_queue, durable=True)
-            msg = pickle.dumps(global_model)
-            channel.basic_publish(
-                exchange='',
-                routing_key=task_queue,
-                body=msg,
-                properties=pika.BasicProperties(delivery_mode=2)
-                )
+            # channel.queue_declare(queue=task_queue, durable=True)
+            # msg = pickle.dumps(global_model)
+            # channel.basic_publish(
+            #     exchange='',
+            #     routing_key=task_queue,
+            #     body=msg,
+            #     properties=pika.BasicProperties(delivery_mode=2)
+            #     )
                 
-            master_global_for_node1_round = f'master_global_for_node[{1}]_round[{t}]'
+            # master_global_for_node1_round = f'master_global_for_node[{1}]_round[{t}]'
             
-            task_queue = master_global_for_node1_round
-            channel.queue_declare(queue=task_queue, durable=True)
-            msg = pickle.dumps(global_model)
-            channel.basic_publish(
-                exchange='',
-                routing_key=task_queue,
-                body=msg,
-                properties=pika.BasicProperties(delivery_mode=2)
-                )
+            # task_queue = master_global_for_node1_round
+            # channel.queue_declare(queue=task_queue, durable=True)
+            # msg = pickle.dumps(global_model)
+            # channel.basic_publish(
+            #     exchange='',
+            #     routing_key=task_queue,
+            #     body=msg,
+            #     properties=pika.BasicProperties(delivery_mode=2)
+            #     )
                 
                 
                 

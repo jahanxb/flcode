@@ -38,6 +38,11 @@ import pickle,json
 from queues_func_list import Node0RabbitQueues as rq0
 from queues_func_list import Node1RabbitQueues as rq1
 
+from pymongo import MongoClient
+
+node0 = 0
+node1 = 1
+
 def arrange_round_train(args):
     pass
 
@@ -60,7 +65,11 @@ nodes = 2
 local_updates = []
 loss_locals = []
 
+# print('t {:3d}: train_loss = {:.3f}, norm = Not Recording, test_acc = {:.3f}'.
+#                   format(t, train_local_loss[0], test_acc[0]))
 
+# print('t {:3d}: train_loss = {:.3f}, norm = {:.3f}, test_acc = {:.3f}'.
+#                 format(t, train_local_loss[t], norm_med[t], test_acc[t]))
 
 
 
@@ -86,7 +95,9 @@ def serve(args):
     print('num. of testing data:{}'.format(len(dataset_test)))
     print('num. of classes:{}'.format(args.num_classes))
     print('num. of users:{}'.format(len(dict_users)))
+    
     sample_per_users = int(sum([ len(dict_users[i]) for i in range(len(dict_users))])/len(dict_users))
+    sample_per_users = 5
     print('num. of samples per user:{}'.format(sample_per_users))
     
     # credentials = pika.PlainCredentials('jahanxb', 'phdunr')
@@ -184,7 +195,20 @@ def serve(args):
     
     num_selected_users = 2
     
+    mconn = MongoClient('mongodb+srv://jahanxb:phdunr@flmongo.7repipw.mongodb.net/?retryWrites=true&w=majority')
+    mdb = mconn['iteration_status']
+    #mdb.create_collection('master_node')
+    
     for t in range(args.round):
+        loss_locals = []
+        local_updates = []
+        delta_norms = []
+        m = max(int(args.frac * args.num_users), 1)
+        args.local_lr = args.local_lr * args.decay_weight
+        selected_idxs = list(np.random.choice(range(args.num_users), m, replace=False))
+        print(selected_idxs)
+        num_selected_users = len(selected_idxs)
+        
         if t==0:
             print('Initial Global Model...')
             print('Queue Preparation for Global Model')
@@ -218,7 +242,97 @@ def serve(args):
             print(" [x] Sent Round=",t)
             print(f'Round Process Started... Current Round on Master t={t}')
             input('Insert Any Key.. If global Model is delivered...: ')
+            
+            # ######################### Check status of Queues through MongoDB ############################
+            # '''GLOBAL ROUND CHECK'''
+            # try:
+            #     task_id = f'node[{node0}]_global_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node0.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
                 
+                
+            # try:
+            #     task_id = f'node[{node1}]_global_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node1.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+            
+            # '''LOCAL ROUND CHECK'''
+            # try:
+            #     task_id = f'node[{node0}]_local_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node0.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+            
+            # try:
+            #     task_id = f'node[{node1}]_local_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node1.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+            
+            # '''LOCAL LOSS ROUND CHECK '''
+            # try:
+            #     task_id = f'node[{node0}]_local_loss_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node0.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+                
+            
+            # try:
+            #     task_id = f'node[{node1}]_local_loss_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node1.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+            
+            
+            
+            # ############################################################################################
+            
+            
+                    
                 
             print('################## TrainingTest onum_selected_usersn aggregated Model ######################')
             ##################### testing on global model #######################
@@ -305,7 +419,7 @@ def serve(args):
             lp1 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_local_round[{t}].pkl')
             local_updates.append(lp0)
             local_updates.append(lp1)
-    
+            #lm = local_updates
     
             lp0_loss = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[0]_local_loss_round[{t}].pkl')
             lp1_loss = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_local_loss_round[{t}].pkl')
@@ -317,26 +431,45 @@ def serve(args):
             gm.append(gm0)
             gm.append(gm1)
             
-            print("gm: ",gm[0].get('fc3.bias'))
-            print("gm: ",gm[1].get('fc3.bias'))
+            # print("gm: ",gm[0].get('fc3.bias'))
+            # print("gm: ",gm[1].get('fc3.bias'))
 
-            for i in range(num_selected_users):
-                global_model = {
-                    k: global_model[k] + gm[i][k]
-                    for k in global_model.keys()
-                }
+            # for i in range(num_selected_users):
+            #     global_model = {
+            #         k: global_model[k] + gm[0][k] + gm[1][k]
+            #         for k in global_model.keys()
+            #     }
+            
+            #print("local updates 0: ",local_updates[0].get('fc3.bias'))
+            #print("local updates 1: ",local_updates[1].get('fc3.bias'))  
+                
+            # for i in range(len(lm)):
+            #     global_model = {
+            #         k: local_updates[k] + lm[i][k]
+            #         for k in local_updates.keys()
+            #     }
     
             loss_locals.append(lp0_loss[0])
             loss_locals.append(lp1_loss[0])
     
-            print("global_model: ",global_model.get('fc3.bias'))
+           
 
+            
+            # for i in range(num_selected_users):
+            #     pass
+            # global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k]) 
+            #         for k in global_model.keys()
+            #     }
             
             for i in range(num_selected_users):
                 global_model = {
-                    k: global_model[k] + local_updates[i][0][k] / num_selected_users
-                    for k in global_model.keys()
-                }
+                k: global_model[k] + local_updates[i][0][k] / num_selected_users
+                for k in global_model.keys()
+            }
+            
+            
+            print("global_model: ",global_model.get('fc3.bias'))
             
             global_counter = 1
     
@@ -346,8 +479,8 @@ def serve(args):
             test_acc.append(test_acc_)
             train_local_loss.append(sum(loss_locals) / len(loss_locals))
             print('t {:3d}: '.format(t, ))
-            print('t {:3d}: train_loss = {:.3f}, norm = Not Recording, test_acc = {:.3f}'.
-                  format(t, train_local_loss[0], test_acc[0]))
+            print('t {:3d}: train_loss = {:.3f}, test_acc = {:.3f}'.
+                format(t, train_local_loss[-1], test_acc[-1]))
             
             print('Submitting new global model: .....')
     
@@ -389,46 +522,137 @@ def serve(args):
             print('Initial Global Model...')
             print('Queue Preparation for Global Model')
             
-            credentials = pika.PlainCredentials('jahanxb', 'phdunr')
-            parameters = pika.ConnectionParameters('130.127.134.6',
-                                   5672,
-                                   '/',
-                                   credentials)
+            # credentials = pika.PlainCredentials('jahanxb', 'phdunr')
+            # parameters = pika.ConnectionParameters('130.127.134.6',
+            #                        5672,
+            #                        '/',
+            #                        credentials)
 
-            connection = pika.BlockingConnection(parameters)
-            #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
-            channel = connection.channel()
+            # connection = pika.BlockingConnection(parameters)
+            # #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
+            # channel = connection.channel()
             
-            master_global_for_node0_round = f'master_global_for_node[{0}]_round[{t}]'
+            # master_global_for_node0_round = f'master_global_for_node[{0}]_round[{t}]'
             
-            task_queue = master_global_for_node0_round
+            # task_queue = master_global_for_node0_round
             
-            channel.queue_declare(queue=task_queue, durable=True)
-            msg = pickle.dumps(global_model)
-            channel.basic_publish(
-                exchange='',
-                routing_key=task_queue,
-                body=msg,
-                properties=pika.BasicProperties(delivery_mode=2)
-                )
+            # channel.queue_declare(queue=task_queue, durable=True)
+            # msg = pickle.dumps(global_model)
+            # channel.basic_publish(
+            #     exchange='',
+            #     routing_key=task_queue,
+            #     body=msg,
+            #     properties=pika.BasicProperties(delivery_mode=2)
+            #     )
                 
-            master_global_for_node1_round = f'master_global_for_node[{1}]_round[{t}]'
+            # master_global_for_node1_round = f'master_global_for_node[{1}]_round[{t}]'
             
-            task_queue = master_global_for_node1_round
-            channel.queue_declare(queue=task_queue, durable=True)
-            msg = pickle.dumps(global_model)
-            channel.basic_publish(
-                exchange='',
-                routing_key=task_queue,
-                body=msg,
-                properties=pika.BasicProperties(delivery_mode=2)
-                )
+            # task_queue = master_global_for_node1_round
+            # channel.queue_declare(queue=task_queue, durable=True)
+            # msg = pickle.dumps(global_model)
+            # channel.basic_publish(
+            #     exchange='',
+            #     routing_key=task_queue,
+            #     body=msg,
+            #     properties=pika.BasicProperties(delivery_mode=2)
+            #     )
                 
                 
                 
             print(" [x] Sent Round=",t)
             print(f'Round Process Started... Current Round on Master t={t}')
-            input('Insert Any Key.. If global Model is delivered...: ')
+            #input('Insert Any Key.. If global Model is delivered...: ')
+            
+            # ######################### Check status of Queues through MongoDB ############################
+            # '''GLOBAL ROUND CHECK'''
+            # try:
+            #     task_id = f'node[{node0}]_global_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node0.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+                
+                
+            # try:
+            #     task_id = f'node[{node1}]_global_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node1.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+            
+            # '''LOCAL ROUND CHECK'''
+            # try:
+            #     task_id = f'node[{node0}]_local_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node0.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+            
+            # try:
+            #     task_id = f'node[{node1}]_local_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node1.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+            
+            # '''LOCAL LOSS ROUND CHECK '''
+            # try:
+            #     task_id = f'node[{node0}]_local_loss_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node0.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+                
+            
+            # try:
+            #     task_id = f'node[{node1}]_local_loss_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node1.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+            
+            
+            
+            # ############################################################################################
+
+            
+            
                 
                 
             print('################## TrainingTest onum_selected_usersn aggregated Model ######################')
@@ -528,26 +752,42 @@ def serve(args):
             gm.append(gm0)
             gm.append(gm1)
             
-            print("gm: ",gm[0].get('fc3.bias'))
-            print("gm: ",gm[1].get('fc3.bias'))
+            # print("gm: ",gm[0].get('fc3.bias'))
+            # print("gm: ",gm[1].get('fc3.bias'))
 
-            for i in range(num_selected_users):
-                global_model = {
-                    k: global_model[k] + gm[i][k]
-                    for k in global_model.keys()
-                }
+            # for i in range(len(gm)):
+            #     global_model = {
+            #         k: global_model[k] + (gm[0][k] + gm[1][k])
+            #         for k in global_model.keys()
+            #     }
     
             loss_locals.append(lp0_loss[0])
             loss_locals.append(lp1_loss[0])
-    
-            print("global_model: ",global_model.get('fc3.bias'))
 
+            
+            # for i in range(num_selected_users):
+            #     pass
+            # global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k]) 
+            #         for k in global_model.keys()
+            #     }
             
             for i in range(num_selected_users):
                 global_model = {
-                    k: global_model[k] + local_updates[i][0][k] / num_selected_users
-                    for k in global_model.keys()
-                }
+                k: global_model[k] + local_updates[i][0][k] / num_selected_users
+                for k in global_model.keys()
+            }
+            
+            
+            
+            print("global_model: ",global_model.get('fc3.bias'))
+
+            
+            # for i in range(num_selected_users):
+            #     global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k]) / num_selected_users
+            #         for k in global_model.keys()
+            #     }
             
             global_counter = 1
     
@@ -557,8 +797,8 @@ def serve(args):
             test_acc.append(test_acc_)
             train_local_loss.append(sum(loss_locals) / len(loss_locals))
             print('t {:3d}: '.format(t, ))
-            print('t {:3d}: train_loss = {:.3f}, norm = Not Recording, test_acc = {:.3f}'.
-                  format(t, train_local_loss[0], test_acc[0]))
+            print('t {:3d}: train_loss = {:.3f}, test_acc = {:.3f}'.
+                format(t, train_local_loss[-1], test_acc[-1]))
             
             print('Submitting new global model: .....')
     
@@ -591,6 +831,7 @@ def serve(args):
             connection.close()
             
         elif t==2:
+            
             print(f'Next Iteration round: {t}')
             print('Waiting for the Client/Slave Node to complete the Process...')
             input('enter something to exit:')
@@ -598,47 +839,137 @@ def serve(args):
             print('Initial Global Model...')
             print('Queue Preparation for Global Model')
             
-            credentials = pika.PlainCredentials('jahanxb', 'phdunr')
-            parameters = pika.ConnectionParameters('130.127.134.6',
-                                   5672,
-                                   '/',
-                                   credentials)
+            # credentials = pika.PlainCredentials('jahanxb', 'phdunr')
+            # parameters = pika.ConnectionParameters('130.127.134.6',
+            #                        5672,
+            #                        '/',
+            #                        credentials)
 
-            connection = pika.BlockingConnection(parameters)
-            #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
-            channel = connection.channel()
+            # connection = pika.BlockingConnection(parameters)
+            # #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
+            # channel = connection.channel()
             
-            master_global_for_node0_round = f'master_global_for_node[{0}]_round[{t}]'
+            # master_global_for_node0_round = f'master_global_for_node[{0}]_round[{t}]'
             
-            task_queue = master_global_for_node0_round
+            # task_queue = master_global_for_node0_round
             
-            channel.queue_declare(queue=task_queue, durable=True)
-            msg = pickle.dumps(global_model)
-            channel.basic_publish(
-                exchange='',
-                routing_key=task_queue,
-                body=msg,
-                properties=pika.BasicProperties(delivery_mode=2)
-                )
+            # channel.queue_declare(queue=task_queue, durable=True)
+            # msg = pickle.dumps(global_model)
+            # channel.basic_publish(
+            #     exchange='',
+            #     routing_key=task_queue,
+            #     body=msg,
+            #     properties=pika.BasicProperties(delivery_mode=2)
+            #     )
                 
-            master_global_for_node1_round = f'master_global_for_node[{1}]_round[{t}]'
+            # master_global_for_node1_round = f'master_global_for_node[{1}]_round[{t}]'
             
-            task_queue = master_global_for_node1_round
-            channel.queue_declare(queue=task_queue, durable=True)
-            msg = pickle.dumps(global_model)
-            channel.basic_publish(
-                exchange='',
-                routing_key=task_queue,
-                body=msg,
-                properties=pika.BasicProperties(delivery_mode=2)
-                )
+            # task_queue = master_global_for_node1_round
+            # channel.queue_declare(queue=task_queue, durable=True)
+            # msg = pickle.dumps(global_model)
+            # channel.basic_publish(
+            #     exchange='',
+            #     routing_key=task_queue,
+            #     body=msg,
+            #     properties=pika.BasicProperties(delivery_mode=2)
+            #     )
                 
                 
                 
             print(" [x] Sent Round=",t)
             print(f'Round Process Started... Current Round on Master t={t}')
-            input('Insert Any Key.. If global Model is delivered...: ')
+            #input('Insert Any Key.. If global Model is delivered...: ')
+            
+            
+            # ######################### Check status of Queues through MongoDB ############################
+            # '''GLOBAL ROUND CHECK'''
+            # try:
+            #     task_id = f'node[{node0}]_global_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node0.find_one({'task_id':task_id})
+            #         print('status: ',status)
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
                 
+                
+            # try:
+            #     task_id = f'node[{node1}]_global_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node1.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+            
+            # '''LOCAL ROUND CHECK'''
+            # try:
+            #     task_id = f'node[{node0}]_local_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node0.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+            
+            # try:
+            #     task_id = f'node[{node1}]_local_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node1.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+            
+            # '''LOCAL LOSS ROUND CHECK '''
+            # try:
+            #     task_id = f'node[{node0}]_local_loss_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node0.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+                
+            
+            # try:
+            #     task_id = f'node[{node1}]_local_loss_round[{t}]'
+            #     while True:
+            #         time.sleep(5)
+            #         status = mdb.client_node1.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            # except Exception as e:
+            #     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+            
+            
+            
+            # ############################################################################################
+
                 
             print('################## TrainingTest onum_selected_usersn aggregated Model ######################')
             ##################### testing on global model #######################
@@ -737,26 +1068,43 @@ def serve(args):
             gm.append(gm0)
             gm.append(gm1)
             
-            print("gm: ",gm[0].get('fc3.bias'))
-            print("gm: ",gm[1].get('fc3.bias'))
+            # print("gm: ",gm[0].get('fc3.bias'))
+            # print("gm: ",gm[1].get('fc3.bias'))
 
-            for i in range(num_selected_users):
-                global_model = {
-                    k: global_model[k] + gm[i][k]
-                    for k in global_model.keys()
-                }
+            # for i in range(len(gm)):
+            #     global_model = {
+            #         k: global_model[k] + (gm[0][k] + gm[1][k])
+            #         for k in global_model.keys()
+            #     }
     
             loss_locals.append(lp0_loss[0])
             loss_locals.append(lp1_loss[0])
     
-            print("global_model: ",global_model.get('fc3.bias'))
+            # print("global_model: ",global_model.get('fc3.bias'))
 
+            
+            # for i in range(num_selected_users):
+            #     global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k]) / num_selected_users
+            #         for k in global_model.keys()
+            #     }
+            
+            # for i in range(num_selected_users):
+            #     pass
+            # global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k]) 
+            #         for k in global_model.keys()
+            #     }
             
             for i in range(num_selected_users):
                 global_model = {
-                    k: global_model[k] + local_updates[i][0][k] / num_selected_users
-                    for k in global_model.keys()
-                }
+                k: global_model[k] + local_updates[i][0][k] / num_selected_users
+                for k in global_model.keys()
+            }
+            
+            print("global_model: ",global_model.get('fc3.bias'))
+            
+            
             
             global_counter = 1
     
@@ -766,8 +1114,8 @@ def serve(args):
             test_acc.append(test_acc_)
             train_local_loss.append(sum(loss_locals) / len(loss_locals))
             print('t {:3d}: '.format(t, ))
-            print('t {:3d}: train_loss = {:.3f}, norm = Not Recording, test_acc = {:.3f}'.
-                  format(t, train_local_loss[0], test_acc[0]))
+            print('t {:3d}: train_loss = {:.3f}, test_acc = {:.3f}'.
+                format(t, train_local_loss[-1], test_acc[-1]))
             
             print('Submitting new global model: .....')
     
@@ -801,6 +1149,7 @@ def serve(args):
         
         
         elif t==3:
+            
             print(f'Next Iteration round: {t}')
             print('Waiting for the Client/Slave Node to complete the Process...')
             input('enter something to exit:')
@@ -808,40 +1157,40 @@ def serve(args):
             print('Initial Global Model...')
             print('Queue Preparation for Global Model')
             
-            credentials = pika.PlainCredentials('jahanxb', 'phdunr')
-            parameters = pika.ConnectionParameters('130.127.134.6',
-                                   5672,
-                                   '/',
-                                   credentials)
+            # credentials = pika.PlainCredentials('jahanxb', 'phdunr')
+            # parameters = pika.ConnectionParameters('130.127.134.6',
+            #                        5672,
+            #                        '/',
+            #                        credentials)
 
-            connection = pika.BlockingConnection(parameters)
-            #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
-            channel = connection.channel()
+            # connection = pika.BlockingConnection(parameters)
+            # #connection = pika.BlockingConnection(pika.ConnectionParameters(host='amqp://jahanxb:phdunr@130.127.134.6:15672'))
+            # channel = connection.channel()
             
-            master_global_for_node0_round = f'master_global_for_node[{0}]_round[{t}]'
+            # master_global_for_node0_round = f'master_global_for_node[{0}]_round[{t}]'
             
-            task_queue = master_global_for_node0_round
+            # task_queue = master_global_for_node0_round
             
-            channel.queue_declare(queue=task_queue, durable=True)
-            msg = pickle.dumps(global_model)
-            channel.basic_publish(
-                exchange='',
-                routing_key=task_queue,
-                body=msg,
-                properties=pika.BasicProperties(delivery_mode=2)
-                )
+            # channel.queue_declare(queue=task_queue, durable=True)
+            # msg = pickle.dumps(global_model)
+            # channel.basic_publish(
+            #     exchange='',
+            #     routing_key=task_queue,
+            #     body=msg,
+            #     properties=pika.BasicProperties(delivery_mode=2)
+            #     )
                 
-            master_global_for_node1_round = f'master_global_for_node[{1}]_round[{t}]'
+            # master_global_for_node1_round = f'master_global_for_node[{1}]_round[{t}]'
             
-            task_queue = master_global_for_node1_round
-            channel.queue_declare(queue=task_queue, durable=True)
-            msg = pickle.dumps(global_model)
-            channel.basic_publish(
-                exchange='',
-                routing_key=task_queue,
-                body=msg,
-                properties=pika.BasicProperties(delivery_mode=2)
-                )
+            # task_queue = master_global_for_node1_round
+            # channel.queue_declare(queue=task_queue, durable=True)
+            # msg = pickle.dumps(global_model)
+            # channel.basic_publish(
+            #     exchange='',
+            #     routing_key=task_queue,
+            #     body=msg,
+            #     properties=pika.BasicProperties(delivery_mode=2)
+            #     )
                 
                 
                 
@@ -944,29 +1293,45 @@ def serve(args):
             gm0 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[0]_global_round[{t}].pkl')
             gm1 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_global_round[{t}].pkl')
     
-            gm.append(gm0)
-            gm.append(gm1)
+            # gm.append(gm0)
+            # gm.append(gm1)
             
-            print("gm: ",gm[0].get('fc3.bias'))
-            print("gm: ",gm[1].get('fc3.bias'))
+            # print("gm: ",gm[0].get('fc3.bias'))
+            # print("gm: ",gm[1].get('fc3.bias'))
 
-            for i in range(num_selected_users):
-                global_model = {
-                    k: global_model[k] + gm[i][k]
-                    for k in global_model.keys()
-                }
+            # for i in range(len(gm)):
+            #     global_model = {
+            #         k: global_model[k] + (gm[0][k] + gm[1][k])
+            #         for k in global_model.keys()
+            #     }
     
             loss_locals.append(lp0_loss[0])
             loss_locals.append(lp1_loss[0])
     
-            print("global_model: ",global_model.get('fc3.bias'))
+            #print("global_model: ",global_model.get('fc3.bias'))
 
+            
+            # for i in range(num_selected_users):
+            #     global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k]) / num_selected_users
+            #         for k in global_model.keys()
+            #     }
+            
+            # for i in range(num_selected_users):
+            #     pass
+            # global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k])
+            #         for k in global_model.keys()
+            #     }
             
             for i in range(num_selected_users):
                 global_model = {
-                    k: global_model[k] + local_updates[i][0][k] / num_selected_users
-                    for k in global_model.keys()
-                }
+                k: global_model[k] + local_updates[i][0][k] / num_selected_users
+                for k in global_model.keys()
+            }
+            
+            print("global_model: ",global_model.get('fc3.bias'))
+            
             
             global_counter = 1
     
@@ -976,8 +1341,8 @@ def serve(args):
             test_acc.append(test_acc_)
             train_local_loss.append(sum(loss_locals) / len(loss_locals))
             print('t {:3d}: '.format(t, ))
-            print('t {:3d}: train_loss = {:.3f}, norm = Not Recording, test_acc = {:.3f}'.
-                  format(t, train_local_loss[0], test_acc[0]))
+            print('t {:3d}: train_loss = {:.3f}, test_acc = {:.3f}'.
+                format(t, train_local_loss[-1], test_acc[-1]))
             
             print('Submitting new global model: .....')
     
@@ -1156,26 +1521,45 @@ def serve(args):
             gm.append(gm0)
             gm.append(gm1)
             
-            print("gm: ",gm[0].get('fc3.bias'))
-            print("gm: ",gm[1].get('fc3.bias'))
+            # print("gm: ",gm[0].get('fc3.bias'))
+            # print("gm: ",gm[1].get('fc3.bias'))
 
-            for i in range(num_selected_users):
-                global_model = {
-                    k: global_model[k] + gm[i][k]
-                    for k in global_model.keys()
-                }
+            # for i in range(len(gm)):
+            #     global_model = {
+            #         k: global_model[k] + (gm[0][k] + gm[1][k])
+            #         for k in global_model.keys()
+            #     }
     
+            # loss_locals.append(lp0_loss[0])
+            # loss_locals.append(lp1_loss[0])
+    
+            # print("global_model: ",global_model.get('fc3.bias'))
+
+            
+            # for i in range(num_selected_users):
+            #     global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k]) / num_selected_users
+            #         for k in global_model.keys()
+            #     }
+            
             loss_locals.append(lp0_loss[0])
             loss_locals.append(lp1_loss[0])
-    
-            print("global_model: ",global_model.get('fc3.bias'))
-
+            
+            # for i in range(num_selected_users):
+            #     pass
+            # global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k])
+            #         for k in global_model.keys()
+            #     }
             
             for i in range(num_selected_users):
                 global_model = {
-                    k: global_model[k] + local_updates[i][0][k] / num_selected_users
-                    for k in global_model.keys()
-                }
+                k: global_model[k] + local_updates[i][0][k] / num_selected_users
+                for k in global_model.keys()
+            }
+            
+            print("global_model: ",global_model.get('fc3.bias'))
+            
             
             global_counter = 1
     
@@ -1185,8 +1569,8 @@ def serve(args):
             test_acc.append(test_acc_)
             train_local_loss.append(sum(loss_locals) / len(loss_locals))
             print('t {:3d}: '.format(t, ))
-            print('t {:3d}: train_loss = {:.3f}, norm = Not Recording, test_acc = {:.3f}'.
-                  format(t, train_local_loss[0], test_acc[0]))
+            print('t {:3d}: train_loss = {:.3f}, test_acc = {:.3f}'.
+                format(t, train_local_loss[-1], test_acc[-1]))
             
             print('Submitting new global model: .....')
     
@@ -1362,29 +1746,49 @@ def serve(args):
             gm0 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[0]_global_round[{t}].pkl')
             gm1 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_global_round[{t}].pkl')
     
-            gm.append(gm0)
-            gm.append(gm1)
+            # gm.append(gm0)
+            # gm.append(gm1)
             
-            print("gm: ",gm[0].get('fc3.bias'))
-            print("gm: ",gm[1].get('fc3.bias'))
+            # print("gm: ",gm[0].get('fc3.bias'))
+            # print("gm: ",gm[1].get('fc3.bias'))
 
-            for i in range(num_selected_users):
-                global_model = {
-                    k: global_model[k] + gm[i][k]
-                    for k in global_model.keys()
-                }
+            # for i in range(len(gm)):
+            #     global_model = {
+            #         k: global_model[k] + (gm[0][k] + gm[1][k])
+            #         for k in global_model.keys()
+            #     }
     
+            # loss_locals.append(lp0_loss[0])
+            # loss_locals.append(lp1_loss[0])
+    
+            # print("global_model: ",global_model.get('fc3.bias'))
+
+            
+            # for i in range(num_selected_users):
+            #     global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k]) / num_selected_users
+            #         for k in global_model.keys()
+            #     }
+            
             loss_locals.append(lp0_loss[0])
             loss_locals.append(lp1_loss[0])
-    
-            print("global_model: ",global_model.get('fc3.bias'))
-
+            
+            # for i in range(num_selected_users):
+            #     pass
+            # global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k])
+            #         for k in global_model.keys()
+            #     }
             
             for i in range(num_selected_users):
                 global_model = {
-                    k: global_model[k] + local_updates[i][0][k] / num_selected_users
-                    for k in global_model.keys()
-                }
+                k: global_model[k] + local_updates[i][0][k] / num_selected_users
+                for k in global_model.keys()
+            }
+            
+            print("global_model: ",global_model.get('fc3.bias'))
+            
+            
             
             global_counter = 1
     
@@ -1394,8 +1798,8 @@ def serve(args):
             test_acc.append(test_acc_)
             train_local_loss.append(sum(loss_locals) / len(loss_locals))
             print('t {:3d}: '.format(t, ))
-            print('t {:3d}: train_loss = {:.3f}, norm = Not Recording, test_acc = {:.3f}'.
-                  format(t, train_local_loss[0], test_acc[0]))
+            print('t {:3d}: train_loss = {:.3f}, test_acc = {:.3f}'.
+                format(t, train_local_loss[-1], test_acc[-1]))
             
             print('Submitting new global model: .....')
     
@@ -1428,6 +1832,7 @@ def serve(args):
             connection.close()
         
         elif t==6:
+            
             print(f'Next Iteration round: {t}')
             print('Waiting for the Client/Slave Node to complete the Process...')
             input('enter something to exit:')
@@ -1571,29 +1976,50 @@ def serve(args):
             gm0 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[0]_global_round[{t}].pkl')
             gm1 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_global_round[{t}].pkl')
     
-            gm.append(gm0)
-            gm.append(gm1)
+            # gm.append(gm0)
+            # gm.append(gm1)
             
-            print("gm: ",gm[0].get('fc3.bias'))
-            print("gm: ",gm[1].get('fc3.bias'))
+            # print("gm: ",gm[0].get('fc3.bias'))
+            # print("gm: ",gm[1].get('fc3.bias'))
 
-            for i in range(num_selected_users):
-                global_model = {
-                    k: global_model[k] + gm[i][k]
-                    for k in global_model.keys()
-                }
+            # for i in range(len(gm)):
+            #     global_model = {
+            #         k: global_model[k] + (gm[0][k] + gm[1][k])
+            #         for k in global_model.keys()
+            #     }
     
+            # loss_locals.append(lp0_loss[0])
+            # loss_locals.append(lp1_loss[0])
+    
+            # print("global_model: ",global_model.get('fc3.bias'))
+
+            
+            # for i in range(num_selected_users):
+            #     global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k]) / num_selected_users
+            #         for k in global_model.keys()
+            #     }
+            
+            
             loss_locals.append(lp0_loss[0])
             loss_locals.append(lp1_loss[0])
-    
-            print("global_model: ",global_model.get('fc3.bias'))
-
+            
+            # for i in range(num_selected_users):
+            #     pass
+            # global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k])
+            #         for k in global_model.keys()
+            #     }
             
             for i in range(num_selected_users):
                 global_model = {
-                    k: global_model[k] + local_updates[i][0][k] / num_selected_users
-                    for k in global_model.keys()
-                }
+                k: global_model[k] + local_updates[i][0][k] / num_selected_users
+                for k in global_model.keys()
+            }
+            
+            print("global_model: ",global_model.get('fc3.bias'))
+            
+            
             
             global_counter = 1
     
@@ -1603,8 +2029,8 @@ def serve(args):
             test_acc.append(test_acc_)
             train_local_loss.append(sum(loss_locals) / len(loss_locals))
             print('t {:3d}: '.format(t, ))
-            print('t {:3d}: train_loss = {:.3f}, norm = Not Recording, test_acc = {:.3f}'.
-                  format(t, train_local_loss[0], test_acc[0]))
+            print('t {:3d}: train_loss = {:.3f}, test_acc = {:.3f}'.
+                format(t, train_local_loss[-1], test_acc[-1]))
             
             print('Submitting new global model: .....')
     
@@ -1780,29 +2206,50 @@ def serve(args):
             gm0 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[0]_global_round[{t}].pkl')
             gm1 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_global_round[{t}].pkl')
     
-            gm.append(gm0)
-            gm.append(gm1)
+            # gm.append(gm0)
+            # gm.append(gm1)
             
-            print("gm: ",gm[0].get('fc3.bias'))
-            print("gm: ",gm[1].get('fc3.bias'))
+            # print("gm: ",gm[0].get('fc3.bias'))
+            # print("gm: ",gm[1].get('fc3.bias'))
 
-            for i in range(num_selected_users):
-                global_model = {
-                    k: global_model[k] + gm[i][k]
-                    for k in global_model.keys()
-                }
+            # for i in range(len(gm)):
+            #     global_model = {
+            #         k: global_model[k] + (gm[0][k] + gm[1][k])
+            #         for k in global_model.keys()
+            #     }
     
+            # loss_locals.append(lp0_loss[0])
+            # loss_locals.append(lp1_loss[0])
+    
+            # print("global_model: ",global_model.get('fc3.bias'))
+
+            
+            # for i in range(num_selected_users):
+            #     global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k]) / num_selected_users
+            #         for k in global_model.keys()
+            #     }
+            
             loss_locals.append(lp0_loss[0])
             loss_locals.append(lp1_loss[0])
-    
-            print("global_model: ",global_model.get('fc3.bias'))
-
+            
+            # for i in range(num_selected_users):
+            #     pass
+            # global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k])
+            #         for k in global_model.keys()
+            #     }
             
             for i in range(num_selected_users):
                 global_model = {
-                    k: global_model[k] + local_updates[i][0][k] / num_selected_users
-                    for k in global_model.keys()
-                }
+                k: global_model[k] + local_updates[i][0][k] / num_selected_users
+                for k in global_model.keys()
+            }
+            
+            print("global_model: ",global_model.get('fc3.bias'))
+            
+            
+            
             
             global_counter = 1
     
@@ -1812,8 +2259,8 @@ def serve(args):
             test_acc.append(test_acc_)
             train_local_loss.append(sum(loss_locals) / len(loss_locals))
             print('t {:3d}: '.format(t, ))
-            print('t {:3d}: train_loss = {:.3f}, norm = Not Recording, test_acc = {:.3f}'.
-                  format(t, train_local_loss[0], test_acc[0]))
+            print('t {:3d}: train_loss = {:.3f}, test_acc = {:.3f}'.
+                format(t, train_local_loss[-1], test_acc[-1]))
             
             print('Submitting new global model: .....')
     
@@ -1990,29 +2437,49 @@ def serve(args):
             gm0 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[0]_global_round[{t}].pkl')
             gm1 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_global_round[{t}].pkl')
     
-            gm.append(gm0)
-            gm.append(gm1)
+            # gm.append(gm0)
+            # gm.append(gm1)
             
-            print("gm: ",gm[0].get('fc3.bias'))
-            print("gm: ",gm[1].get('fc3.bias'))
+            # print("gm: ",gm[0].get('fc3.bias'))
+            # print("gm: ",gm[1].get('fc3.bias'))
 
-            for i in range(num_selected_users):
-                global_model = {
-                    k: global_model[k] + gm[i][k]
-                    for k in global_model.keys()
-                }
+            # for i in range(len(gm)):
+            #     global_model = {
+            #         k: global_model[k] + (gm[0][k] + gm[1][k])
+            #         for k in global_model.keys()
+            #     }
     
+            # loss_locals.append(lp0_loss[0])
+            # loss_locals.append(lp1_loss[0])
+    
+            # print("global_model: ",global_model.get('fc3.bias'))
+
+            
+            # for i in range(num_selected_users):
+            #     global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k]) / num_selected_users
+            #         for k in global_model.keys()
+            #     }
+            
             loss_locals.append(lp0_loss[0])
             loss_locals.append(lp1_loss[0])
-    
-            print("global_model: ",global_model.get('fc3.bias'))
-
+            
+            # for i in range(num_selected_users):
+            #     pass
+            # global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k])
+            #         for k in global_model.keys()
+            #     }
             
             for i in range(num_selected_users):
                 global_model = {
-                    k: global_model[k] + local_updates[i][0][k] / num_selected_users
-                    for k in global_model.keys()
-                }
+                k: global_model[k] + local_updates[i][0][k] / num_selected_users
+                for k in global_model.keys()
+            }
+            
+            print("global_model: ",global_model.get('fc3.bias'))
+            
+            
             
             global_counter = 1
     
@@ -2022,8 +2489,8 @@ def serve(args):
             test_acc.append(test_acc_)
             train_local_loss.append(sum(loss_locals) / len(loss_locals))
             print('t {:3d}: '.format(t, ))
-            print('t {:3d}: train_loss = {:.3f}, norm = Not Recording, test_acc = {:.3f}'.
-                  format(t, train_local_loss[0], test_acc[0]))
+            print('t {:3d}: train_loss = {:.3f}, test_acc = {:.3f}'.
+                format(t, train_local_loss[-1], test_acc[-1]))
             
             print('Submitting new global model: .....')
     
@@ -2200,29 +2667,36 @@ def serve(args):
             gm0 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[0]_global_round[{t}].pkl')
             gm1 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_global_round[{t}].pkl')
     
-            gm.append(gm0)
-            gm.append(gm1)
+            # gm.append(gm0)
+            # gm.append(gm1)
             
-            print("gm: ",gm[0].get('fc3.bias'))
-            print("gm: ",gm[1].get('fc3.bias'))
+            # print("gm: ",gm[0].get('fc3.bias'))
+            # print("gm: ",gm[1].get('fc3.bias'))
 
-            for i in range(num_selected_users):
-                global_model = {
-                    k: global_model[k] + gm[i][k]
-                    for k in global_model.keys()
-                }
+            # for i in range(len(gm)):
+            #     global_model = {
+            #         k: global_model[k] + (gm[0][k] + gm[1][k])
+            #         for k in global_model.keys()
+            #     }
     
             loss_locals.append(lp0_loss[0])
             loss_locals.append(lp1_loss[0])
     
-            print("global_model: ",global_model.get('fc3.bias'))
+            # print("global_model: ",global_model.get('fc3.bias'))
 
+            
+            # for i in range(num_selected_users):
+            #     pass
+            # global_model = {
+            #         k: global_model[k] + (local_updates[0][0][k]+local_updates[1][0][k])
+            #         for k in global_model.keys()
+            #     }
             
             for i in range(num_selected_users):
                 global_model = {
-                    k: global_model[k] + local_updates[i][0][k] / num_selected_users
-                    for k in global_model.keys()
-                }
+                k: global_model[k] + local_updates[i][0][k] / num_selected_users
+                for k in global_model.keys()
+            }
             
             global_counter = 1
     
@@ -2232,8 +2706,8 @@ def serve(args):
             test_acc.append(test_acc_)
             train_local_loss.append(sum(loss_locals) / len(loss_locals))
             print('t {:3d}: '.format(t, ))
-            print('t {:3d}: train_loss = {:.3f}, norm = Not Recording, test_acc = {:.3f}'.
-                  format(t, train_local_loss[0], test_acc[0]))
+            print('t {:3d}: train_loss = {:.3f}, test_acc = {:.3f}'.
+                format(t, train_local_loss[-1], test_acc[-1]))
             
             print('Submitting new global model: .....')
     
