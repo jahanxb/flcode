@@ -37,30 +37,32 @@ from celery import Celery
 
 import pickle, json
 
+from queues_func_list import Node1RabbitQueues as rq1
+
+node1 = 1
+# def pdf_process_function(msg):
+#     print("processing")
+#     #print(" [x] Received " + str(msg))
+
+#     print('pickle loading started...')
+#     gmdl = pickle.loads(msg)
+#     #global_model = gmdl
+#     print('pickle loading completed...')
+
+#     time.sleep(5) # delays for 5 seconds
+#     print("processing finished");
+#     return gmdl
 
 
+# # create a function which is called on incoming messages
+# def callback(ch, method, properties, body):
+#     gdm = pdf_process_function(body)
+#     time.sleep(5)
+#     print('[x] press ctrl+c to move to next step')            
+#     global_model = gdm
+#     torch.save(global_model, f"/mydata/flcode/models/rabbitmq-queues/pickles/node[{1}]_global.pkl")
+#     # set up subscription on the queue
 
-def pdf_process_function(msg):
-    print("processing")
-    #print(" [x] Received " + str(msg))
-
-    print('pickle loading started...')
-    gmdl = pickle.loads(msg)
-    #global_model = gmdl
-    print('pickle loading completed...')
-
-    time.sleep(5) # delays for 5 seconds
-    print("processing finished");
-    return gmdl
-
-
-# create a function which is called on incoming messages
-def callback(ch, method, properties, body):
-    gdm = pdf_process_function(body)
-    time.sleep(5)
-    print('[x] press ctrl+c to move to next step')            
-    global_model = gdm
-    # set up subscription on the queue
 
 def client_node():
     pid = os.getpid()
@@ -173,11 +175,10 @@ def client_node():
             
                     new_global_model_queue_id = f'master_global_for_node[{1}]_round[{t}]'
                     channel.basic_consume(new_global_model_queue_id,
-                    callback,
+                    rq1.callback_master_global,
                     auto_ack=True)
 
                     
-                    print("t=",t ," | global_model: ",global_model.get('fc3.bias'))
                     
                     try:
                         channel.start_consuming()
@@ -187,11 +188,32 @@ def client_node():
                     
                     
                     
+                    
                     args.local_lr = args.local_lr * args.decay_weight
                     selected_idxs = list(np.random.choice(range(1), m, replace=False))
                     print("In Round Loop: selected_idxs: ",selected_idxs)
                     num_selected_users = len(selected_idxs)
 
+                    
+                    gm = []
+                    global_model = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/master_global_for_node[{node1}]_round[{t}].pkl')
+                    #gm1 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_global_round[{t}].pkl')
+    
+                    # gm.append(gm0)
+                    # #gm.append(gm1)
+            
+                    # print("gm: ",gm[0].get('fc3.bias'))
+                    # #print("gm: ",gm[1].get('fc3.bias'))
+
+                    # for i in range(num_selected_users):
+                    #     global_model = {
+                    #         k: global_model[k] + gm[0][k]
+                    #     for k in global_model.keys()
+                    # }
+                    
+                    print("t=",t ," | global_model: ",global_model.get('fc3.bias'))
+                    
+                    
                     ###################### local training : SGD for selected users ######################
                     loss_locals = []
                     local_updates = []
@@ -344,11 +366,11 @@ def client_node():
 
                     new_global_model_queue_id = f'master_global_for_node[{1}]_round[{t}]'
                     channel.basic_consume(new_global_model_queue_id,
-                    callback,
+                    rq1.callback_master_global_1,
                     auto_ack=True)
-
                     
-                    print("t=",t ," | global_model: ",global_model.get('fc3.bias'))
+                    
+                    
                     # start consuming (blocks)
                     #channel.start_consuming()
                     
@@ -363,6 +385,7 @@ def client_node():
 
                     
                     
+                    
                     #####################################
                     
                     
@@ -371,6 +394,27 @@ def client_node():
                     print("In Round Loop: selected_idxs: ",selected_idxs)
                     num_selected_users = len(selected_idxs)
 
+                    
+                    gm = []
+                    global_model = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/master_global_for_node[{node1}]_round[{t}].pkl')
+                    #gm1 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_global_round[{t}].pkl')
+    
+                    # gm.append(gm0)
+                    # #gm.append(gm1)
+            
+                    # print("gm: ",gm[0].get('fc3.bias'))
+                    # #print("gm: ",gm[1].get('fc3.bias'))
+
+                    # for i in range(num_selected_users):
+                    #     global_model = {
+                    #         k: global_model[k] + gm[0][k]
+                    #     for k in global_model.keys()
+                    # }
+                    
+                    print("t=",t ," | global_model: ",global_model.get('fc3.bias'))
+                    
+                    
+                    
                     ###################### local training : SGD for selected users ######################
                     loss_locals = []
                     local_updates = []
@@ -401,17 +445,26 @@ def client_node():
                         loss_locals.append(loss)
                     norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
 
+                    #### Global Model
+                    print("dumb global model:",global_model)
+                    print(type(global_model))
+                    
+                    
                 
                     model_update = {
                         k: local_updates[0][k] * 0.0
                         for k in local_updates[0].keys()
                     }
-                    for i in range(num_selected_users):
-                        global_model = {
-                            k: global_model[k] + local_updates[i][k] / num_selected_users
-                            for k in global_model.keys()
-                        }
-
+                    ###################
+                    ### This loop is creating problem
+                    ####################
+                    # for i in range(num_selected_users):
+                    #     global_model = {
+                    #         k: global_model[k] + local_updates[i][k] / num_selected_users
+                    #         for k in global_model.keys()
+                    #     }
+                    ###########################
+                    
                     t2 = time.time()
                     hours, rem = divmod(t2 - t1, 3600)
                     minutes, seconds = divmod(rem, 60)
@@ -453,8 +506,6 @@ def client_node():
                     connection.close()
                 
                 
-                    #### Global Model
-                    
                     
                     url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
                     params = pika.URLParameters(url)
@@ -517,6 +568,7 @@ def client_node():
                     input('Press Any key to start: ')
                 
                 elif t==2:
+                    
                     #### Get aggregated Global Model #####
                     url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
                     params = pika.URLParameters(url)
@@ -526,11 +578,11 @@ def client_node():
 
                     new_global_model_queue_id = f'master_global_for_node[{1}]_round[{t}]'
                     channel.basic_consume(new_global_model_queue_id,
-                    callback,
+                    rq1.callback_master_global_2,
                     auto_ack=True)
 
                     
-                    print("t=",t ," | global_model: ",global_model.get('fc3.bias'))
+                    
                     # start consuming (blocks)
                     #channel.start_consuming()
                     
@@ -553,6 +605,27 @@ def client_node():
                     print("In Round Loop: selected_idxs: ",selected_idxs)
                     num_selected_users = len(selected_idxs)
 
+                    
+                    gm = []
+                    gm0 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/master_global_for_node[{node1}]_round[{t}].pkl')
+                    #gm1 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_global_round[{t}].pkl')
+    
+                    gm.append(gm0)
+                    #gm.append(gm1)
+            
+                    print("gm: ",gm[0].get('fc3.bias'))
+                    #print("gm: ",gm[1].get('fc3.bias'))
+
+                    for i in range(num_selected_users):
+                        global_model = {
+                            k: global_model[k] + gm[0][k]
+                        for k in global_model.keys()
+                    }
+                    
+                    print("t=",t ," | global_model: ",global_model.get('fc3.bias'))
+                    
+                    
+                    
                     ###################### local training : SGD for selected users ######################
                     loss_locals = []
                     local_updates = []
@@ -588,11 +661,12 @@ def client_node():
                         k: local_updates[0][k] * 0.0
                         for k in local_updates[0].keys()
                     }
-                    for i in range(num_selected_users):
-                        global_model = {
-                            k: global_model[k] + local_updates[i][k] / num_selected_users
-                            for k in global_model.keys()
-                        }
+                    
+                    # for i in range(num_selected_users):
+                    #     global_model = {
+                    #         k: global_model[k] + local_updates[i][k] / num_selected_users
+                    #         for k in global_model.keys()
+                    #     }
 
                     t2 = time.time()
                     hours, rem = divmod(t2 - t1, 3600)
@@ -699,6 +773,7 @@ def client_node():
                     input('Press Any key to start: ')
                 
                 else:
+                    break
                     #### Get aggregated Global Model #####
                     url = 'amqp://jahanxb:phdunr@130.127.134.6:5672/'
                     params = pika.URLParameters(url)
@@ -708,11 +783,11 @@ def client_node():
 
                     new_global_model_queue_id = f'master_global_for_node[{1}]_round[{t}]'
                     channel.basic_consume(new_global_model_queue_id,
-                    callback,
+                    rq1.callback_master_global,
                     auto_ack=True)
 
                     
-                    print("t=",t ," | global_model: ",global_model.get('fc3.bias'))
+                    
                     # start consuming (blocks)
                     #channel.start_consuming()
                     
@@ -735,6 +810,28 @@ def client_node():
                     print("In Round Loop: selected_idxs: ",selected_idxs)
                     num_selected_users = len(selected_idxs)
 
+                    
+                    gm = []
+                    gm0 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/master_global_for_node[{1}]_round[{t}].pkl')
+                    #gm1 = torch.load(f'/mydata/flcode/models/rabbitmq-queues/pickles/node[1]_global_round[{t}].pkl')
+    
+                    gm.append(gm0)
+                    #gm.append(gm1)
+            
+                    print("gm: ",gm[0].get('fc3.bias'))
+                    #print("gm: ",gm[1].get('fc3.bias'))
+
+                    for i in range(num_selected_users):
+                        global_model = {
+                            k: global_model[k] + gm[0][k]
+                        for k in global_model.keys()
+                    }
+                    
+                    print("t=",t ," | global_model: ",global_model.get('fc3.bias'))
+                    
+                    
+                    
+                    
                     ###################### local training : SGD for selected users ######################
                     loss_locals = []
                     local_updates = []
