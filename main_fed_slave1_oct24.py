@@ -37,7 +37,7 @@ from celery import Celery
 
 import pickle, json
 
-from queues_func_list import Node0RabbitQueues as rq0
+from queues_func_list_oct24 import Node0RabbitQueues as rq0
 
 #method_list = [func for func in dir('queues_func_list.py') if callable(getattr('queues_func_list.py', func))]
 

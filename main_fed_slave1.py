@@ -37,7 +37,7 @@ from celery import Celery
 
 import pickle, json
 
-from queues_func_list import Node0RabbitQueues as rq0
+from queues_func_list_nov3 import Node0RabbitQueues as rq0
 
 
 def pdf_process_function(msg):
