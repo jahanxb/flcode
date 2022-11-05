@@ -39,7 +39,7 @@ from celery import Celery
 
 import pickle, json
 
-from queues_func_list import Node1RabbitQueues as rq1
+from queues_func_list_oct24 import Node1RabbitQueues as rq1
 node0 = 0
 node1 = 1
 
