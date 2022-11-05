@@ -19,3 +19,8 @@ sudo apt install python3.7
  python main_fed.py --gpu -1 --dataset cifar --round 50
  
  python -m grpc_tools.protoc -I/home/jahanxb/PycharmProjects/FLcode/proto --python_out=. --grpc_python_out=. /home/jahanxb/PycharmProjects/FLcode/proto/pingpong.proto
+
+
+delete all rabbitmq queues
+
+rabbitmqadmin -u jahanxb -p phdunr -f tsv -q list queues name | while read queue; do rabbitmqadmin -u jahanxb -p phdunr -q delete queue name=${queue}; done
