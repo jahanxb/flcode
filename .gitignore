@@ -9,3 +9,4 @@ models/received.pkl
 models/pickles
 models/pickles/test
 models/rabbitmq-queues
+models/nodes_sftp
