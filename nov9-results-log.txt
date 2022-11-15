@@ -1,0 +1,10 @@
+t   0: train_loss = 1.619, test_acc = 59.322
+t   1: train_loss = 1.019, test_acc = 72.689
+t   2: train_loss = 0.768, test_acc = 78.056
+t   3: train_loss = 0.627, test_acc = 81.100
+t   4: train_loss = 0.534, test_acc = 82.378
+t   5: train_loss = 0.463, test_acc = 83.522
+t   6: train_loss = 0.405, test_acc = 83.856
+t   7: train_loss = 0.359, test_acc = 84.456
+t   8: train_loss = 0.318, test_acc = 84.744
+t   9: train_loss = 0.286, test_acc = 84.867

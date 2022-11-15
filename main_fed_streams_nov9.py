@@ -44,7 +44,7 @@ from pymongo import MongoClient
 import asyncio
 import os,paramiko
 
-from declared_nodes import client_nodes
+from declared_nodes import client_nodes_addr
 
 
 async def waiting_exception_to_interupt():
@@ -161,7 +161,7 @@ def serve(args):
     delta_norms = []
     
     nodes = 2
-    
+    node_index = 1
     num_selected_users = 2
     
     mconn = MongoClient('mongodb+srv://jahanxb:phdunr@flmongo.7repipw.mongodb.net/?retryWrites=true&w=majority')
@@ -179,17 +179,20 @@ def serve(args):
         pass
 
     for t in range(args.round):
+        loss_locals = []
+        local_updates = []
+        delta_norms = []
         m = max(int(args.frac * args.num_users), 1)
         args.local_lr = args.local_lr * args.decay_weight
         selected_idxs = list(np.random.choice(range(args.num_users), m, replace=False))
         print(selected_idxs)
         num_selected_users = len(selected_idxs)
         
-        for n in range(1,3):    
+        for nodeid in range(1,3):    
             if t==0:
                 print('Initial Global Model...')
                 print('Queue Preparation for Global Model')
-                master_global_for_round = f'master_global_for_node[{n}]_round[{t}]'
+                master_global_for_round = f'master_global_for_node[{nodeid}]_round[{t}]'
             
                 msg = pickle.dumps(global_model)
             
@@ -198,12 +201,15 @@ def serve(args):
                 model_path = f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl"
 
                 # send model to nodes from here 
-                print("client_nodes.get() =",client_nodes.get(n))
-                send_global_round(client_nodes.get(n),model_path)
+                print("mongodb_client_cluster.get() =",client_nodes_addr.get(nodeid))
+                send_global_round(client_nodes_addr.get(nodeid),model_path)
                 
                 
                 mdb_msg = {'task_id':master_global_for_round,'state-ready':True,'consumed':False}
                 mdb.master_global.insert_one(mdb_msg)
+            
+            else:
+                pass
             
             
         print(" [x] Sent Round=",t)
@@ -212,18 +218,18 @@ def serve(args):
         for n in range(1,3):    
             ######################### Check status of Queues through MongoDB ############################
             '''GLOBAL ROUND CHECK'''
-            while True:
-                task_id = f'node[{n}]_global_round[{t}]'
-                try:
-                    time.sleep(5)
-                    status = mdb.client_node.find_one({'task_id':task_id})
-                    if status.get('state-ready') == True:
-                        print('status: ',200,' For :',status.get('task_id'))
-                        break
-                    else:
-                        pass
-                except Exception as e:
-                    print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+            # while True:
+            #     task_id = f'node[{n}]_global_round[{t}]'
+            #     try:
+            #         time.sleep(5)
+            #         status = mdb.client_node.find_one({'task_id':task_id})
+            #         if status.get('state-ready') == True:
+            #             print('status: ',200,' For :',status.get('task_id'))
+            #             break
+            #         else:
+            #             pass
+            #     except Exception as e:
+            #         print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
                 
                 
             
@@ -232,7 +238,7 @@ def serve(args):
                 task_id = f'node[{n}]_local_round[{t}]'
                 try:
                     time.sleep(5)
-                    status = mdb.client_node.find_one({'task_id':task_id})
+                    status = mdb.mongodb_client_cluster.find_one({'task_id':task_id})
                     if status.get('state-ready') == True:
                         print('status: ',200,' For :',status.get('task_id'))
                         break
@@ -247,7 +253,7 @@ def serve(args):
                 task_id = f'node[{n}]_local_loss_round[{t}]'
                 try:
                     time.sleep(5)
-                    status = mdb.client_node.find_one({'task_id':task_id})
+                    status = mdb.mongodb_client_cluster.find_one({'task_id':task_id})
                     if status.get('state-ready') == True:
                         print('status: ',200,' For :',status.get('task_id'))
                         break
@@ -259,9 +265,11 @@ def serve(args):
             print('################## TrainingTest onum_selected_usersn aggregated Model ######################')
             
             lp = torch.load(f'/mydata/flcode/models/nodes_sftp/nodes_local/node[{n}]_local_round[{t}].pkl')
+            lp = list(pickle.loads(lp))
             local_updates.append(lp)
             
             lp_loss = torch.load(f'/mydata/flcode/models/nodes_sftp/nodes_local_loss/node[{n}]_local_loss_round[{t}].pkl')
+            lp_loss = list(pickle.loads(lp_loss))
             loss_locals.append(lp_loss[0])
     
             
@@ -285,22 +293,22 @@ def serve(args):
             
         print('Submitting new global model: .....')
     
-    
-        master_global_for_round = f'master_global_for_node[{n}]_round[{t+1}]'
+        # send model to nodes from here
+        for nn in range(1,3):
+            master_global_for_round = f'master_global_for_node[{nn}]_round[{t+1}]'
             
-        msg = pickle.dumps(global_model)
+            msg = pickle.dumps(global_model)
             
-        torch.save(msg,f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl")
+            torch.save(msg,f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl")
             
                 
-        model_path = f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl"
+            model_path = f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl"
 
-        # send model to nodes from here
-        for n in range(nodes): 
-            send_global_round(client_nodes.get(n),model_path)    
+         
+            send_global_round(client_nodes_addr.get(nn),model_path)    
             mdb_msg = {'task_id':master_global_for_round,'state-ready':True,'consumed':False}
             mdb.master_global.insert_one(mdb_msg)
-            print(" [x] Node=", n," Sent Round=",t+1)
+            print(" [x] Node=", nn," Sent Round=",t+1)
 
             
             
