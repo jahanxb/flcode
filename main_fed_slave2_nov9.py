@@ -60,7 +60,7 @@ async def raise_me():
 node0 = 0
 node1 = 1
 
-global_node_addr = '130.127.134.6'
+global_node_addr = '10.10.1.1'
 
 
 def send_local_round(node_addr,model_path):
@@ -72,6 +72,7 @@ def send_local_round(node_addr,model_path):
     ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
     ssh.connect(node_addr, username='jahanxb')
     sftp = ssh.open_sftp()
+    print("model path:",model_path)
     print('sftp opened...')
     sftp.put(localpath, remotepath)
     sftp.close()
@@ -146,7 +147,7 @@ def client_node():
             data_loader_list = []
             print(len(dict_users))
             index = args.num_users
-            for i in range(0,1):
+            for i in range(1,2):
             # for i in range(response_node0.user_index,args.num_users):
                 print("broke here ")
                 dataset = DatasetSplit(dataset_train, dict_users[i])
@@ -274,6 +275,7 @@ def client_node():
     except Exception as e:
             print(f"Exception Thrown: {e}")
             #channel.unsubscribe(close)
+            os.system('rm -rf /mydata/flcode/models/nodes_sftp/global_models/* && rm -rf /mydata/flcode/models/nodes_sftp/nodes_local/* && rm -rf /mydata/flcode/models/nodes_sftp/nodes_local_loss/*')
             exit(0)
 
 
