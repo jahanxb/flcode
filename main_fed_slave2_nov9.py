@@ -158,7 +158,7 @@ def client_node():
             mdb = mconn['iteration_status']
             
             try:
-                mdb.create_collection('client_node')
+                mdb.create_collection('mongodb_client_cluster')
             except Exception as e:
                 print(e)
                 pass
@@ -168,6 +168,9 @@ def client_node():
             
             mynode = 2
             for t in range(args.round):
+                loss_locals = []
+                local_updates = []
+                delta_norms = []
                 n = mynode
                 
                 new_global_model_queue_id = f'master_global_for_node[{n}]_round[{t}]'
@@ -191,6 +194,8 @@ def client_node():
                 num_selected_users = len(selected_idxs)
                 gm = []
                 global_model = torch.load(f'/mydata/flcode/models/nodes_sftp/global_models/{new_global_model_queue_id}.pkl')
+                
+                global_model = pickle.loads(global_model)
                 
                 print("num_selected_users: ",num_selected_users)
                    
@@ -242,7 +247,7 @@ def client_node():
                 send_local_round(global_node_addr,model_path=model_path)
                 
                 mdb_msg = {'task_id':local_model_node,'state-ready':True,'consumed':False}
-                mdb.client_nodes.insert_one(mdb_msg)
+                mdb.mongodb_client_cluster.insert_one(mdb_msg)
                 
                 ###### loss local
                 
@@ -253,14 +258,15 @@ def client_node():
                 torch.save(msg,f"/mydata/flcode/models/nodes_sftp/nodes_local_loss/{local_loss_node}.pkl")
                 
                 model_path = f"/mydata/flcode/models/nodes_sftp/nodes_local_loss/{local_loss_node}.pkl"
-                    
+                
+                send_local_round(global_node_addr,model_path=model_path)
 
                 print(" [x] local Loss sent Queue=",t)
 
                 
                 
                 mdb_msg = {'task_id':local_loss_node,'state-ready':True,'consumed':False}
-                mdb.client_nodes.insert_one(mdb_msg)
+                mdb.mongodb_client_cluster.insert_one(mdb_msg)
                 
                 print(f'Moving to next iteration round t+1:[{t}+1] = {t+1} ')
                 
