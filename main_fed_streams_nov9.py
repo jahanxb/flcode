@@ -6,7 +6,7 @@ import copy
 from fileinput import filename
 import sys
 import threading
-from typing import OrderedDict
+from collections import OrderedDict
 
 import grpc
 import numpy as np
