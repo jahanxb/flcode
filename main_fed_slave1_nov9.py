@@ -60,7 +60,7 @@ async def raise_me():
 node0 = 0
 node1 = 1
 
-global_node_addr = '130.127.134.6'
+global_node_addr = '10.10.1.1'
 
 
 def send_local_round(node_addr,model_path):
@@ -274,6 +274,7 @@ def client_node():
     except Exception as e:
             print(f"Exception Thrown: {e}")
             #channel.unsubscribe(close)
+            os.system('rm -rf /mydata/flcode/models/nodes_sftp/global_models/* && rm -rf /mydata/flcode/models/nodes_sftp/nodes_local/* && rm -rf /mydata/flcode/models/nodes_sftp/nodes_local_loss/*')
             exit(0)
 
 
