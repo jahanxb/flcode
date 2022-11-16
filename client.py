@@ -1,73 +1,45 @@
-# import threading
-# from concurrent import futures
-# import grpc
-# import pingpong_pb2_grpc, pingpong_pb2
-# import os, time
-#
-#
-# def run():
-#     counter = 0
-#     pid = os.getgid()
-#     with grpc.insecure_channel("localhost:9999") as channel:
-#         stub = pingpong_pb2_grpc.PingPongServiceStub(channel)
-#         while True:
-#             try:
-#                 start = time.time()
-#                 response = stub.ping(pingpong_pb2.Ping(count=counter))
-#                 counter = response.count
-#
-#                 if counter % 100:
-#                     print("%4f : resp= %s : procid=%i" % (time.time() - start, response.count, pid))
-#
-#             except KeyboardInterrupt:
-#                 print("KeyboardInterrupt")
-#                 channel.unsubscribe(close)
-#                 exit()
-#
-#
-# def close(channel):
-#     channel.close()
-#
-#
-# if __name__ == "__main__":
-#     run()
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Python version: 3.6
+import copy
+import sys
+import threading
 
-
-"""The Python implememntation of seans grpc client"""
-import os
-import time
 import grpc
-import pingpong_pb2
-import pingpong_pb2_grpc
+import numpy as np
+import time, math
+import torch
 
-def run():
-    "The run method, that sends gRPC conformant messsages to the server"
-    counter = 0
-    pid = os.getpid()
-    with grpc.insecure_channel("localhost:9999") as channel:
-        stub = pingpong_pb2_grpc.PingPongServiceStub(channel)
-        while True:
-            try:
-                start = time.time()
-                response = stub.ping(pingpong_pb2.Ping(count=counter))
-                counter = response.count
-                if counter % 100 == 0:
-                    print(
-                        "%.4f : resp=%s : procid=%i"
-                        % (time.time() - start, response.count, pid)
-                    )
-                    # counter = 0
-                time.sleep(0.001)
-            except KeyboardInterrupt:
-                print("KeyboardInterrupt")
-                channel.unsubscribe(close)
-                exit()
+from utils.data_utils import data_setup, DatasetSplit
+from utils.model_utils import *
+from utils.aggregation import *
+from options import call_parser
+from models.Update import LocalUpdate
+from models.test import test_img
+from torch.utils.data import DataLoader
+from concurrent import futures
+# from utils.rdp_accountant import compute_rdp, get_privacy_spent
+import warnings
+
+warnings.filterwarnings("ignore")
+torch.cuda.is_available()
+
+import fdnodes_pb2_grpc as pb2_grpc
+import fdnodes_pb2 as pb2
+
+import file_grpc_lib as lib
+
+from kafka import KafkaProducer, KafkaConsumer
+
+import pika
+
+from celery import Celery
+
+import pickle, json
 
 
-def close(channel):
-    "Close the channel"
-    channel.close()
+NODE_ID = 1
 
-
-if __name__ == "__main__":
-    run()
+def loop_counter(args_num_user):
+    if args_num_user == 1:
+        return NODE_ID, 
