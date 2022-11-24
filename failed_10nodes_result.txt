@@ -1,0 +1,30 @@
+
+training time: 00:05:28.84 
+ t   0: train_loss = 1.584, test_acc = 59.044
+
+training time: 00:10:37.30 
+ t   1: train_loss = 1.267, test_acc = 53.100
+
+training time: 00:15:45.48 
+ t   2: train_loss = 1.145, test_acc = 41.733
+
+training time: 00:21:13.76 
+ t   3: train_loss = nan, test_acc = 34.356
+
+training time: 00:26:26.94 
+ t   4: train_loss = nan, test_acc = 28.733
+
+training time: 00:31:35.19 
+ t   5: train_loss = nan, test_acc = 25.767
+
+training time: 00:36:38.33 
+ t   6: train_loss = nan, test_acc = 23.644
+
+training time: 00:41:46.45 
+ t   7: train_loss = nan, test_acc = 21.989
+
+training time: 00:46:55.13 
+ t   8: train_loss = nan, test_acc = 20.833
+
+training time: 00:51:59.12 
+ t   9: train_loss = nan, test_acc = 20.144

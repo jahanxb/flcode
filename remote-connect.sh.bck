@@ -1,0 +1,46 @@
+#!/bin/bash
+
+x=2
+numuser = 1
+while [ $x -le 11 ]
+do
+  echo "Processing on Client Node:  $x "
+  ssh jahanxb@10.10.1.$x  -f 'hostname'
+  if [ $numuser -eq 1 ];
+    then
+    ssh jahanxb@10.10.1.$x  -f 'screen -dmS sudo /mydata/flcode/venv/bin/python /mydata/flcode/main_fed_10_nodes.py --dataset cifar --round 10 --gpu -1 --tau 1 --num_users 1 --frac 1'
+  elif [ $numuser -eq 2 ];
+    then
+    ssh jahanxb@10.10.1.$x  -f 'screen -dmS sudo /mydata/flcode/venv/bin/python /mydata/flcode/main_fed_10_nodes.py --dataset cifar --round 10 --gpu -1 --tau 1 --num_users 2 --frac 1'
+  elif [ $numuser -eq 3 ];
+    then
+    ssh jahanxb@10.10.1.$x  -f 'screen -dmS sudo /mydata/flcode/venv/bin/python /mydata/flcode/main_fed_10_nodes.py --dataset cifar --round 10 --gpu -1 --tau 1 --num_users 3 --frac 1'
+  elif [ $numuser -eq 4 ];
+    then
+    ssh jahanxb@10.10.1.$x  -f 'screen -dmS sudo /mydata/flcode/venv/bin/python /mydata/flcode/main_fed_10_nodes.py --dataset cifar --round 10 --gpu -1 --tau 1 --num_users 4 --frac 1'
+  elif [ $numuser -eq 5 ];
+    then
+    ssh jahanxb@10.10.1.$x  -f 'screen -dmS sudo /mydata/flcode/venv/bin/python /mydata/flcode/main_fed_10_nodes.py --dataset cifar --round 10 --gpu -1 --tau 1 --num_users 5 --frac 1'
+  elif [ $numuser -eq 6 ];
+    then
+    ssh jahanxb@10.10.1.$x  -f 'screen -dmS sudo /mydata/flcode/venv/bin/python /mydata/flcode/main_fed_10_nodes.py --dataset cifar --round 10 --gpu -1 --tau 1 --num_users 6 --frac 1'
+  elif [ $numuser -eq 7 ];
+    then
+    ssh jahanxb@10.10.1.$x  -f 'screen -dmS sudo /mydata/flcode/venv/bin/python /mydata/flcode/main_fed_10_nodes.py --dataset cifar --round 10 --gpu -1 --tau 1 --num_users 7 --frac 1'
+  elif [ $numuser -eq 8 ];
+    then
+    ssh jahanxb@10.10.1.$x  -f 'screen -dmS sudo /mydata/flcode/venv/bin/python /mydata/flcode/main_fed_10_nodes.py --dataset cifar --round 10 --gpu -1 --tau 1 --num_users 8 --frac 1'
+  elif [ $numuser -eq 9 ];
+    then
+    ssh jahanxb@10.10.1.$x  -f 'screen -dmS sudo /mydata/flcode/venv/bin/python /mydata/flcode/main_fed_10_nodes.py --dataset cifar --round 10 --gpu -1 --tau 1 --num_users 9 --frac 1'
+  elif [ $numuser -eq 10 ];
+    then
+    ssh jahanxb@10.10.1.$x  -f 'screen -dmS sudo /mydata/flcode/venv/bin/python /mydata/flcode/main_fed_10_nodes.py --dataset cifar --round 10 --gpu -1 --tau 1 --num_users 10 --frac 1'
+  else
+    echo 'Process Finished!!!'
+  fi
+  
+  numuser=$(( $numuser + 1 ))
+  x=$(( $x + 1 ))
+
+done
