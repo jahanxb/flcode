@@ -86,7 +86,8 @@ def client_node():
 
     try:
             args = call_parser()
-    
+            NODE_INDEX = 0
+            NODE_ID = 1
             print("Active PID : %i" % pid)
             torch.manual_seed(args.seed + args.repeat)
             torch.cuda.manual_seed(args.seed + args.repeat)
@@ -146,7 +147,7 @@ def client_node():
             data_loader_list = []
             print(len(dict_users))
             index = args.num_users
-            for i in range(0,NODE_ID):
+            for i in range(NODE_INDEX,NODE_ID):
             # for i in range(response_node0.user_index,args.num_users):
                 print("broke here ")
                 dataset = DatasetSplit(dataset_train, dict_users[i])
@@ -163,7 +164,7 @@ def client_node():
                 print(e)
                 pass
             
-            m = max(int(args.frac * NODE_ID), 1)
+            m = max(int(args.frac * 1), 1)
             print("m = ",m)
             
             mynode = NODE_ID
@@ -181,10 +182,6 @@ def client_node():
                         status = mdb.master_global.find_one({'task_id':new_global_model_queue_id})
                         if status.get('state-ready') == True:
                             print('status: ',200,' For :',status.get('task_id'))
-                            
-                            with open(f'/mydata/flcode/models/nodes_sftp/global_models/{new_global_model_queue_id}.pkl','w') as fl:
-                                fl.write(status.get('data'))
-                                fl.close()
                             
                             break
                         else:
@@ -249,9 +246,9 @@ def client_node():
                 model_path = f"/mydata/flcode/models/nodes_sftp/nodes_local/{local_model_node}.pkl"
                 
                 # send local model to global node
-                #send_local_round(global_node_addr,model_path=model_path)
+                send_local_round(global_node_addr,model_path=model_path)
                 
-                mdb_msg = {'task_id':local_model_node,'state-ready':True,'consumed':False,'data':msg}
+                mdb_msg = {'task_id':local_model_node,'state-ready':True,'consumed':False}
                 mdb.mongodb_client_cluster.insert_one(mdb_msg)
                 
                 ###### loss local
@@ -264,13 +261,13 @@ def client_node():
                 
                 model_path = f"/mydata/flcode/models/nodes_sftp/nodes_local_loss/{local_loss_node}.pkl"
                 
-                #send_local_round(global_node_addr,model_path=model_path)
+                send_local_round(global_node_addr,model_path=model_path)
 
                 print(" [x] local Loss sent Queue=",t)
 
                 
                 
-                mdb_msg = {'task_id':local_loss_node,'state-ready':True,'consumed':False,'data':msg}
+                mdb_msg = {'task_id':local_loss_node,'state-ready':True,'consumed':False}
                 mdb.mongodb_client_cluster.insert_one(mdb_msg)
                 
                 print(f'Moving to next iteration round t+1:[{t}+1] = {t+1} ')
