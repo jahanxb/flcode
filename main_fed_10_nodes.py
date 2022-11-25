@@ -37,7 +37,7 @@ from celery import Celery
 
 import pickle, json
 
-from client import NODE_ID
+from client import global_node_addr,mongodb_url, client_num_users
 
 from pymongo import MongoClient
 import asyncio
@@ -60,7 +60,7 @@ async def raise_me():
 node0 = 0
 node1 = 1
 
-global_node_addr = '10.10.1.1'
+
 
 
 def send_local_round(node_addr,model_path):
@@ -88,6 +88,8 @@ def client_node():
             args = call_parser()
             NODE_INDEX = 0
             NODE_ID = 1
+            NODE_INDEX, NODE_ID = client_num_users(args.num_users)
+            print(f"NODE_INDEX: {NODE_INDEX} | NODE_ID: {NODE_ID}")
             print("Active PID : %i" % pid)
             torch.manual_seed(args.seed + args.repeat)
             torch.cuda.manual_seed(args.seed + args.repeat)
@@ -155,7 +157,7 @@ def client_node():
                 data_loader_list.append(ldr_train)
             ldr_train_public = DataLoader(val_set, batch_size=args.batch_size, shuffle=True)
 
-            mconn = MongoClient('mongodb+srv://jahanxb:phdunr@flmongo.7repipw.mongodb.net/?retryWrites=true&w=majority')
+            mconn = MongoClient(mongodb_url)
             mdb = mconn['iteration_status']
             
             try:
