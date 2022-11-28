@@ -171,6 +171,7 @@ def client_node():
             
             mynode = NODE_ID
             for t in range(args.round):
+                seconds_to_match = 0
                 loss_locals = []
                 local_updates = []
                 delta_norms = []
@@ -181,6 +182,7 @@ def client_node():
                 while True:
                     try:
                         time.sleep(5)
+                        seconds_to_match = seconds_to_match + 5
                         status = mdb.master_global.find_one({'task_id':new_global_model_queue_id})
                         if status.get('state-ready') == True:
                             print('status: ',200,' For :',status.get('task_id'))
@@ -272,7 +274,29 @@ def client_node():
                 mdb_msg = {'task_id':local_loss_node,'state-ready':True,'consumed':False}
                 mdb.mongodb_client_cluster.insert_one(mdb_msg)
                 
+                
+                t2 = time.time()
+        
+        
+                dbs_time =  t2 - t1
+                # dbs_time = dbs_time - seconds_to_match
+                hours, rem = divmod(dbs_time, 3600)
+                minutes, seconds = divmod(rem, 60)
+        
+               
+        
+                print("training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))   
+                time_taken = "training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds)
+                
+                result = '\n'+ time_taken+' \n '+'t {:3d}'.format(t) + '\n'
+    
+                
+                
                 print(f'Moving to next iteration round t+1:[{t}+1] = {t+1} ')
+                filename = f'/mydata/flcode/node_output/node{NODE_ID}-log.txt'
+                with open(filename, 'a') as the_file:
+                    the_file.write(result)
+                    the_file.close()
                 
 
     except Exception as e:
