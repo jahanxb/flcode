@@ -37,7 +37,7 @@ from celery import Celery
 
 import pickle, json
 
-from client import global_node_addr,mongodb_url, client_num_users
+from client import global_node_addr,mongodb_url, client_num_users, training_and_testing_size
 
 from pymongo import MongoClient
 import asyncio
@@ -109,10 +109,17 @@ def client_node():
 
             sample_per_users = 25000  # for two users , we take 25000 samples as per the loop
 
+            
+            train_size, test_size, sample_per_users= training_and_testing_size(args.num_users)
+            
+            
+            
             print('num. of samples per user:{}'.format(sample_per_users))
             if args.dataset == 'fmnist' or args.dataset == 'cifar':
                 dataset_test, val_set = torch.utils.data.random_split(
-                    dataset_test, [9000, 1000])
+                    dataset_test, [train_size, test_size])
+                # dataset_test, val_set = torch.utils.data.random_split(
+                #     dataset_test, [9000, 1000])
                 print(len(dataset_test), len(val_set))
             elif args.dataset == 'svhn':
                 dataset_test, val_set = torch.utils.data.random_split(

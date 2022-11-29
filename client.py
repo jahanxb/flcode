@@ -66,3 +66,27 @@ def client_num_users(num_users):
         return 8,9
     elif num_users == 10:
         return 9,10
+    
+    
+def training_and_testing_size(num_users):
+    if num_users == 1:
+        return int(50000/100),int(10000/100),int(25000/100)
+    elif num_users == 2:
+        return int(50000/90),int(10000/90),int(25000/90)
+    elif num_users == 3:
+        return int(50000/80),int(10000/80),int(25000/80)
+    elif num_users == 4:
+        return int(50000/70),int(10000/70),int(25000/70)
+    elif num_users == 5:
+        return int(50000/60),int(10000/60),int(25000/60)
+    elif num_users == 6:
+        return int(50000/50),int(10000/50),int(25000/50)
+    elif num_users == 7:
+        return int(50000/40),int(10000/40),int(25000/40)
+    elif num_users == 8:
+        return int(50000/30),int(10000/30),int(25000/30)
+    elif num_users == 9:
+        return int(50000/20),int(10000/20),int(25000/20)
+    elif num_users == 10:
+        return int(50000/10),int(10000/10),int(25000/10)
+    
