@@ -102,12 +102,10 @@ def client_node():
             
             args, dataset_train, dataset_test, dict_users = data_setup(args)
             
-            dataset_train = train_size
-            dataset_test = test_size
+            
             
             print("{:<50}".format("=" * 15 + " data setup " + "=" * 50)[0:60])
-            print(
-                'length of dataset:{}'.format(len(dataset_train) + len(dataset_test)))
+            print('length of dataset:{}'.format(len(dataset_train) + len(dataset_test)))
             print('num. of training data:{}'.format(len(dataset_train)))
             print('num. of testing data:{}'.format(len(dataset_test)))
             print('num. of classes:{}'.format(args.num_classes))
@@ -120,9 +118,10 @@ def client_node():
 
             
             #train_size, test_size, sample_per_users= training_and_testing_size(args.num_users)
+            #print(f"train_size: {train_size} | test_size: {test_size}")
             
-            train_size = train_size / 2
-            test_size = test_size / 2
+            train_size = 9000
+            test_size = 1000
             
             
             print('num. of samples per user:{}'.format(sample_per_users))
