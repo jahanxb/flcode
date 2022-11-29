@@ -98,7 +98,13 @@ def client_node():
             torch.cuda.manual_seed(args.seed + args.repeat)
             np.random.seed(args.seed + args.repeat)
 
+            
+            
             args, dataset_train, dataset_test, dict_users = data_setup(args)
+            
+            dataset_train = train_size
+            dataset_test = test_size
+            
             print("{:<50}".format("=" * 15 + " data setup " + "=" * 50)[0:60])
             print(
                 'length of dataset:{}'.format(len(dataset_train) + len(dataset_test)))
