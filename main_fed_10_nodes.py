@@ -88,7 +88,10 @@ def client_node():
             args = call_parser()
             NODE_INDEX = 0
             NODE_ID = 1
+            
             NODE_INDEX, NODE_ID = client_num_users(args.num_users)
+            train_size, test_size, sample_per_users= training_and_testing_size(args.num_users)
+            
             print(f"NODE_INDEX: {NODE_INDEX} | NODE_ID: {NODE_ID}")
             print("Active PID : %i" % pid)
             torch.manual_seed(args.seed + args.repeat)
@@ -107,13 +110,13 @@ def client_node():
             print('arg.num_users:{}'.format(args.num_users))
             
 
-            sample_per_users = 25000  # for two users , we take 25000 samples as per the loop
+            #sample_per_users = 25000  # for two users , we take 25000 samples as per the loop
 
             
             #train_size, test_size, sample_per_users= training_and_testing_size(args.num_users)
             
-            train_size = 9000
-            test_size = 1000
+            train_size = train_size / 2
+            test_size = test_size / 2
             
             
             print('num. of samples per user:{}'.format(sample_per_users))
