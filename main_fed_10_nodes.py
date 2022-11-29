@@ -110,8 +110,10 @@ def client_node():
             sample_per_users = 25000  # for two users , we take 25000 samples as per the loop
 
             
-            train_size, test_size, sample_per_users= training_and_testing_size(args.num_users)
+            #train_size, test_size, sample_per_users= training_and_testing_size(args.num_users)
             
+            train_size = 9000
+            test_size = 1000
             
             
             print('num. of samples per user:{}'.format(sample_per_users))
