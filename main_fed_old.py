@@ -37,6 +37,7 @@ if __name__ == '__main__':
     print('num. of classes:{}'.format(args.num_classes))
     print('num. of users:{}'.format(len(dict_users)))
     sample_per_users = int(sum([ len(dict_users[i]) for i in range(len(dict_users))])/len(dict_users))
+    #sample_per_users = 25000
     print('num. of samples per user:{}'.format(sample_per_users))
     if args.dataset == 'fmnist' or args.dataset == 'cifar':
         dataset_test, val_set = torch.utils.data.random_split(
