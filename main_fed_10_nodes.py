@@ -162,6 +162,7 @@ def client_node():
             delta_norms = []
             ###################################### run experiment ##########################
 
+
             # initialize data loader
             data_loader_list = []
             print(len(dict_users))
