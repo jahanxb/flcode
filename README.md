@@ -24,3 +24,17 @@ sudo apt install python3.7
 delete all rabbitmq queues
 
 rabbitmqadmin -u jahanxb -p phdunr -f tsv -q list queues name | while read queue; do rabbitmqadmin -u jahanxb -p phdunr -q delete queue name=${queue}; done
+
+*** Mongodb Setup ***
+sudo docker pull mongo:4.0.4
+ sudo docker run -d -p 27017:27017 --name test-mongo mongo:latest
+ sudo docker exec -it container_name /bin/bash
+ mongosh
+db. createUser( { user: "jahanxb", pwd: "phdunr", roles: [ { role: "userAdminAnyDatabase", db: "admin" } ] } )
+
+connect to mongoserver through Mongodb Compass 
+
+---------------------------------------
+
+
+

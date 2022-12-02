@@ -41,11 +41,14 @@ from queues_func_list import Node1RabbitQueues as rq1
 from pymongo import MongoClient
 
 
+from Pyfhel import Pyfhel, PyPtxt, PyCtxt
+
 import asyncio
-import os,paramiko
+import os,paramiko,datetime
 
 from declared_nodes import client_nodes_addr
 
+mongodb_url = 'mongodb://jahanxb:phdunr@130.127.133.239:27017/?authMechanism=DEFAULT&authSource=flmongo&tls=false'
 
 async def waiting_exception_to_interupt():
     print("Waiting...")
@@ -164,7 +167,8 @@ def serve(args):
     node_index = 1
     num_selected_users = 2
     
-    mconn = MongoClient('mongodb+srv://jahanxb:phdunr@flmongo.7repipw.mongodb.net/?retryWrites=true&w=majority')
+    #mconn = MongoClient('mongodb+srv://jahanxb:phdunr@flmongo.7repipw.mongodb.net/?retryWrites=true&w=majority')
+    mconn = MongoClient(mongodb_url)
     mdb = mconn['iteration_status']
     
     try:
@@ -194,6 +198,17 @@ def serve(args):
         
         print("num_selected_users: ",num_selected_users)
         
+        
+        ###########
+        ## global model keys check###
+        #############
+        # print('#########global model keys#############')
+        # for k in global_model.keys():
+        #     print(k)
+        
+        
+        
+        
         for nodeid in range(node_index,nodes):    
             if t==0:
                 print('Initial Global Model...')
@@ -212,7 +227,21 @@ def serve(args):
                 send_global_round(client_nodes_addr.get(nodeid),model_path)
                 
                 
-                mdb_msg = {'task_id':master_global_for_round,'state-ready':True,'consumed':False}
+                mdb_msg = {'task_id':master_global_for_round,'state-ready':True,'consumed':False,
+                        "conv1.weight":"",
+                        "conv1.bias":"",
+                        "conv2.weight":"",
+                        "conv2.bias":"",
+                        "conv3.weight":"",
+                        "conv3.bias":"",
+                        "fc1.weight":"",
+                        "fc1.bias":"",
+                        "fc2.weight":"",
+                        "fc2.bias":"",
+                        "fc3.weight":"",
+                        "fc3.bias":""
+                           }
+                
                 mdb.master_global.insert_one(mdb_msg)
             
             else:
@@ -230,6 +259,7 @@ def serve(args):
                 try:
                     time.sleep(5)
                     seconds_to_match = seconds_to_match + 5
+                    t1 = t1 + 5
                     status = mdb.mongodb_client_cluster.find_one({'task_id':task_id})
                     if status.get('state-ready') == True:
                         print('status: ',200,' For :',status.get('task_id'))
@@ -239,6 +269,7 @@ def serve(args):
                         pass
                 except Exception as e:
                     print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+                    
             
             
             '''LOCAL LOSS ROUND CHECK '''
@@ -247,6 +278,7 @@ def serve(args):
                 try:
                     time.sleep(5)
                     seconds_to_match = seconds_to_match + 5
+                    t1 = t1 + 5
                     status = mdb.mongodb_client_cluster.find_one({'task_id':task_id})
                     if status.get('state-ready') == True:
                         print('status: ',200,' For :',status.get('task_id'))
@@ -267,8 +299,9 @@ def serve(args):
             lp_loss = list(pickle.loads(lp_loss))
             loss_locals.append(lp_loss[0])
         
-
+        print("num_selected_users: ",num_selected_users)
         for i in range(num_selected_users):
+                print("i=",i)
                 global_model = {
                     k: global_model[k] + local_updates[i][0][k] / num_selected_users
                     for k in global_model.keys()
@@ -304,15 +337,42 @@ def serve(args):
 
          
             send_global_round(client_nodes_addr.get(nn),model_path)    
-            mdb_msg = {'task_id':master_global_for_round,'state-ready':True,'consumed':False}
+            mdb_msg = {'task_id':master_global_for_round,'state-ready':True,'consumed':False,
+                       
+                       "conv1.weight":"",
+                        "conv1.bias":"",
+                        "conv2.weight":"",
+                        "conv2.bias":"",
+                        "conv3.weight":"",
+                        "conv3.bias":"",
+                        "fc1.weight":"",
+                        "fc1.bias":"",
+                        "fc2.weight":"",
+                        "fc2.bias":"",
+                        "fc3.weight":"",
+                        "fc3.bias":""
+                       
+                       }
             mdb.master_global.insert_one(mdb_msg)
             print(" [x] Node=", nn," Sent Round=",t+1)
 
             
-            
+        
         t2 = time.time()
-        hours, rem = divmod(t2 - t1, 3600) - seconds_to_match
+        
+        
+        #dbs_time = datetime.timedelta(seconds=seconds_to_match)
+        dbs_time =  t2 - t1
+        #dbs_time = dbs_time - seconds_to_match
+        hours, rem = divmod(dbs_time, 3600)
         minutes, seconds = divmod(rem, 60)
+        
+        # print("dbs_time: ",dbs_time)
+        
+        # dhours, drem = divmod(dbs_time, 3600)
+        # dminutes, dseconds = divmod(rem, 60)
+        # print("dbs time: {:0>2}:{:0>2}:{:05.2f}".format(int(dhours), int(dminutes), dseconds))  
+        
         print("training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))   
         time_taken = "training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds)
         result = '\n'+ time_taken+' \n '+'t {:3d}: train_loss = {:.3f}, test_acc = {:.3f}'.format(t, train_local_loss[-1], test_acc[-1]) + '\n'
