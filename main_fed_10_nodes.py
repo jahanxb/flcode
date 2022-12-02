@@ -44,6 +44,9 @@ import asyncio
 
 import os,paramiko
 
+from cryptography.fernet import Fernet
+
+
 async def waiting_exception_to_interupt():
     print("Waiting...")
     await asyncio.sleep(5)
@@ -204,6 +207,11 @@ def client_node():
                         status = mdb.master_global.find_one({'task_id':new_global_model_queue_id})
                         if status.get('state-ready') == True:
                             print('status: ',200,' For :',status.get('task_id'))
+                            global_model = status.get('data')
+                            global_model_key = status.get('key')
+                            
+                            print('global_model_key: ',global_model_key)
+                            
                             
                             break
                         else:
@@ -218,7 +226,13 @@ def client_node():
                 num_selected_users = len(selected_idxs)
                 gm = []
                 
-                global_model = torch.load(f'/mydata/flcode/models/nodes_sftp/global_models/{new_global_model_queue_id}.pkl')
+                
+                fernet = Fernet(global_model_key)
+                
+                #global_model = torch.load(f'/mydata/flcode/models/nodes_sftp/global_models/{new_global_model_queue_id}.pkl')
+                
+                global_model = fernet.decrypt(global_model)
+                
                 global_model = pickle.loads(global_model)
                 
                 print("num_selected_users: ",num_selected_users)
@@ -260,36 +274,51 @@ def client_node():
                 
                 local_model_node = f'node[{n}]_local_round[{t}]'
                     
-                    
+                key = Fernet.generate_key()
+                fernet = Fernet(key)
+                
                 msg = pickle.dumps(local_updates)
+                
+                encmsg = fernet.encrypt(msg)
                 
                 torch.save(msg,f"/mydata/flcode/models/nodes_sftp/nodes_local/{local_model_node}.pkl")
                 
                 model_path = f"/mydata/flcode/models/nodes_sftp/nodes_local/{local_model_node}.pkl"
                 
                 # send local model to global node
-                send_local_round(global_node_addr,model_path=model_path)
+                #send_local_round(global_node_addr,model_path=model_path)
                 
-                mdb_msg = {'task_id':local_model_node,'state-ready':True,'consumed':False}
+                mdb_msg = {'task_id':local_model_node,'state-ready':True,'consumed':False,
+                           "data":encmsg, "key":key
+                           
+                           }
                 mdb.mongodb_client_cluster.insert_one(mdb_msg)
                 
                 ###### loss local
                 
                 local_loss_node = f'node[{n}]_local_loss_round[{t}]'
+                
+                key = Fernet.generate_key()
+                fernet = Fernet(key)
+                
                 msg = pickle.dumps(loss_locals)
+                
+                encmsg = fernet.encrypt(msg)
                 
                 # send local loss to global Node
                 torch.save(msg,f"/mydata/flcode/models/nodes_sftp/nodes_local_loss/{local_loss_node}.pkl")
                 
                 model_path = f"/mydata/flcode/models/nodes_sftp/nodes_local_loss/{local_loss_node}.pkl"
                 
-                send_local_round(global_node_addr,model_path=model_path)
+                #send_local_round(global_node_addr,model_path=model_path)
 
                 print(" [x] local Loss sent Queue=",t)
 
                 
                 
-                mdb_msg = {'task_id':local_loss_node,'state-ready':True,'consumed':False}
+                mdb_msg = {'task_id':local_loss_node,'state-ready':True,'consumed':False,
+                           "data":encmsg, "key":key
+                           }
                 mdb.mongodb_client_cluster.insert_one(mdb_msg)
                 
                 
