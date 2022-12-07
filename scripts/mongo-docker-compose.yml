@@ -1,0 +1,19 @@
+version: '2'
+services:
+  mongo:
+   image: mongo:latest
+   container_name: mongo
+   ports:
+    - "0.0.0.0:27017:0.0.0.0:27017"
+   volumes:
+    - /app/hdp/mongo/data:/data/db
+
+  mongoClientTemp:
+   image: mongo:latest
+   container_name: mongoClientTemp
+   links:
+    - mongo:mongo
+   command: mongo --host mongo --eval  "db.getSiblingDB('admin').createUser({user:'jahanxb', pwd:'phdunr', roles:[{role:'readWrite',db:'flmongo'}]});"
+   depends_on:
+    - mongo
+

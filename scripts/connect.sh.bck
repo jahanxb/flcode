@@ -1,0 +1,15 @@
+#!/bin/bash
+
+x=3
+while [ $x -le 11 ]
+do
+  echo "Welcome $x times"
+  x=$(( $x + 1 ))
+  ssh jahanxb@10.10.1.$x  -f 'cd'
+  scp -r flcode jahanxb@10.10.1.$x:/mydata
+  ssh jahanxb@10.10.1.$x -f 'python3 -m venv /mydata/flcode/venv'
+  ssh jahanxb@10.10.1.$x -f '/mydata/flcode/venv/bin/pip install wheel'
+  ssh jahanxb@10.10.1.$x -f '/mydata/flcode/venv/bin/pip install --upgrade pip'
+  ssh jahanxb@10.10.1.$x -f '/mydata/flcode/venv/bin/pip install -r /mydata/flcode/reqpy38.txt'
+
+done

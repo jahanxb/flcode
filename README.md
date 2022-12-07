@@ -37,4 +37,25 @@ connect to mongoserver through Mongodb Compass
 ---------------------------------------
 
 
+*** Mongodb Setup ***
 
+scripts/cassandra_configs/
+
+delete this folder first: it seems it create problems if we don't 
+
+$ sudo rm -rf /var/lib/cassandra/data/system/*
+
+I configured node 1 (10.10.1.2) as the main seader for everyone 
+I have node11 cassandra config file, follow the instruction and replace IP address for the nodes 
+
+/etc/cassandra/cassandra-env.sh 
+
+#JVM_OPTS there is a hostname , change it to its corresponding IP Addr e.g node10 , 10.10.1.11
+
+once it's done also restart service on all nodes 
+
+sudo systemctl daemon-reload && sudo systemctl restart cassandra 
+
+check status via 
+
+sudo nodetool status 
