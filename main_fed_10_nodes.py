@@ -46,6 +46,10 @@ import os,paramiko
 
 from cryptography.fernet import Fernet
 
+from cassandra.cluster import Cluster
+from cassandra.query import named_tuple_factory, dict_factory
+
+casandra_cluster = Cluster(['10.10.1.2'],port=9042)
 
 async def waiting_exception_to_interupt():
     print("Waiting...")
@@ -163,6 +167,7 @@ def client_node():
             loss_locals = []
             local_updates = []
             delta_norms = []
+            seconds_to_match = 0
             ###################################### run experiment ##########################
 
 
@@ -187,39 +192,98 @@ def client_node():
                 print(e)
                 pass
             
+            ########### Check if Cassandra Keyspace exists #############
+            while True:           
+                try:
+                    time.sleep(5)
+                    seconds_to_match = seconds_to_match + 5
+                    session = casandra_cluster.connect()
+                    session.execute("USE iteration_status;")
+                    break
+                except Exception as e:
+                    print(e)
+            
+            
+            ###########################################################
+            
+            
             m = max(int(args.frac * 1), 1)
             print("m = ",m)
             
             mynode = NODE_ID
             for t in range(args.round):
-                seconds_to_match = 0
+                
                 loss_locals = []
                 local_updates = []
                 delta_norms = []
                 n = mynode
                 
                 new_global_model_queue_id = f'master_global_for_node[{n}]_round[{t}]'
-                ####################### MongoDB Queue Check #######################
+
+                
+                ####################### Cassandra Keyspace table check #######################
+                
+                
                 while True:
                     try:
                         time.sleep(5)
                         seconds_to_match = seconds_to_match + 5
-                        status = mdb.master_global.find_one({'task_id':new_global_model_queue_id})
-                        if status.get('state-ready') == True:
+                        #status = mdb.master_global.find_one({'task_id':new_global_model_queue_id})
+                        
+                        session = casandra_cluster.connect('iteration_status')
+                        session.row_factory = dict_factory
+                        select_str = f"select task_id,consumed,state_ready,key,data from iteration_status.master_global where task_id = '{new_global_model_queue_id}'; "
+                        print("select_Str: ",select_str)
+                        stn = session.execute(select_str)
+                        
+                        
+                        status = stn[0]
+                        print("STATUS: ",type(status))
+                        
+                        if status.get('state_ready') == 0:
                             print('status: ',200,' For :',status.get('task_id'))
-                            global_model = status.get('data')
-                            global_model_key = status.get('key')
+                            
+                            print("key status:",status.get('key'))
+                            print("key status type:",type(status.get('key')))
+                            
+                            
+                            keystr = str(status.get('key')).replace('\"',"\'")
+                            datastr = str(status.get('data')).replace('\"',"\'")
+                            
+                            #keystr = keystr.encode('ascii')
+                            #keystr = base64.urlsafe_b64encode(keystr)
+                            
+                            keystr = keystr.replace("b'","")
+                            keystr = keystr.replace("'","")
+                            
+                            datastr = datastr.replace("b'","")
+                            datastr = datastr.replace("'","")
+                            
+                            
+                            
+                            global_model = bytes(datastr, 'utf-8')
+                            global_model_key = bytes(keystr, 'utf-8')
+                            #global_model = status.get('data')
+                            #global_model_key = status.get('key')
                             
                             print('global_model_key: ',global_model_key)
+                            
+                            
+                            print("key status type:",type(global_model_key))
                             
                             
                             break
                         else:
                             pass
                     except Exception as e:
-                        print(f'@ [{new_global_model_queue_id}] | MongoDB Exception Thrown :',e)    
+                        print(f'@ [{new_global_model_queue_id}] | Cassandra Exception Thrown :',e)    
                     
                 ###################################################################
+                
+                
+                
+                
+                
                 args.local_lr = args.local_lr * args.decay_weight
                 selected_idxs = list(np.random.choice(range(1), m, replace=False))
                 print("In Round Loop: selected_idxs: ",selected_idxs)
@@ -288,11 +352,38 @@ def client_node():
                 # send local model to global node
                 #send_local_round(global_node_addr,model_path=model_path)
                 
-                mdb_msg = {'task_id':local_model_node,'state-ready':True,'consumed':False,
-                           "data":encmsg, "key":key
+                # mdb_msg = {'task_id':local_model_node,'state-ready':True,'consumed':False,
+                #            "data":encmsg, "key":key
                            
-                           }
-                mdb.mongodb_client_cluster.insert_one(mdb_msg)
+                #            }
+                # mdb.mongodb_client_cluster.insert_one(mdb_msg)
+                
+                
+                ############### Insert local model data on Cassandra #######
+                session = casandra_cluster.connect()
+                
+                print("key: ", key)
+                print("key: ", type(key))
+                keystr = str(key).replace('\'',"\"")
+                datastr = str(encmsg).replace('\'',"\"")
+                print("keystr: ",keystr)
+                insert_cql = f"""INSERT INTO iteration_status.cass_client_cluster (task_id, state_ready, consumed , key, data) 
+                              VALUES ({"'"+local_model_node+"'"}, {0}, {-1} , {"'"+keystr+"'"}, {"'"+datastr+"'"} ); """
+                session.execute(insert_cql)
+                
+                ################################################
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 
                 ###### loss local
                 
@@ -316,10 +407,26 @@ def client_node():
 
                 
                 
-                mdb_msg = {'task_id':local_loss_node,'state-ready':True,'consumed':False,
-                           "data":encmsg, "key":key
-                           }
-                mdb.mongodb_client_cluster.insert_one(mdb_msg)
+                # mdb_msg = {'task_id':local_loss_node,'state-ready':True,'consumed':False,
+                #            "data":encmsg, "key":key
+                #            }
+                # mdb.mongodb_client_cluster.insert_one(mdb_msg)
+                
+                
+                ############### Insert local model loss data on Cassandra #######
+                session = casandra_cluster.connect()
+                
+                print("key: ", key)
+                print("key: ", type(key))
+                keystr = str(key).replace('\'',"\"")
+                datastr = str(encmsg).replace('\'',"\"")
+                print("keystr: ",keystr)
+                insert_cql = f"""INSERT INTO iteration_status.cass_client_cluster (task_id, state_ready, consumed , key, data) 
+                              VALUES ({"'"+local_loss_node+"'"}, {0}, {-1} , {"'"+keystr+"'"}, {"'"+datastr+"'"} ); """
+                session.execute(insert_cql)
+                
+                ################################################
+                
                 
                 
                 t2 = time.time()
