@@ -3,7 +3,9 @@ amqp==5.1.1
 astunparse==1.6.3
 bcrypt==4.0.1
 billiard==3.6.4.0
+bitarray==2.6.0
 cachetools==5.2.0
+cassandra-driver==3.25.0
 celery==5.2.7
 certifi==2022.6.15
 cffi==1.15.1
@@ -12,6 +14,8 @@ click==8.1.3
 click-didyoumean==0.3.0
 click-plugins==1.1.1
 click-repl==0.2.0
+cql==1.4.0
+cqlsh==6.0.0
 cryptography==38.0.3
 dill==0.3.5.1
 dnspython==2.2.1
@@ -19,6 +23,7 @@ enum-compat==0.0.3
 flatbuffers==2.0.7
 future==0.18.2
 gast==0.4.0
+geomet==0.2.1.post1
 google-auth==2.11.0
 google-auth-oauthlib==0.4.6
 google-pasta==0.2.0
@@ -64,6 +69,7 @@ tensorflow==2.10.0
 tensorflow-estimator==2.10.0
 tensorflow-io-gcs-filesystem==0.26.0
 termcolor==1.1.0
+thrift==0.16.0
 torch==1.12.1
 torch-model-archiver==0.6.0
 torch-workflow-archiver==0.2.4

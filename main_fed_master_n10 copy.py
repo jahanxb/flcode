@@ -175,20 +175,19 @@ def serve(args):
     num_selected_users = 2
     
     #mconn = MongoClient('mongodb+srv://jahanxb:phdunr@flmongo.7repipw.mongodb.net/?retryWrites=true&w=majority')
-    # mconn = MongoClient(mongodb_url)
-    # mdb = mconn['iteration_status']
+    mconn = MongoClient(mongodb_url)
+    mdb = mconn['iteration_status']
     
-    # try:
-    #     mdb.create_collection('master_global')
-    # except Exception as e:
-    #     print(e)
-    #     pass
-    # try:
-    #     mdb.create_collection('master_global')
-    # except Exception as e:
-    #     print(e)
-    #     pass
-    
+    try:
+        mdb.create_collection('master_global')
+    except Exception as e:
+        print(e)
+        pass
+    try:
+        mdb.create_collection('master_global')
+    except Exception as e:
+        print(e)
+        pass
     
     ####### create or drop Cassandra KEYSPACE ################
     '''
@@ -319,7 +318,37 @@ def serve(args):
         num_selected_users = len(selected_idxs)
         
         print("num_selected_users: ",num_selected_users)
-                
+        
+        
+        ###########
+        ## global model keys check###
+        #############
+        # print('#########global model keys#############')
+        # for k in global_model.keys():
+        #     print(k)
+        
+        ########## Implementing Encryption #############
+        #HE = Pyfhel(context_params={'scheme':'bfv', 'n':2**14, 't_bits':32})
+        #HE = Pyfhel()
+        
+        # HE = Pyfhel(key_gen=True, context_params={
+        #     'scheme': 'CKKS',
+        #     'n': 2**14,         # For CKKS, n/2 values can be encoded in a single ciphertext.
+        #     'scale': 2**30,     # Each multiplication grows the final scale
+        #     'qi_sizes': [60]+ [30]*8 +[60] # Number of bits of each prime in the chain.
+        #                 # Intermediate prime sizes should be close to log2(scale).
+        #                 # One per multiplication! More/higher qi_sizes means bigger
+        #                 #  ciphertexts and slower ops.
+        #     })
+        # HE.relinKeyGen()
+        
+        
+        # HE.keyGen()
+        # HE.rotateKeyGen()
+        # HE.relinKeyGen()
+        
+        #################################################
+        
         
         for nodeid in range(node_index,nodes):    
             if t==0:
@@ -328,6 +357,34 @@ def serve(args):
                 master_global_for_round = f'master_global_for_node[{nodeid}]_round[{t}]'
             
                 msg = pickle.dumps(global_model)
+                
+                
+                ######## Encryption Step 1 - encrypt data #####################
+                # numpyArray = np.array(list(global_model.get('conv1.weight')))
+                # c = HE.encrypt(numpyArray)
+                # p = HE.encode(master_global_for_round)
+                
+                # print("1. Creating serializable objects")
+                # print(f"  Pyfhel object HE: {HE}")
+                # print(f"  PyCtxt c=HE.encrypt([42]): {c}")
+                # print(f"  PyPtxt p=HE.encode([-1]): {p}")
+                
+                # con_size, con_size_zstd   = HE.sizeof_context(),    HE.sizeof_context(compr_mode="zstd")
+                # pk_size,  pk_size_zstd    = HE.sizeof_public_key(), HE.sizeof_public_key(compr_mode="zstd")
+                # sk_size,  sk_size_zstd    = HE.sizeof_secret_key(), HE.sizeof_secret_key(compr_mode="zstd")
+                # rotk_size,rotk_size_zstd  = HE.sizeof_rotate_key(), HE.sizeof_rotate_key(compr_mode="zstd")
+                # rlk_size, rlk_size_zstd   = HE.sizeof_relin_key(),  HE.sizeof_relin_key(compr_mode="zstd")
+                # c_size,   c_size_zstd     = c.sizeof_ciphertext(),  c.sizeof_ciphertext(compr_mode="zstd")
+                # # alternatively, for ciphertext sizes you can use sys.getsizeof(c)
+
+                # print("2. Checking size of serializable objects (with and without compression)")
+                # print(f"   - context:    [ \"zstd\"  --> {con_size_zstd} | No compression --> {con_size}]")
+                # print(f"   - public_key: [ \"zstd\"  --> {pk_size_zstd} | No compression --> {pk_size}]")
+                # print(f"   - secret_key: [ \"zstd\"  --> {sk_size_zstd} | No compression --> {sk_size}]")
+                # print(f"   - relin_key:  [ \"zstd\"  --> {rotk_size_zstd} | No compression --> {rotk_size}]")
+                # print(f"   - rotate_key: [ \"zstd\"  --> {rlk_size_zstd} | No compression --> {rlk_size}]")
+                # print(f"   - c:          [ \"zstd\"  --> {c_size_zstd} | No compression --> {c_size}]")
+                
                 
                 
                 ####################################################################
@@ -346,6 +403,24 @@ def serve(args):
                 encmsg = fernet.encrypt(msg)
                 
                 print("key: ",key)
+                #print('encmsg: ',encmsg)
+                
+                
+                # #tmp_dir = tempfile.TemporaryDirectory()
+                # tmp_dir_name = encrypt_key_path
+
+                # # Now we save all objects into files
+                # HE.save_context(tmp_dir_name + "/context")
+                # HE.save_public_key(tmp_dir_name + "/pub.key")
+                # HE.save_secret_key(tmp_dir_name + "/sec.key")
+                # HE.save_relin_key(tmp_dir_name + "/relin.key")
+                # HE.save_rotate_key(tmp_dir_name + "/rotate.key")
+                # c.save(tmp_dir_name + "/c.ctxt")
+                # p.save(tmp_dir_name + "/p.ptxt")
+
+                # print("2a. Saving everything into files. Let's check the temporary dir:")
+                # print("\n\t".join(os.listdir(tmp_dir_name)))
+                
                 
                 ###################################################################
                 
@@ -354,28 +429,28 @@ def serve(args):
                 model_path = f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl"
 
                 # send model to nodes from here 
-                #print("mongodb_client_cluster.get() =",client_nodes_addr.get(nodeid))
+                print("mongodb_client_cluster.get() =",client_nodes_addr.get(nodeid))
                 #send_global_round(client_nodes_addr.get(nodeid),model_path)
                 
                 
-                # mdb_msg = {'task_id':master_global_for_round,'state-ready':True,'consumed':False,
-                #         "conv1.weight":"",
-                #         "conv1.bias":"",
-                #         "conv2.weight":"",
-                #         "conv2.bias":"",
-                #         "conv3.weight":"",
-                #         "conv3.bias":"",
-                #         "fc1.weight":"",
-                #         "fc1.bias":"",
-                #         "fc2.weight":"",
-                #         "fc2.bias":"",
-                #         "fc3.weight":"",
-                #         "fc3.bias":"",
-                #         "data":encmsg,
-                #         "key":key
-                #            }
+                mdb_msg = {'task_id':master_global_for_round,'state-ready':True,'consumed':False,
+                        "conv1.weight":"",
+                        "conv1.bias":"",
+                        "conv2.weight":"",
+                        "conv2.bias":"",
+                        "conv3.weight":"",
+                        "conv3.bias":"",
+                        "fc1.weight":"",
+                        "fc1.bias":"",
+                        "fc2.weight":"",
+                        "fc2.bias":"",
+                        "fc3.weight":"",
+                        "fc3.bias":"",
+                        "data":encmsg,
+                        "key":key
+                           }
                 
-                # mdb.master_global.insert_one(mdb_msg)
+                mdb.master_global.insert_one(mdb_msg)
                 
                 ############### Insert data on Cassandra #######
                 session = casandra_cluster.connect()
@@ -409,143 +484,44 @@ def serve(args):
         for n in range(node_index,nodes):    
             
             '''LOCAL ROUND CHECK'''
-            # while True:
-            #     task_id = f'node[{n}]_local_round[{t}]'
-            #     try:
-            #         time.sleep(5)
-            #         seconds_to_match = seconds_to_match + 5
-            #         t1 = t1 + 5
-            #         status = mdb.mongodb_client_cluster.find_one({'task_id':task_id})
-            #         if status.get('state-ready') == True:
-            #             print('status: ',200,' For :',status.get('task_id'))
-            #             local_model_key = status.get('key')
-            #             local_model = status.get('data')
-                        
-            #             break
-            #         else:
-            #             pass
-            #     except Exception as e:
-            #         print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
-            
             while True:
                 task_id = f'node[{n}]_local_round[{t}]'
                 try:
                     time.sleep(5)
                     seconds_to_match = seconds_to_match + 5
                     t1 = t1 + 5
-                    session = casandra_cluster.connect('iteration_status')
-                    session.row_factory = dict_factory
-                    select_str = f"select task_id,consumed,state_ready,key,data from iteration_status.cass_client_cluster where task_id = '{task_id}'; "
-                    print("select_Str: ",select_str)
-                    stn = session.execute(select_str)
-                        
-                        
-                    status = stn[0]
-                    print("STATUS: ",type(status))
-                        
-                    if status.get('state_ready') == 0:
+                    status = mdb.mongodb_client_cluster.find_one({'task_id':task_id})
+                    if status.get('state-ready') == True:
                         print('status: ',200,' For :',status.get('task_id'))
-                            
-                        print("key status:",status.get('key'))
-                        print("key status type:",type(status.get('key')))
-                            
-                            
-                        keystr = str(status.get('key')).replace('\"',"\'")
-                        datastr = str(status.get('data')).replace('\"',"\'")
-                            
-                            
-                        keystr = keystr.replace("b'","")
-                        keystr = keystr.replace("'","")
-                            
-                        datastr = datastr.replace("b'","")
-                        datastr = datastr.replace("'","")
-                            
-                            
-                            
-                        local_model = bytes(datastr, 'utf-8')
-                        local_model_key = bytes(keystr, 'utf-8')
-                            
-                            
+                        local_model_key = status.get('key')
+                        local_model = status.get('data')
+                        
                         break
                     else:
                         pass
                 except Exception as e:
-                    print(f'@ [{task_id}] | Cassandra Exception Thrown :',e)
-            
-            
-            
-                                
+                    print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+                    
             
             
             '''LOCAL LOSS ROUND CHECK '''
-            # while True:
-            #     task_id = f'node[{n}]_local_loss_round[{t}]'
-            #     try:
-            #         time.sleep(5)
-            #         seconds_to_match = seconds_to_match + 5
-            #         t1 = t1 + 5
-            #         status = mdb.mongodb_client_cluster.find_one({'task_id':task_id})
-            #         if status.get('state-ready') == True:
-            #             print('status: ',200,' For :',status.get('task_id'))
-            #             local_model_loss_key = status.get('key')
-            #             local_model_loss = status.get('data')
-            #             break
-            #         else:
-            #             pass
-            #     except Exception as e:
-            #         print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
-            # ############################################################################################
-            
-            
             while True:
                 task_id = f'node[{n}]_local_loss_round[{t}]'
                 try:
                     time.sleep(5)
                     seconds_to_match = seconds_to_match + 5
                     t1 = t1 + 5
-                    session = casandra_cluster.connect('iteration_status')
-                    session.row_factory = dict_factory
-                    select_str = f"select task_id,consumed,state_ready,key,data from iteration_status.cass_client_cluster where task_id = '{task_id}'; "
-                    print("select_Str: ",select_str)
-                    stn = session.execute(select_str)
-                        
-                        
-                    status = stn[0]
-                    print("STATUS: ",type(status))
-                        
-                    if status.get('state_ready') == 0:
+                    status = mdb.mongodb_client_cluster.find_one({'task_id':task_id})
+                    if status.get('state-ready') == True:
                         print('status: ',200,' For :',status.get('task_id'))
-                            
-                        print("key status:",status.get('key'))
-                        print("key status type:",type(status.get('key')))
-                            
-                            
-                        keystr = str(status.get('key')).replace('\"',"\'")
-                        datastr = str(status.get('data')).replace('\"',"\'")
-                            
-                            
-                        keystr = keystr.replace("b'","")
-                        keystr = keystr.replace("'","")
-                            
-                        datastr = datastr.replace("b'","")
-                        datastr = datastr.replace("'","")
-                            
-                            
-                            
-                        local_model_loss = bytes(datastr, 'utf-8')
-                        local_model_loss_key = bytes(keystr, 'utf-8')
-                            
-                            
+                        local_model_loss_key = status.get('key')
+                        local_model_loss = status.get('data')
                         break
                     else:
                         pass
                 except Exception as e:
-                    print(f'@ [{task_id}] | Cassandra Exception Thrown :',e)
-            
-            
-            
-            
-            
+                    print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+            ############################################################################################
             print('################## TrainingTest onum_selected_usersn aggregated Model ######################')
             
             
@@ -610,41 +586,25 @@ def serve(args):
             print("key: ",key)
          
             #send_global_round(client_nodes_addr.get(nn),model_path)    
-            # mdb_msg = {'task_id':master_global_for_round,'state-ready':True,'consumed':False,
+            mdb_msg = {'task_id':master_global_for_round,'state-ready':True,'consumed':False,
                        
-            #            "conv1.weight":"",
-            #             "conv1.bias":"",
-            #             "conv2.weight":"",
-            #             "conv2.bias":"",
-            #             "conv3.weight":"",
-            #             "conv3.bias":"",
-            #             "fc1.weight":"",
-            #             "fc1.bias":"",
-            #             "fc2.weight":"",
-            #             "fc2.bias":"",
-            #             "fc3.weight":"",
-            #             "fc3.bias":"",
-            #             "data":encmsg,
-            #             "key":key
+                       "conv1.weight":"",
+                        "conv1.bias":"",
+                        "conv2.weight":"",
+                        "conv2.bias":"",
+                        "conv3.weight":"",
+                        "conv3.bias":"",
+                        "fc1.weight":"",
+                        "fc1.bias":"",
+                        "fc2.weight":"",
+                        "fc2.bias":"",
+                        "fc3.weight":"",
+                        "fc3.bias":"",
+                        "data":encmsg,
+                        "key":key
                        
-            #            }
-            # mdb.master_global.insert_one(mdb_msg)
-            
-            
-            print("key: ", key)
-            print("key: ", type(key))
-            keystr = str(key).replace('\'',"\"")
-            datastr = str(encmsg).replace('\'',"\"")
-            print("keystr: ",keystr)
-            insert_cql = f"""INSERT INTO iteration_status.master_global (task_id, state_ready, consumed , key, data) 
-                              VALUES ({"'"+master_global_for_round+"'"}, {0}, {-1} , {"'"+keystr+"'"}, {"'"+datastr+"'"} ); """
-        
-                
-            session.execute(insert_cql)
-            
-            
-            
-            
+                       }
+            mdb.master_global.insert_one(mdb_msg)
             print(" [x] Node=", nn," Sent Round=",t+1)
 
             
