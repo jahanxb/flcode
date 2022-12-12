@@ -206,7 +206,7 @@ def client_node():
             
             ###########################################################
             
-            key = Fernet.generate_key()
+            
             
             m = max(int(args.frac * 1), 1)
             print("m = ",m)
@@ -339,7 +339,7 @@ def client_node():
                 
                 local_model_node = f'node[{n}]_local_round[{t}]'
                     
-                #key = Fernet.generate_key()
+                key = Fernet.generate_key()
                 fernet = Fernet(key)
                 
                 msg = pickle.dumps(local_updates)
@@ -390,7 +390,7 @@ def client_node():
                 
                 local_loss_node = f'node[{n}]_local_loss_round[{t}]'
                 
-                #key = Fernet.generate_key()
+                key = Fernet.generate_key()
                 fernet = Fernet(key)
                 
                 msg = pickle.dumps(loss_locals)
