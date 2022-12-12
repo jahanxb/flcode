@@ -305,7 +305,7 @@ def serve(args):
 
 
     
-    key = Fernet.generate_key()
+    
     
     for t in range(args.round):
         seconds_to_match = 0
@@ -340,7 +340,7 @@ def serve(args):
                 
                 #os.system(f'cd /mydata/flcode/models/node_encrypted/global_models/{master_global_for_round}')
                 
-                #key = Fernet.generate_key()
+                key = Fernet.generate_key()
                 fernet = Fernet(key=key)
                 
                 encmsg = fernet.encrypt(msg)
@@ -602,7 +602,7 @@ def serve(args):
             model_path = f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl"
 
             
-            #key = Fernet.generate_key()
+            key = Fernet.generate_key()
             fernet = Fernet(key=key)
                 
             encmsg = fernet.encrypt(msg)
