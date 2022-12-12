@@ -263,13 +263,14 @@ def serve(args):
         
         try:
             session.execute('DROP TABLE iteration_status.master_global')
+            session.execute(table_string)
         except:
-            pass
+            raise Exception
             
         #session = casandra_cluster.connect()
         #session.execute("USE iteration_status;")
         #session.execute(" CREATE TABLE master_global (task_id text,state_ready boolean,consumed boolean, conv1_weight varchar,data varchar,key varchar, PRIMARY KEY (task_id));")
-        session.execute(table_string)               
+                       
                         
                         
     
@@ -284,13 +285,15 @@ def serve(args):
         
         try:
             session.execute('DROP TABLE iteration_status.cass_client_cluster')
+            session.execute(table_string_client)
         except:
-            pass
+            
+            raise Exception
             
         #session = casandra_cluster.connect()
         #session.execute("USE iteration_status;")
         #session.execute(" CREATE TABLE master_global (task_id text,state_ready boolean,consumed boolean, conv1_weight varchar,data varchar,key varchar, PRIMARY KEY (task_id));")
-        session.execute(table_string_client)               
+                       
                         
                         
     
