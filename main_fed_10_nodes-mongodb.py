@@ -116,7 +116,10 @@ def client_node():
 
             print('arg.num_users:{}'.format(args.num_users))
             
-
+            if args.dataset == 'fmnist' or args.dataset == 'svhn':
+                sample_per_users = 25000
+            else:
+                pass
             #sample_per_users = 25000  # for two users , we take 25000 samples as per the loop
 
             
