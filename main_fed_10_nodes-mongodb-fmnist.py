@@ -240,7 +240,7 @@ def client_node():
                 
                 print("num_selected_users: ",num_selected_users)
                    
-                print("t=",t ," | global_model: ",global_model.get('fc3.bias'))
+                print("t=",t ," | global_model: ",global_model.keys())
                 
                 ###################### local training : SGD for selected users ######################
                     
