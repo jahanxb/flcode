@@ -47,6 +47,7 @@ import os,paramiko
 from cryptography.fernet import Fernet
 
 import blosc
+import zlib
 
 async def waiting_exception_to_interupt():
     print("Waiting...")
@@ -213,7 +214,7 @@ def client_node():
                             print('status: ',200,' For :',status.get('task_id'))
                             global_model = status.get('data')
                             
-                            global_model = blosc.decompress(global_model)
+                            global_model = zlib.decompress(global_model)
                             global_model_key = status.get('key')
                             
                             print('global_model_key: ',global_model_key)
@@ -293,9 +294,13 @@ def client_node():
                 
                 # send local model to global node
                 #send_local_round(global_node_addr,model_path=model_path)
+                compressed_encmsg = zlib.compress(encmsg)
+                size = sys.getsizeof(compressed_encmsg)
+                print(f'Size of msg: {size} bytes')
+                
                 
                 mdb_msg = {'task_id':local_model_node,'state-ready':True,'consumed':False,
-                           "data":encmsg, "key":key
+                           "data":compressed_encmsg, "key":key
                            
                            }
                 mdb.mongodb_client_cluster.insert_one(mdb_msg)
@@ -320,10 +325,12 @@ def client_node():
 
                 print(" [x] local Loss sent Queue=",t)
 
-                
+                compressed_encmsg = zlib.compress(encmsg)
+                size = sys.getsizeof(compressed_encmsg)
+                print(f'Size of msg: {size} bytes')
                 
                 mdb_msg = {'task_id':local_loss_node,'state-ready':True,'consumed':False,
-                           "data":encmsg, "key":key
+                           "data":compressed_encmsg, "key":key
                            }
                 mdb.mongodb_client_cluster.insert_one(mdb_msg)
                 
