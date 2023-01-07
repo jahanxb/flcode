@@ -37,7 +37,6 @@ from celery import Celery
 
 import pickle, json
 
-
 NODE_ID = 1
 global_node_addr = '10.10.1.1'
 

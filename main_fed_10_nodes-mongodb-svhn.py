@@ -46,6 +46,7 @@ import os,paramiko
 
 from cryptography.fernet import Fernet
 
+import blosc
 
 async def waiting_exception_to_interupt():
     print("Waiting...")
@@ -211,6 +212,8 @@ def client_node():
                         if status.get('state-ready') == True:
                             print('status: ',200,' For :',status.get('task_id'))
                             global_model = status.get('data')
+                            
+                            global_model = blosc.decompress(global_model)
                             global_model_key = status.get('key')
                             
                             print('global_model_key: ',global_model_key)
