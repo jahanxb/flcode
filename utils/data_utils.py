@@ -61,6 +61,7 @@ def data_setup(args):
         dataset_train = datasets.SVHN(path, split='train', download=True, transform=trans_svhn)
         dataset_extra = datasets.SVHN(path, split='extra', download=True, transform=trans_svhn)
         dataset_train = torch.utils.data.ConcatDataset([dataset_train, dataset_extra])
+        #dataset_train = torch.utils.data.ConcatDataset([dataset_train])
         dataset_test = datasets.SVHN(path, split='test', download=True, transform=trans_svhn)
         args.num_classes = 10
         if args.iid:

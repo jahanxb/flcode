@@ -185,21 +185,7 @@ def serve(args):
     node_index = 1
     num_selected_users = 2
     
-    #mconn = MongoClient('mongodb+srv://jahanxb:phdunr@flmongo.7repipw.mongodb.net/?retryWrites=true&w=majority')
-    # mconn = MongoClient(mongodb_url)
-    # mdb = mconn['iteration_status']
-    
-    # try:
-    #     mdb.create_collection('master_global')
-    # except Exception as e:
-    #     print(e)
-    #     pass
-    # try:
-    #     mdb.create_collection('master_global')
-    # except Exception as e:
-    #     print(e)
-    #     pass
-    
+
     
     ####### create or drop Cassandra KEYSPACE ################
     '''
@@ -304,11 +290,7 @@ def serve(args):
             pass
             #raise Exception
             
-        #session = casandra_cluster.connect()
-        #session.execute("USE iteration_status;")
-        #session.execute(" CREATE TABLE master_global (task_id text,state_ready boolean,consumed boolean, conv1_weight varchar,data varchar,key varchar, PRIMARY KEY (task_id));")
-                       
-                        
+                    
                         
     
     except Exception as e:
@@ -370,29 +352,7 @@ def serve(args):
                 
                 model_path = f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl"
 
-                # send model to nodes from here 
-                #print("mongodb_client_cluster.get() =",client_nodes_addr.get(nodeid))
-                #send_global_round(client_nodes_addr.get(nodeid),model_path)
-                
-                
-                # mdb_msg = {'task_id':master_global_for_round,'state-ready':True,'consumed':False,
-                #         "conv1.weight":"",
-                #         "conv1.bias":"",
-                #         "conv2.weight":"",
-                #         "conv2.bias":"",
-                #         "conv3.weight":"",
-                #         "conv3.bias":"",
-                #         "fc1.weight":"",
-                #         "fc1.bias":"",
-                #         "fc2.weight":"",
-                #         "fc2.bias":"",
-                #         "fc3.weight":"",
-                #         "fc3.bias":"",
-                #         "data":encmsg,
-                #         "key":key
-                #            }
-                
-                # mdb.master_global.insert_one(mdb_msg)
+
                 
                 ############### Insert data on Cassandra #######
                 session = casandra_cluster.connect()
@@ -426,23 +386,7 @@ def serve(args):
         for n in range(node_index,nodes):    
             
             '''LOCAL ROUND CHECK'''
-            # while True:
-            #     task_id = f'node[{n}]_local_round[{t}]'
-            #     try:
-            #         time.sleep(5)
-            #         seconds_to_match = seconds_to_match + 5
-            #         t1 = t1 + 5
-            #         status = mdb.mongodb_client_cluster.find_one({'task_id':task_id})
-            #         if status.get('state-ready') == True:
-            #             print('status: ',200,' For :',status.get('task_id'))
-            #             local_model_key = status.get('key')
-            #             local_model = status.get('data')
-                        
-            #             break
-            #         else:
-            #             pass
-            #     except Exception as e:
-            #         print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+
             
             while True:
                 task_id = f'node[{n}]_local_round[{t}]'
@@ -495,24 +439,7 @@ def serve(args):
             
             
             '''LOCAL LOSS ROUND CHECK '''
-            # while True:
-            #     task_id = f'node[{n}]_local_loss_round[{t}]'
-            #     try:
-            #         time.sleep(5)
-            #         seconds_to_match = seconds_to_match + 5
-            #         t1 = t1 + 5
-            #         status = mdb.mongodb_client_cluster.find_one({'task_id':task_id})
-            #         if status.get('state-ready') == True:
-            #             print('status: ',200,' For :',status.get('task_id'))
-            #             local_model_loss_key = status.get('key')
-            #             local_model_loss = status.get('data')
-            #             break
-            #         else:
-            #             pass
-            #     except Exception as e:
-            #         print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
-            # ############################################################################################
-            
+
             
             while True:
                 task_id = f'node[{n}]_local_loss_round[{t}]'
@@ -629,26 +556,7 @@ def serve(args):
                 
             print("key: ",key)
          
-            #send_global_round(client_nodes_addr.get(nn),model_path)    
-            # mdb_msg = {'task_id':master_global_for_round,'state-ready':True,'consumed':False,
-                       
-            #            "conv1.weight":"",
-            #             "conv1.bias":"",
-            #             "conv2.weight":"",
-            #             "conv2.bias":"",
-            #             "conv3.weight":"",
-            #             "conv3.bias":"",
-            #             "fc1.weight":"",
-            #             "fc1.bias":"",
-            #             "fc2.weight":"",
-            #             "fc2.bias":"",
-            #             "fc3.weight":"",
-            #             "fc3.bias":"",
-            #             "data":encmsg,
-            #             "key":key
-                       
-            #            }
-            # mdb.master_global.insert_one(mdb_msg)
+
             
             
             print("key: ", key)
@@ -696,15 +604,7 @@ def serve(args):
 
 
 def aggregation_avg(global_model, local_updates):
-    '''
-    simple average
-    '''
-    
-    # model_update = {k: local_updates[0][k] *0.0 for k in local_updates[0].keys()}
-    # for i in range(len(local_updates)):
-    #     model_update = {k: model_update[k] +  local_updates[i][k] for k in global_model.keys()}
-    # global_model = {k: global_model[k] +  model_update[k]/ len(local_updates) for k in global_model.keys()}
-    # return global_model
+
     
     model_update = {k: local_updates[0][k] *0.0 for k in local_updates[0]}
     for i in range(len(local_updates)):
