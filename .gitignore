@@ -10,5 +10,3 @@ models/pickles
 models/pickles/test
 models/rabbitmq-queues
 models/nodes_sftp
-models/nodes_trained_model
-node_output/
