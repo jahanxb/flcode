@@ -40,6 +40,7 @@ import pickle, json
 NODE_ID = 1
 global_node_addr = '10.10.1.1'
 
+cassandra_addr = '10.10.1.2' 
 #mongodb_url = 'mongodb+srv://jahanxb:phdunr@flmongo.7repipw.mongodb.net/?retryWrites=true&w=majority'
 
 #mongodb_url = 'mongodb://jahanxb:phdunr@130.127.133.239:27017/?authMechanism=DEFAULT&authSource=flmongo&tls=false'
