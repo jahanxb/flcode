@@ -328,9 +328,9 @@ def serve_cassandra(args):
                 
                 ###################################################################
                 
-                torch.save(msg,f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl")
+                torch.save(msg,f"/mydata/flcode/models/nodes_trained_model/global_models/{master_global_for_round}.pkl")
                 
-                model_path = f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl"
+                model_path = f"/mydata/flcode/models/nodes_trained_model/global_models/{master_global_for_round}.pkl"
 
                 
                 ############### Insert data on Cassandra #######
@@ -509,10 +509,10 @@ def serve_cassandra(args):
             
             msg = pickle.dumps(global_model)
             
-            torch.save(msg,f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl")
+            torch.save(msg,f"/mydata/flcode/models/nodes_trained_model/global_models/{master_global_for_round}.pkl")
             
                 
-            model_path = f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl"
+            model_path = f"/mydata/flcode/models/nodes_trained_model/global_models/{master_global_for_round}.pkl"
 
             
             key = Fernet.generate_key()
@@ -665,9 +665,9 @@ def serve_mongodb(args):
                 print("key: ",key)
                 ###################################################################
                 
-                torch.save(msg,f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl")
+                torch.save(msg,f"/mydata/flcode/models/nodes_trained_model/global_models/{master_global_for_round}.pkl")
                 
-                model_path = f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl"
+                model_path = f"/mydata/flcode/models/nodes_trained_model/global_models/{master_global_for_round}.pkl"
 
                 # send model to nodes from here 
                 print("mongodb_client_cluster.get() =",client_nodes_addr.get(nodeid))
@@ -777,10 +777,10 @@ def serve_mongodb(args):
             
             msg = pickle.dumps(global_model)
             
-            torch.save(msg,f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl")
+            torch.save(msg,f"/mydata/flcode/models/nodes_trained_model/global_models/{master_global_for_round}.pkl")
             
                 
-            model_path = f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl"
+            model_path = f"/mydata/flcode/models/nodes_trained_model/global_models/{master_global_for_round}.pkl"
 
             
             key = Fernet.generate_key()
@@ -905,9 +905,9 @@ def serve_scp(args):
             
                 msg = pickle.dumps(global_model)
             
-                torch.save(msg,f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl")
+                torch.save(msg,f"/mydata/flcode/models/nodes_trained_model/global_models/{master_global_for_round}.pkl")
                 
-                model_path = f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl"
+                model_path = f"/mydata/flcode/models/nodes_trained_model/global_models/{master_global_for_round}.pkl"
 
                 # send model to nodes from here 
                 print("mongodb_client_cluster.get() =",client_nodes_addr.get(nodeid))
@@ -959,11 +959,11 @@ def serve_scp(args):
             ############################################################################################
             print('################## TrainingTest onum_selected_usersn aggregated Model ######################')
             
-            lp = torch.load(f'/mydata/flcode/models/nodes_sftp/nodes_local/node[{n}]_local_round[{t}].pkl')
+            lp = torch.load(f'/mydata/flcode/models/nodes_trained_model/nodes_local/node[{n}]_local_round[{t}].pkl')
             lp = list(pickle.loads(lp))
             local_updates.append(lp)
             
-            lp_loss = torch.load(f'/mydata/flcode/models/nodes_sftp/nodes_local_loss/node[{n}]_local_loss_round[{t}].pkl')
+            lp_loss = torch.load(f'/mydata/flcode/models/nodes_trained_model/nodes_local_loss/node[{n}]_local_loss_round[{t}].pkl')
             lp_loss = list(pickle.loads(lp_loss))
             loss_locals.append(lp_loss[0])
     
@@ -974,7 +974,7 @@ def serve_scp(args):
                 for k in global_model.keys()
             }
             
-        print("global_model: ",global_model.get('fc3.bias'))
+        print("global_model: ",global_model.keys())
             
             
         net_glob.load_state_dict(global_model)
@@ -989,38 +989,37 @@ def serve_scp(args):
         print('Submitting new global model: .....')
     
         # send model to nodes from here
-        for nn in range(1,3):
+        for nn in range(1,11):
             master_global_for_round = f'master_global_for_node[{nn}]_round[{t+1}]'
             
             msg = pickle.dumps(global_model)
             
-            torch.save(msg,f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl")
+            torch.save(msg,f"/mydata/flcode/models/nodes_trained_model/global_models/{master_global_for_round}.pkl")
             
                 
-            model_path = f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl"
-
+            model_path = f"/mydata/flcode/models/nodes_trained_model/global_models/{master_global_for_round}.pkl"
          
             send_global_round(client_nodes_addr.get(nn),model_path)    
             mdb_msg = {'task_id':master_global_for_round,'state-ready':True,'consumed':False}
             mdb.master_global.insert_one(mdb_msg)
             print(" [x] Node=", nn," Sent Round=",t+1)
-
             
+            t2 = time.time()
+            hours, rem = divmod(t2 - t1, 3600)
+            minutes, seconds = divmod(rem, 60)
+            print("training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))   
             
-        t2 = time.time()
-        hours, rem = divmod(t2 - t1, 3600)
-        minutes, seconds = divmod(rem, 60)
-        print("training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))   
-            
-        result = 't {:3d}: train_loss = {:.3f}, test_acc = {:.3f}'.format(t, train_local_loss[-1], test_acc[-1]) + '\n'
+            result = 't {:3d}: train_loss = {:.3f}, test_acc = {:.3f}'.format(t, train_local_loss[-1], test_acc[-1]) + '\n'
     
-        with open('/mydata/flcode/output/scp-10nodes-results-log.txt', 'a') as the_file:
-            the_file.write(result)
-            the_file.close()
+            with open('/mydata/flcode/output/scp-10nodes-results-log.txt', 'a') as the_file:
+                the_file.write(result)
+                the_file.close()
 
 
             
 def server_rabbitmq(args):
+    print('rabbitMQ pending...')
+    exit(0)
     pass
 
 

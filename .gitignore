@@ -9,3 +9,4 @@ models/received.pkl
 models/pickles
 models/rabbitmq-queues
 models/nodes_sftp
+models/nodes_trained_model
