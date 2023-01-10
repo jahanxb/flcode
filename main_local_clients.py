@@ -365,6 +365,7 @@ def client_node_mongodb():
                 filename = f'/mydata/flcode/node_output/mongodb-node{NODE_ID}-log.txt'
                 #tfname = f'touch + {filename}'
                 #os.system(tfname)
+                
                 with open(filename, 'a') as the_file:
                     the_file.write(result)
                     the_file.close()
