@@ -86,6 +86,7 @@ def args_parser():
     
     args = parser.parse_args()
     return args
+
 def call_parser():
     args = args_parser()
     return args

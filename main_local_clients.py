@@ -922,16 +922,16 @@ if __name__ == '__main__':
     args = call_parser()
     if args.db == 'mongodb':
         print('Mongodb selected...!')
-        client_node_mongodb(args)
+        client_node_mongodb()
     elif args.db == 'cassandra':
         print('Cassandra Selected...!')
-        client_node_cassandra(args)
+        client_node_cassandra()
     elif args.db == 'scp':
         print('SCP Selected...!')
-        client_node_scp(args)
+        client_node_scp()
     elif args.db == 'rabbitmq':
         print('RabbitMQ selected...!')
-        client_node_rabbitmq(args)
+        client_node_rabbitmq()
     else:
         print('Database Not specified or incorrect entry...!')
         exit(0)
