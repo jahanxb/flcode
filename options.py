@@ -81,8 +81,13 @@ def args_parser():
                         type=int,
                         default=0,
                         help=" tuning hyperparameter? ")
+    
+    parser.add_argument('--db', type=str, default='mongodb',help='Select Database System [mongodb | cassandra | scp | rabbitmq ]')
+    
+
     args = parser.parse_args()
     return args
+
 def call_parser():
     args = args_parser()
     return args

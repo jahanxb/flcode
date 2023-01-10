@@ -9,3 +9,7 @@ client_nodes_addr = {
     6:'10.10.1.7',7:'10.10.1.8',8:'10.10.1.9',9:'10.10.1.10',10:'10.10.1.11'
     
 }
+
+#mongodb_url = 'mongodb://jahanxb:phdunr@130.127.133.239:27017/?authMechanism=DEFAULT&authSource=flmongo&tls=false'
+mongodb_url = 'mongodb+srv://jahanxb:phdunr@flmongo.7repipw.mongodb.net/?retryWrites=true&w=majority'
+
