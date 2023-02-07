@@ -126,3 +126,19 @@ t   7: train_loss = 0.174, test_acc = 90.444
 t   8: train_loss = 0.161, test_acc = 90.700
 t   9: train_loss = 0.148, test_acc = 91.011
 ############################################
+t   0: train_loss = 0.436, test_acc = 88.222
+t   1: train_loss = 0.221, test_acc = 91.056
+t   2: train_loss = 0.135, test_acc = 92.033
+############################################
+t   0: train_loss = 1.584, test_acc = 59.044
+############################################
+t   0: train_loss = 0.273, test_acc = 90.625
+t   1: train_loss = 0.097, test_acc = 94.083
+t   2: train_loss = 0.061, test_acc = 94.911
+t   3: train_loss = 0.046, test_acc = 95.302
+t   4: train_loss = 0.038, test_acc = 95.464
+t   5: train_loss = 0.032, test_acc = 95.593
+t   6: train_loss = 0.028, test_acc = 95.672
+t   7: train_loss = 0.025, test_acc = 95.668
+t   8: train_loss = 0.022, test_acc = 95.647
+t   9: train_loss = 0.020, test_acc = 95.814

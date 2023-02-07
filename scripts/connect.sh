@@ -22,10 +22,10 @@ do
   
   #ssh jahanxb@10.10.1.$x -f "sudo rm -rf /mydata/flcode/models/nodes_trained_model"
   
-  ##ssh jahanxb@10.10.1.$x -f "mkdir /mydata/flcode/models/nodes_trained_model"
-  #ssh jahanxb@10.10.1.$x -f "mkdir /mydata/flcode/models/nodes_trained_model/global_models"
-  #ssh jahanxb@10.10.1.$x -f "mkdir /mydata/flcode/models/nodes_trained_model/nodes_local"
-  #ssh jahanxb@10.10.1.$x -f "mkdir /mydata/flcode/models/nodes_trained_model/nodes_local_loss"
+  ssh jahanxb@10.10.1.$x -f "mkdir /mydata/flcode/models/nodes_trained_model"
+  ssh jahanxb@10.10.1.$x -f "mkdir /mydata/flcode/models/nodes_trained_model/global_models"
+  ssh jahanxb@10.10.1.$x -f "mkdir /mydata/flcode/models/nodes_trained_model/nodes_local"
+  ssh jahanxb@10.10.1.$x -f "mkdir /mydata/flcode/models/nodes_trained_model/nodes_local_loss"
 
   #ssh jahanxb@10.10.1.$x -f "sudo chown -R jahanxb:root /mydata/flcode/models/nodes_trained_model"
   #ssh jahanxb@10.10.1.$x -f "sudo chown -R jahanxb:root /mydata/flcode/models/node_output"
