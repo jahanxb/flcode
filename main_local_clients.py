@@ -66,6 +66,12 @@ from cryptography.fernet import Fernet
 from cassandra.cluster import Cluster
 from cassandra.query import named_tuple_factory, dict_factory
 
+from neo4j import GraphDatabase
+import logging
+from neo4j.exceptions import ServiceUnavailable
+
+
+
 casandra_cluster = Cluster([cassandra_addr],port=9042)
 
 
@@ -236,7 +242,7 @@ def client_node_mongodb():
                             global_model_key = status.get('key')
                             
                             print('global_model_key: ',global_model_key)
-                            
+                            print("key status type:",type(global_model_key))
                             
                             break
                         else:
@@ -539,16 +545,21 @@ def client_node_cassandra():
                             print("key status:",status.get('key'))
                             print("key status type:",type(status.get('key')))
                             
+                            #datastr = zlib.decompress(datastr)
                             
                             keystr = str(status.get('key')).replace('\"',"\'")
                             datastr = str(status.get('data')).replace('\"',"\'")
+                            datastr = zlib.decompress(datastr)
                             keystr = keystr.replace("b'","")
                             keystr = keystr.replace("'","")
                             
                             datastr = datastr.replace("b'","")
                             datastr = datastr.replace("'","")
                             
+                            
+                            
                             global_model = bytes(datastr, 'utf-8')
+                            
                             global_model_key = bytes(keystr, 'utf-8')
                             
                             print('global_model_key: ',global_model_key)
@@ -926,8 +937,6 @@ def client_node_rabbitmq():
 
 def client_node_postgres():
     pid = os.getpid()
-    
-
     try:
             args = call_parser()
             NODE_INDEX = 0
@@ -1256,74 +1265,451 @@ def client_node_postgres():
 
 
 
-
-def client_postgres_1(args):
-    #conn = psycopg2.connect(database = "ddfl", user = "postgres", password = "postgres", host = "130.127.133.239", port = "5432")
-    # print ("Opened database successfully")
-
-    # cur = conn.cursor()
-    # cur.execute('''CREATE TABLE master_global.COMPANY
-    #   (ID INT PRIMARY KEY     NOT NULL,
-    #   NAME           TEXT    NOT NULL,
-    #   AGE            INT     NOT NULL,
-    #   ADDRESS        CHAR(50),
-    #   SALARY         REAL);''')
-    # print ("Table created successfully")
-
-    # conn.commit()
-    # conn.close()
-    table_string = '''
-    CREATE TABLE iteration_status.master_global (
-        task_id text,
-        state_ready int,
-        consumed int,
-        key text,
-        data text,
-        PRIMARY KEY (task_id)
-    );
-    
-    '''
-    
-    table_string_client = '''
-    CREATE TABLE iteration_status.client_cluster (
-                task_id text,
-                state_ready int,
-                consumed int,
-                key text,
-                data text,
-                PRIMARY KEY (task_id)
-                );
-    
-                '''
-    
-    
-    
-    
+def client_node_neo4j():
+    pid = os.getpid()
     try:
-        conn = psycopg2.connect(database = "ddfl", user = "postgres", password = "ng.dB.Q'3s`^9HVx", host = "104.198.252.184", port = "5432")
-        print ("Opened database successfully")
-        curr = conn.cursor()
-        curr.execute('DROP TABLE IF EXISTS iteration_status.master_global;')
-        curr.execute(table_string)
-        conn.commit()
-        conn.close()
-        #session = casandra_cluster.connect()
-        #session.execute("CREATE KEYSPACE IF NOT EXISTS iteration_status with replication = {'class':'SimpleStrategy','replication_factor':10};")
+
+            uri_neo4j = "neo4j://34.168.82.215:7687"
+            user_neo4j = "neo4j"
+            password_new4j = "oi2KksBMaHfsB355HdoHsI2Kzv4NoOUm7MnPNtnESIY"
+    
+            driver = GraphDatabase.driver(uri_neo4j, auth=(user_neo4j, password_new4j))
+    
+            
+            args = call_parser()
+            NODE_INDEX = 0
+            NODE_ID = 1
+            
+            NODE_INDEX, NODE_ID = client_num_users(args.num_users)
+            train_size, test_size, sample_per_users= training_and_testing_size(args.num_users)
+            
+            print(f"NODE_INDEX: {NODE_INDEX} | NODE_ID: {NODE_ID}")
+            print("Active PID : %i" % pid)
+            torch.manual_seed(args.seed + args.repeat)
+            torch.cuda.manual_seed(args.seed + args.repeat)
+            np.random.seed(args.seed + args.repeat)
+
+            args, dataset_train, dataset_test, dict_users = data_setup(args)
+                        
+            print("{:<50}".format("=" * 15 + " data setup " + "=" * 50)[0:60])
+            print('length of dataset:{}'.format(len(dataset_train) + len(dataset_test)))
+            print('num. of training data:{}'.format(len(dataset_train)))
+            print('num. of testing data:{}'.format(len(dataset_test)))
+            print('num. of classes:{}'.format(args.num_classes))
+            print('num. of users:{}'.format(len(dict_users)))
+
+            print('arg.num_users:{}'.format(args.num_users))
+            
+
+            sample_per_users = 25000  # for two users , we take 25000 samples as per the loop
+
+            
+            #train_size, test_size, sample_per_users= training_and_testing_size(args.num_users)
+            #print(f"train_size: {train_size} | test_size: {test_size}")
+            
+            train_size = 9000
+            test_size = 1000
+            
+            
+            print('num. of samples per user:{}'.format(sample_per_users))
+            if args.dataset == 'fmnist' or args.dataset == 'cifar':
+                dataset_test, val_set = torch.utils.data.random_split(
+                    dataset_test, [train_size, test_size])
+                # dataset_test, val_set = torch.utils.data.random_split(
+                #     dataset_test, [9000, 1000])
+                print(len(dataset_test), len(val_set))
+            elif args.dataset == 'svhn':
+                dataset_test, val_set = torch.utils.data.random_split(
+                    dataset_test, [len(dataset_test) - 2000, 2000])
+                print(len(dataset_test), len(val_set))
+
+            print("{:<50}".format("=" * 15 + " log path " + "=" * 50)[0:60])
+            log_path = set_log_path(args)
+            print(log_path)
+
+            args, net_glob = model_setup(args)
+            print("{:<50}".format("=" * 15 + " model setup " + "=" * 50)[0:60])
+
+            ###################################### model initialization ###########################
+            print("{:<50}".format("=" * 15 + " training... " + "=" * 50)[0:60])
+            t1 = time.time()
+            print("Training starting....")
+            net_glob.train()
+            print("Training completed...")
+            print(net_glob.cpu())
+
+            # copy weights
+            global_model = copy.deepcopy(net_glob.state_dict())
+            local_m = []
+            train_local_loss = []
+            test_acc = []
+            norm_med = []
+            loss_locals = []
+            local_updates = []
+            delta_norms = []
+            seconds_to_match = 0
+            ###################################### run experiment ##########################
+
+
+            # initialize data loader
+            data_loader_list = []
+            print(len(dict_users))
+            index = args.num_users
+            for i in range(NODE_INDEX,NODE_ID):
+            # for i in range(response_node0.user_index,args.num_users):
+                print("broke here ")
+                dataset = DatasetSplit(dataset_train, dict_users[i])
+                ldr_train = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
+                data_loader_list.append(ldr_train)
+            ldr_train_public = DataLoader(val_set, batch_size=args.batch_size, shuffle=True)
+
+            
+            def get_global_node(tx,task_id):
+                result = tx.run("MATCH (g:global_model {task_id: $task_id}) RETURN g.task_id, g.state_ready,g.consumed,g.key,g.data",task_id=task_id)
+                records = list(result)  # a list of Record objects
+                summary = result.consume()
+                return records, summary
+            
+            
+            def create_client_node(tx, task_id, state_ready, consumed, key, data):
+                result = tx.run(
+                "CREATE (c:client_cluster {task_id: $task_id, state_ready: $state_ready, consumed: $consumed, data: $data, key: $key})",
+                task_id = task_id,state_ready = state_ready, consumed = consumed, data = data, key = key
+                )
+                summary = result.consume()        
+                return summary
+            
+            
+            m = max(int(args.frac * 1), 1)
+            print("m = ",m)
+            
+            mynode = NODE_ID
+            for t in range(args.round):
+                
+                loss_locals = []
+                local_updates = []
+                delta_norms = []
+                n = mynode
+                
+                new_global_model_queue_id = f'master_global_for_node[{n}]_round[{t}]'
+
+                
+                ####################### neo4j check #######################
+                
+                
+                while True:
+                    try:
+                        time.sleep(5)
+                        seconds_to_match = seconds_to_match + 5
+                        #status = mdb.master_global.find_one({'task_id':new_global_model_queue_id})
+                        #cur = session.cursor()
+                        #session = casandra_cluster.connect('iteration_status')
+                        #session.row_factory = dict_factory
+                        #select_str = f"select task_id,consumed,state_ready,key,data from iteration_status.master_global where task_id = '{new_global_model_queue_id}'; "
+                        #print("select_Str: ",select_str)
+                        #stn = session.execute(select_str)
+                        with driver.session(database="neo4j") as session:
+                            records, summary = session.execute_read(get_global_node,task_id=new_global_model_queue_id)
+
+                            # Summary information
+                            print("The query `{query}` returned {records_count} records in {time} ms.".format(
+                                query=summary.query, records_count=len(records),
+                                time=summary.result_available_after))
+
+                        
+                        # Loop through results and do something with them
+                        
+                        for task in records:
+                            #print(task.data())  # obtain record as dict
+                            status = task.data()
+                        
+                        
+                        print("STATUS: ",type(status))
+                        print("STATUS: ",status.keys())
+                        print("STATUS: ",status.get('g.state_ready'))
+                        
+                        status = dict(task_id=status.get('g.task_id'),state_ready=status.get('g.state_ready'),
+                                      consumed=status.get("g.consumed"),key=status.get("g.key"),data=status.get('g.data'))
+                        
+                        if status.get('state_ready') == True:
+                            print('status: ',200,' For :',status.get('task_id'))
+                            
+                            print("key status:",status.get('key'))
+                            print("key status type:",type(status.get('key')))
+                            
+                            
+                            keystr = str(status.get('key')).replace('\"',"\'")
+                            datastr = str(status.get('data')).replace('\"',"\'")
+                            keystr = keystr.replace("b'","")
+                            keystr = keystr.replace("'","")
+                            
+                            datastr = datastr.replace("b'","")
+                            datastr = datastr.replace("'","")
+                            
+                            global_model = bytes(datastr, 'utf-8')
+                            global_model_key = bytes(keystr, 'utf-8')
+                            
+                            print('global_model_key: ',global_model_key)
+                            
+                            
+                            print("key status type:",type(global_model_key))
+                            
+                            
+                            break
+                        else:
+                            pass
+                    except Exception as e:
+                        print(f'@ [{new_global_model_queue_id}] | Neo4j Exception Thrown :',e)    
+                    
+                ###################################################################
+
+                
+                args.local_lr = args.local_lr * args.decay_weight
+                selected_idxs = list(np.random.choice(range(1), m, replace=False))
+                print("In Round Loop: selected_idxs: ",selected_idxs)
+                num_selected_users = len(selected_idxs)
+                gm = []
+                
+                
+                fernet = Fernet(global_model_key)
+                
+                #global_model = torch.load(f'/mydata/flcode/models/nodes_trained_model/global_models/{new_global_model_queue_id}.pkl')
+                #print('breakpoint1')
+                #### error in decrypting global model
+                global_model = fernet.decrypt(global_model)
+                #print('breakpoint2')
+                global_model = pickle.loads(global_model)
+                #print('breakpoint3')
+                print("num_selected_users: ",num_selected_users)
+                   
+                print("t=",t ," | global_model: ",global_model.keys())
+                
+                ###################### local training : SGD for selected users ######################
+                    
+                for i in selected_idxs:
+                    print("selected_idx",i)
+                    l_solver = LocalUpdate(args=args)
+                    net_glob.load_state_dict(global_model)
+                    # choose local solver
+                    if args.local_solver == 'local_sgd':
+                        new_model, loss = l_solver.local_sgd(
+                        net=copy.deepcopy(net_glob).to(args.device),
+                        ldr_train=data_loader_list[i])
+                    # compute local delta
+                    model_update = {k: new_model[k] - global_model[k] for k in global_model.keys()}
+
+                    # compute local model norm
+                    delta_norm = torch.norm(
+                    torch.cat([
+                            torch.flatten(model_update[k])
+                            for k in model_update.keys()
+                        ]))
+                    delta_norms.append(delta_norm)
+
+                    local_updates.append(model_update)
+                    print("local updates len",len(local_updates), "index",len(local_updates[0]))
+                    loss_locals.append(loss)
+                norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
+                
+                t2 = time.time()
+                hours, rem = divmod(t2 - t1, 3600)
+                minutes, seconds = divmod(rem, 60)
+                print("Local training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
+                #################################
+                
+                local_model_node = f'node[{n}]_local_round[{t}]'
+                    
+                key = Fernet.generate_key()
+                fernet = Fernet(key)
+                
+                msg = pickle.dumps(local_updates)
+                
+                encmsg = fernet.encrypt(msg)
+                
+                torch.save(msg,f"/mydata/flcode/models/nodes_trained_model/nodes_local/{local_model_node}.pkl")
+                
+                model_path = f"/mydata/flcode/models/nodes_trained_model/nodes_local/{local_model_node}.pkl"
+                
+                
+                
+                ############### Insert local model data on Cassandra #######
+                #session = casandra_cluster.connect()
+                #cur = session.cursor()
+                
+                print("key: ", key)
+                print("key: ", type(key))
+                keystr = str(key).replace('\'',"\"")
+                datastr = str(encmsg).replace('\'',"\"")
+                print("keystr: ",keystr)
+                # insert_cql = f"""INSERT INTO iteration_status.client_cluster (task_id, state_ready, consumed , key, data) 
+                #               VALUES ({"'"+local_model_node+"'"}, {0}, {-1} , {"'"+keystr+"'"}, {"'"+datastr+"'"} ); """
+                # cur.execute(insert_cql)
+                # session.commit()
+                #session.execute(insert_cql)
+                
+                task_id = local_model_node
+                state_ready = True
+                consumed = False
+                data = datastr
+                key = keystr
+                
+                with driver.session(database="neo4j") as session:
+                    summary = session.execute_write(create_client_node, task_id=task_id, state_ready=state_ready, consumed=consumed,key=key,data=data)
+                    print("Created {nodes_created} nodes in {time} ms.".format(
+                    nodes_created=summary.counters.nodes_created,
+                    time=summary.result_available_after
+                    ))
+                
+                
+                
+                ################################################
+                                
+                
+                ###### loss local
+                
+                local_loss_node = f'node[{n}]_local_loss_round[{t}]'
+                
+                key = Fernet.generate_key()
+                fernet = Fernet(key)
+                
+                msg = pickle.dumps(loss_locals)
+                
+                encmsg = fernet.encrypt(msg)
+                
+                # send local loss to global Node
+                torch.save(msg,f"/mydata/flcode/models/nodes_trained_model/nodes_local_loss/{local_loss_node}.pkl")
+                
+                model_path = f"/mydata/flcode/models/nodes_trained_model/nodes_local_loss/{local_loss_node}.pkl"
+                
+          
+
+                print(" [x] local Loss sent Queue=",t)
+
+                
+ 
+                ############### Insert local model loss data on Cassandra #######
+                #session = casandra_cluster.connect()
+                #cur = session.cursor()
+                
+                print("key: ", key)
+                print("key: ", type(key))
+                keystr = str(key).replace('\'',"\"")
+                datastr = str(encmsg).replace('\'',"\"")
+                print("keystr: ",keystr)
+                #insert_cql = f"""INSERT INTO iteration_status.client_cluster (task_id, state_ready, consumed , key, data) 
+                #              VALUES ({"'"+local_loss_node+"'"}, {0}, {-1} , {"'"+keystr+"'"}, {"'"+datastr+"'"} ); """
+                #session.execute(insert_cql)
+                #cur.execute(insert_cql)
+                #session.commit()
+                
+                task_id = local_model_node
+                state_ready = True
+                consumed = False
+                data = datastr
+                key = keystr
+                
+                with driver.session(database="neo4j") as session:
+                    summary = session.execute_write(create_client_node, task_id=task_id, state_ready=state_ready, consumed=consumed,key=key,data=data)
+                    print("Created {nodes_created} nodes in {time} ms.".format(
+                    nodes_created=summary.counters.nodes_created,
+                    time=summary.result_available_after
+                    ))
+                
+                
+                
+                ################################################
+                t2 = time.time()
+                dbs_time =  t2 - t1
+                # dbs_time = dbs_time - seconds_to_match
+                hours, rem = divmod(dbs_time, 3600)
+                minutes, seconds = divmod(rem, 60)
+                print("training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))   
+                time_taken = "training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds)
+                result = '\n'+ time_taken+' \n '+'t {:3d}'.format(t) + '\n'
+                print(f'Moving to next iteration round t+1:[{t}+1] = {t+1} ')
+                filename = f'/mydata/flcode/node_output/neo4j-node{NODE_ID}-log.txt'
+                with open(filename, 'a') as the_file:
+                    the_file.write(result)
+                    the_file.close()
+                
+
     except Exception as e:
-        print(e)
+            print(f"Here Exception Thrown: {e}")
+            #channel.unsubscribe(close)
+            os.system('rm -rf /mydata/flcode/models/nodes_trained_model/global_models/* && rm -rf /mydata/flcode/models/nodes_trained_model/nodes_local/* && rm -rf /mydata/flcode/models/nodes_trained_model/nodes_local_loss/*')
+            exit(0)
+
+
+
+# def client_postgres_1(args):
+#     #conn = psycopg2.connect(database = "ddfl", user = "postgres", password = "postgres", host = "130.127.133.239", port = "5432")
+#     # print ("Opened database successfully")
+
+#     # cur = conn.cursor()
+#     # cur.execute('''CREATE TABLE master_global.COMPANY
+#     #   (ID INT PRIMARY KEY     NOT NULL,
+#     #   NAME           TEXT    NOT NULL,
+#     #   AGE            INT     NOT NULL,
+#     #   ADDRESS        CHAR(50),
+#     #   SALARY         REAL);''')
+#     # print ("Table created successfully")
+
+#     # conn.commit()
+#     # conn.close()
+#     table_string = '''
+#     CREATE TABLE iteration_status.master_global (
+#         task_id text,
+#         state_ready int,
+#         consumed int,
+#         key text,
+#         data text,
+#         PRIMARY KEY (task_id)
+#     );
+    
+#     '''
+    
+#     table_string_client = '''
+#     CREATE TABLE iteration_status.client_cluster (
+#                 task_id text,
+#                 state_ready int,
+#                 consumed int,
+#                 key text,
+#                 data text,
+#                 PRIMARY KEY (task_id)
+#                 );
+    
+#                 '''
+    
+    
+    
+    
+#     try:
+#         conn = psycopg2.connect(database = "ddfl", user = "postgres", password = "ng.dB.Q'3s`^9HVx", host = "104.198.252.184", port = "5432")
+#         print ("Opened database successfully")
+#         curr = conn.cursor()
+#         curr.execute('DROP TABLE IF EXISTS iteration_status.master_global;')
+#         curr.execute(table_string)
+#         conn.commit()
+#         conn.close()
+#         #session = casandra_cluster.connect()
+#         #session.execute("CREATE KEYSPACE IF NOT EXISTS iteration_status with replication = {'class':'SimpleStrategy','replication_factor':10};")
+#     except Exception as e:
+#         print(e)
         
-    try:
-        conn = psycopg2.connect(database = "ddfl", user = "postgres", password = "ng.dB.Q'3s`^9HVx", host = "104.198.252.184", port = "5432")
-        print ("Opened database successfully")
-        curr = conn.cursor()
-        curr.execute('DROP TABLE IF EXISTS iteration_status.client_cluster;')
-        curr.execute(table_string_client)
-        conn.commit()
-        conn.close()
-        #session = casandra_cluster.connect()
-        #session.execute("CREATE KEYSPACE IF NOT EXISTS iteration_status with replication = {'class':'SimpleStrategy','replication_factor':10};")
-    except Exception as e:
-        print(e)
+#     try:
+#         conn = psycopg2.connect(database = "ddfl", user = "postgres", password = "ng.dB.Q'3s`^9HVx", host = "104.198.252.184", port = "5432")
+#         print ("Opened database successfully")
+#         curr = conn.cursor()
+#         curr.execute('DROP TABLE IF EXISTS iteration_status.client_cluster;')
+#         curr.execute(table_string_client)
+#         conn.commit()
+#         conn.close()
+#         #session = casandra_cluster.connect()
+#         #session.execute("CREATE KEYSPACE IF NOT EXISTS iteration_status with replication = {'class':'SimpleStrategy','replication_factor':10};")
+#     except Exception as e:
+#         print(e)
+
+
 
 
 
@@ -1344,6 +1730,9 @@ if __name__ == '__main__':
     elif args.db == 'postgres':
         print('Postgres Selected...!')
         client_node_postgres()
+    elif args.db == 'neo4j':
+        print('Neo4j Selected...!')
+        client_node_neo4j()
     else:
         print('Database Not specified or incorrect entry...!')
         exit(0)
