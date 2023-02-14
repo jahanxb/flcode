@@ -1269,7 +1269,7 @@ def client_node_neo4j():
     pid = os.getpid()
     try:
 
-            uri_neo4j = "neo4j://34.171.91.108:7687"
+            uri_neo4j = "neo4j://10.10.1.11:7687"
             user_neo4j = "neo4j"
             password_new4j = "oi2KksBMaHfsB355HdoHsI2Kzv4NoOUm7MnPNtnESIY"
     
