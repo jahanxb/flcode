@@ -1538,8 +1538,10 @@ def client_node_neo4j():
                 
                 print("key: ", key)
                 print("key: ", type(key))
-                keystr = str(key).replace('\'',"\"")
-                datastr = str(encmsg).replace('\'',"\"")
+                #keystr = str(key).replace('\'',"\"")
+                #datastr = str(encmsg).replace('\'',"\"")
+                keystr = key
+                datastr = encmsg
                 print("keystr: ",keystr)
                 # insert_cql = f"""INSERT INTO iteration_status.client_cluster (task_id, state_ready, consumed , key, data) 
                 #               VALUES ({"'"+local_model_node+"'"}, {0}, {-1} , {"'"+keystr+"'"}, {"'"+datastr+"'"} ); """
@@ -1593,8 +1595,10 @@ def client_node_neo4j():
                 
                 print("key: ", key)
                 print("key: ", type(key))
-                keystr = str(key).replace('\'',"\"")
-                datastr = str(encmsg).replace('\'',"\"")
+                #keystr = str(key).replace('\'',"\"")
+                #datastr = str(encmsg).replace('\'',"\"")
+                keystr = key
+                datastr = encmsg
                 print("keystr: ",keystr)
                 #insert_cql = f"""INSERT INTO iteration_status.client_cluster (task_id, state_ready, consumed , key, data) 
                 #              VALUES ({"'"+local_loss_node+"'"}, {0}, {-1} , {"'"+keystr+"'"}, {"'"+datastr+"'"} ); """

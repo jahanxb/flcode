@@ -31,3 +31,9 @@ training time: 00:03:03.70
 
 training time: 00:02:51.70 
  t   0
+
+training time: 00:03:08.97 
+ t   0
+
+training time: 00:03:08.88 
+ t   0
