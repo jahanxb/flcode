@@ -1602,7 +1602,7 @@ def client_node_neo4j():
                 #cur.execute(insert_cql)
                 #session.commit()
                 
-                task_id = local_model_node
+                task_id = local_loss_node
                 state_ready = True
                 consumed = False
                 data = datastr
