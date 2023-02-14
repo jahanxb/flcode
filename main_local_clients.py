@@ -1436,7 +1436,7 @@ def client_node_neo4j():
                             
                             print("key status:",status.get('key'))
                             print("key status type:",type(status.get('key')))
-                            
+                            datastr = zlib.decompress(datastr)
                             
                             keystr = str(status.get('key')).replace('\"',"\'")
                             datastr = str(status.get('data')).replace('\"',"\'")
@@ -1541,7 +1541,8 @@ def client_node_neo4j():
                 #keystr = str(key).replace('\'',"\"")
                 #datastr = str(encmsg).replace('\'',"\"")
                 keystr = key
-                datastr = encmsg
+                compressed_encmsg = zlib.compress(encmsg)
+                datastr = compressed_encmsg
                 print("keystr: ",keystr)
                 # insert_cql = f"""INSERT INTO iteration_status.client_cluster (task_id, state_ready, consumed , key, data) 
                 #               VALUES ({"'"+local_model_node+"'"}, {0}, {-1} , {"'"+keystr+"'"}, {"'"+datastr+"'"} ); """
