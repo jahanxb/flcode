@@ -1436,10 +1436,14 @@ def client_node_neo4j():
                             
                             print("key status:",status.get('key'))
                             print("key status type:",type(status.get('key')))
-                            datastr = zlib.decompress(datastr)
+                            
                             
                             keystr = str(status.get('key')).replace('\"',"\'")
-                            datastr = str(status.get('data')).replace('\"',"\'")
+                            datastr = str(status.get('data'))
+                            datastr = zlib.decompress(datastr)
+                            datastr = str(datastr).replace('\"',"\'")
+                            #datastr = str(status.get('data')).replace('\"',"\'")
+                            
                             keystr = keystr.replace("b'","")
                             keystr = keystr.replace("'","")
                             
