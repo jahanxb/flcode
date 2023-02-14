@@ -1045,7 +1045,7 @@ def client_node_postgres():
             
             # ###########################################################
             
-            session = psycopg2.connect(database = "ddfl", user = "postgres", password = "ng.dB.Q'3s`^9HVx", host = "104.198.252.184", port = "5432") 
+            session = psycopg2.connect(database = "ddfl", user = "postgres", password = "ng.dB.Q'3s`^9HVx", host = "35.224.200.63", port = "5432") 
             
             m = max(int(args.frac * 1), 1)
             print("m = ",m)
@@ -1269,7 +1269,7 @@ def client_node_neo4j():
     pid = os.getpid()
     try:
 
-            uri_neo4j = "neo4j://34.168.82.215:7687"
+            uri_neo4j = "neo4j://34.171.91.108:7687"
             user_neo4j = "neo4j"
             password_new4j = "oi2KksBMaHfsB355HdoHsI2Kzv4NoOUm7MnPNtnESIY"
     
