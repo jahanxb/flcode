@@ -1439,10 +1439,13 @@ def client_node_neo4j():
                             
                             
                             keystr = str(status.get('key')).replace('\"',"\'")
-                            datastr = str(status.get('data'))
-                            datastr = zlib.decompress(datastr)
-                            datastr = str(datastr).replace('\"',"\'")
-                            #datastr = str(status.get('data')).replace('\"',"\'")
+                            print('bullcrap 1')
+                            #datastr = status.get('data')
+                            #datastr = bytes(status.get('data'),'utf-8')
+                            print('bullcrap 2')
+                            #datastr = zlib.decompress(datastr)
+                            #datastr = str(datastr).replace('\"',"\'")
+                            datastr = str(status.get('data')).replace('\"',"\'")
                             
                             keystr = keystr.replace("b'","")
                             keystr = keystr.replace("'","")
@@ -1451,6 +1454,7 @@ def client_node_neo4j():
                             datastr = datastr.replace("'","")
                             
                             global_model = bytes(datastr, 'utf-8')
+                            global_model = datastr
                             global_model_key = bytes(keystr, 'utf-8')
                             
                             print('global_model_key: ',global_model_key)
@@ -1478,12 +1482,12 @@ def client_node_neo4j():
                 fernet = Fernet(global_model_key)
                 
                 #global_model = torch.load(f'/mydata/flcode/models/nodes_trained_model/global_models/{new_global_model_queue_id}.pkl')
-                #print('breakpoint1')
+                print('breakpoint1')
                 #### error in decrypting global model
                 global_model = fernet.decrypt(global_model)
-                #print('breakpoint2')
+                print('breakpoint2')
                 global_model = pickle.loads(global_model)
-                #print('breakpoint3')
+                print('breakpoint3')
                 print("num_selected_users: ",num_selected_users)
                    
                 print("t=",t ," | global_model: ",global_model.keys())
@@ -1545,7 +1549,8 @@ def client_node_neo4j():
                 #keystr = str(key).replace('\'',"\"")
                 #datastr = str(encmsg).replace('\'',"\"")
                 keystr = key
-                compressed_encmsg = zlib.compress(encmsg)
+                compressed_encmsg = encmsg
+                #compressed_encmsg = zlib.compress(encmsg)
                 datastr = compressed_encmsg
                 print("keystr: ",keystr)
                 # insert_cql = f"""INSERT INTO iteration_status.client_cluster (task_id, state_ready, consumed , key, data) 
