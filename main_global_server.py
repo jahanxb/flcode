@@ -1163,7 +1163,7 @@ def serve_postgres(args):
     
     
     try:
-        conn = psycopg2.connect(database = "ddfl", user = "postgres", password = "ng.dB.Q'3s`^9HVx", host = "104.198.252.184", port = "5432")
+        conn = psycopg2.connect(database = "ddfl", user = "postgres", password = "ng.dB.Q'3s`^9HVx", host = "35.224.200.63", port = "5432")
         print ("Opened database successfully")
         curr = conn.cursor()
         curr.execute('DROP TABLE IF EXISTS iteration_status.master_global;')
@@ -1176,7 +1176,7 @@ def serve_postgres(args):
         print(e)
         
     try:
-        conn = psycopg2.connect(database = "ddfl", user = "postgres", password = "ng.dB.Q'3s`^9HVx", host = "104.198.252.184", port = "5432")
+        conn = psycopg2.connect(database = "ddfl", user = "postgres", password = "ng.dB.Q'3s`^9HVx", host = "35.224.200.63", port = "5432")
         print ("Opened database successfully")
         curr = conn.cursor()
         curr.execute('DROP TABLE IF EXISTS iteration_status.client_cluster;')
@@ -1189,7 +1189,7 @@ def serve_postgres(args):
         print(e)
 
 
-    session = psycopg2.connect(database = "ddfl", user = "postgres", password = "ng.dB.Q'3s`^9HVx", host = "104.198.252.184", port = "5432")
+    session = psycopg2.connect(database = "ddfl", user = "postgres", password = "ng.dB.Q'3s`^9HVx", host = "35.224.200.63", port = "5432")
     
     #########################################################
 
@@ -1344,7 +1344,8 @@ def serve_postgres(args):
                         statusl.append(dict(zip(columns, row)))
                     #print("select_Str: ",select_str)
                     #stn = session.execute(select_str)
-                        
+                    
+                    print("status list",statusl)
                         
                     status = statusl[0]
                     print("STATUS: ",type(status))
@@ -1563,7 +1564,7 @@ def serve_postgres(args):
 
 
 def test_neo4j(args):
-    uri_neo4j = "neo4j://34.168.82.215:7687"
+    uri_neo4j = "neo4j://10.10.1.10:7687"
     user_neo4j = "neo4j"
     password_new4j = "oi2KksBMaHfsB355HdoHsI2Kzv4NoOUm7MnPNtnESIY"
     
@@ -1758,6 +1759,9 @@ def test_neo4j(args):
             '''LOCAL ROUND CHECK'''
             while True:
                 task_id = f'node[{n}]_local_round[{t}]'
+                
+                
+                status = dict()
                 try:
                     time.sleep(5)
                     seconds_to_match = seconds_to_match + 5
@@ -1772,19 +1776,27 @@ def test_neo4j(args):
                                 query=summary.query, records_count=len(records),
                                 time=summary.result_available_after))
 
+                        #print("records: ",records)
                         
                         # Loop through results and do something with them
                         for task in records:
                             #print(task.data())  # obtain record as dict
                             status = task.data()
-                        
-                        
-                        print("STATUS: ",type(status))
-                        print("STATUS: ",status.keys())
-                        print("STATUS: ",status.get('g.state_ready'))
+                            print("inside loop  ")
+                            print("STATUS: ",type(status))
+                            print("STATUS: ",status.keys())
+                            print("STATUS: ",status.get('c.state_ready'))    
+                            print("loop end")
                         
                         status = dict(task_id=status.get('c.task_id'),state_ready=status.get('c.state_ready'),
                                       consumed=status.get("c.consumed"),key=status.get("c.key"),data=status.get('c.data'))
+                        
+                        print("STATUS: ",type(status))
+                        print("STATUS: ",status.keys())
+                        print("STATUS: ",status.get('c.state_ready'))
+                        print("task id: ",task_id)
+                        
+                        
                         
                     
                     
@@ -1793,20 +1805,24 @@ def test_neo4j(args):
                     if status.get('state_ready') == True:
                         print('status: ',200,' For :',status.get('task_id'))
                         local_model_key = status.get('key')
+                        print('local_model_key: ',local_model_key)
+                        #local_model_key = str(local_model_key).replace('\'',"\"")
                         local_model = status.get('data')
                         #local_model = zlib.decompress(local_model)
                         
                         break
                     else:
                         pass
+                    
                 except Exception as e:
-                    print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+                    print(f'@ [{task_id}] | Neo4j [local model] Exception Thrown :',e)
                     
             
             
             '''LOCAL LOSS ROUND CHECK '''
             while True:
                 task_id = f'node[{n}]_local_loss_round[{t}]'
+                status = dict()
                 try:
                     time.sleep(5)
                     seconds_to_match = seconds_to_match + 5
@@ -1826,27 +1842,37 @@ def test_neo4j(args):
                         for task in records:
                             #print(task.data())  # obtain record as dict
                             status = task.data()
-                        
+                            print("inside loop  ")
+                            print("STATUS: ",type(status))
+                            print("STATUS: ",status.keys())
+                            print("STATUS: ",status.get('c.state_ready'))    
+                            print("loop end")
+                             
+                        status = dict(task_id=status.get('c.task_id'),state_ready=status.get('c.state_ready'),
+                                      consumed=status.get("c.consumed"),key=status.get("c.key"),data=status.get('c.data'))
                         
                         print("STATUS: ",type(status))
                         print("STATUS: ",status.keys())
-                        print("STATUS: ",status.get('g.state_ready'))
+                        print("STATUS: ",status.get('c.state_ready'))
                         
-                        status = dict(task_id=status.get('c.task_id'),state_ready=status.get('c.state_ready'),
-                                      consumed=status.get("c.consumed"),key=status.get("c.key"),data=status.get('c.data'))
+                        
                         
                     
                     
                     if status.get('state_ready') == True:
                         print('status: ',200,' For :',status.get('task_id'))
                         local_model_loss_key = status.get('key')
+                        print('local_model_loss_key: ',local_model_loss_key)
+                        #local_model_loss_key = str(local_model_loss_key).replace('\'',"\"")
                         local_model_loss = status.get('data')
                         #local_model_loss = zlib.decompress(local_model_loss)
                         break
+                        
                     else:
                         pass
+                        
                 except Exception as e:
-                    print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+                    print(f'@ [{task_id}] | Neo4j [local-loss] Exception Thrown :',e)
             ############################################################################################
             print('################## TrainingTest onum_selected_usersn aggregated Model ######################')
             

@@ -11,6 +11,11 @@ client_nodes_addr = {
 }
 
 #mongodb_url = 'mongodb://jahanxb:phdunr@130.127.133.239:27017/?authMechanism=DEFAULT&authSource=flmongo&tls=false'
-mongodb_url = 'mongodb+srv://jahanxb:phdunr@flmongo.7repipw.mongodb.net/?retryWrites=true&w=majority'
+#mongodb_url = 'mongodb+srv://jahanxb:phdunr@flmongo.7repipw.mongodb.net/?retryWrites=true&w=majority'
+
+# mongodb_url = 'mongodb://jahanxb:phdunr@10.10.1.1:27017/?authMechanism=DEFAULT&authSource=flmongo&tls=false'
+
+mongodb_url = 'mongodb://jahanxb:phdunr@10.10.1.1:27017/iteration_status?authMechanism=DEFAULT&authSource=admin&tls=false'
+
 
 cassandra_addr = '10.10.1.2'

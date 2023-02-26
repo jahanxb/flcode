@@ -174,3 +174,4 @@ training time: 00:06:57.64
 
 training time: 00:07:23.05 
  t   9: train_loss = 0.013, test_acc = 92.856
+############################

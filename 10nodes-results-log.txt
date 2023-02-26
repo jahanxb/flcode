@@ -253,3 +253,14 @@ training time: 00:08:58.87
 
 training time: 00:09:35.95 
  t   9: train_loss = 0.110, test_acc = 90.656
+######################## FMNIST #################################################################
+
+
+training time: 00:01:03.84 
+ t   0: train_loss = 0.436, test_acc = 88.311
+
+training time: 00:01:12.39 
+ t   1: train_loss = 0.222, test_acc = 91.122
+
+training time: 00:01:21.03 
+ t   2: train_loss = 0.135, test_acc = 92.011
