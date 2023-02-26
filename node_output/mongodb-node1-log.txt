@@ -178,3 +178,33 @@ training time: 00:39:49.25
 
 training time: 00:45:42.84 
  t   9
+
+training time: 00:04:36.03 
+ t   0
+
+training time: 00:10:30.26 
+ t   1
+
+training time: 00:16:34.91 
+ t   2
+
+training time: 00:22:13.68 
+ t   3
+
+training time: 00:28:11.74 
+ t   4
+
+training time: 00:34:16.22 
+ t   5
+
+training time: 00:40:15.00 
+ t   6
+
+training time: 00:46:05.44 
+ t   7
+
+training time: 00:51:59.86 
+ t   8
+
+training time: 00:57:51.41 
+ t   9
