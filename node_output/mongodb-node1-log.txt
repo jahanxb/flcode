@@ -208,3 +208,102 @@ training time: 00:51:59.86
 
 training time: 00:57:51.41 
  t   9
+
+training time: 00:03:09.46 
+ t   0
+
+training time: 00:07:41.33 
+ t   1
+
+training time: 00:12:01.18 
+ t   2
+
+training time: 00:16:42.75 
+ t   3
+
+training time: 00:21:01.83 
+ t   4
+
+training time: 00:25:44.09 
+ t   5
+
+training time: 00:30:10.87 
+ t   6
+
+training time: 00:34:45.26 
+ t   7
+
+training time: 00:39:00.18 
+ t   8
+
+training time: 00:43:05.18 
+ t   9
+
+training time: 00:02:51.14 
+ t   0
+
+training time: 00:07:28.08 
+ t   1
+
+training time: 00:12:12.34 
+ t   2
+
+training time: 00:04:18.87 
+ t   0
+
+training time: 00:02:57.32 
+ t   0
+
+training time: 00:06:53.23 
+ t   1
+
+training time: 00:10:46.35 
+ t   2
+
+training time: 00:14:35.64 
+ t   3
+
+training time: 00:18:34.40 
+ t   4
+
+training time: 00:22:14.12 
+ t   5
+
+training time: 00:26:22.79 
+ t   6
+
+training time: 00:30:31.17 
+ t   7
+
+training time: 00:34:18.55 
+ t   8
+
+training time: 00:02:48.87 
+ t   0
+
+training time: 00:05:39.58 
+ t   1
+
+training time: 00:08:40.95 
+ t   2
+
+training time: 00:11:57.14 
+ t   3
+
+training time: 00:14:42.89 
+ t   4
+
+training time: 00:17:58.34 
+ t   5
+
+training time: 00:21:20.30 
+ t   6
+
+training time: 00:24:16.93 
+ t   7
+
+training time: 00:27:30.76 
+ t   8
+
+training time: 00:30:25.55 
+ t   9
