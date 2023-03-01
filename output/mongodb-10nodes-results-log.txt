@@ -89,3 +89,104 @@ training time: 00:01:16.72
 
 training time: 00:01:24.61 
  t   9: train_loss = 0.214, test_acc = 85.756
+#########
+training time: 00:00:13.54 
+ t   0: train_loss = 0.436, test_acc = 88.311
+
+training time: 00:00:21.87 
+ t   1: train_loss = 0.222, test_acc = 91.122
+
+training time: 00:00:30.27 
+ t   2: train_loss = 0.135, test_acc = 92.011
+
+training time: 00:00:38.55 
+ t   3: train_loss = 0.086, test_acc = 92.244
+
+training time: 00:00:46.94 
+ t   4: train_loss = 0.058, test_acc = 92.544
+
+training time: 00:00:55.13 
+ t   5: train_loss = 0.041, test_acc = 92.589
+
+training time: 00:01:03.82 
+ t   6: train_loss = 0.030, test_acc = 92.711
+
+training time: 00:01:12.06 
+ t   7: train_loss = 0.022, test_acc = 92.667
+
+training time: 00:01:20.20 
+ t   8: train_loss = 0.016, test_acc = 92.822
+
+training time: 00:01:28.30 
+ t   9: train_loss = 0.013, test_acc = 92.856
+
+training time: 00:00:13.57 
+ t   0: train_loss = 0.436, test_acc = 88.311
+
+training time: 00:00:22.00 
+ t   1: train_loss = 0.222, test_acc = 91.122
+
+training time: 00:00:30.23 
+ t   2: train_loss = 0.135, test_acc = 92.011
+
+training time: 00:00:06.76 
+ t   0: train_loss = 1.584, test_acc = 59.044
+
+############ FMNIST 8 - mongodb #################################
+training time: 00:00:11.51 
+ t   0: train_loss = 0.412, test_acc = 88.844
+
+training time: 00:00:18.48 
+ t   1: train_loss = 0.207, test_acc = 91.267
+
+training time: 00:00:25.49 
+ t   2: train_loss = 0.122, test_acc = 92.044
+
+training time: 00:00:32.51 
+ t   3: train_loss = 0.075, test_acc = 92.311
+
+training time: 00:00:39.56 
+ t   4: train_loss = 0.049, test_acc = 92.367
+
+training time: 00:00:46.40 
+ t   5: train_loss = 0.034, test_acc = 92.856
+
+training time: 00:00:53.25 
+ t   6: train_loss = 0.024, test_acc = 92.744
+
+training time: 00:01:00.17 
+ t   7: train_loss = 0.017, test_acc = 92.811
+
+training time: 00:01:07.09 
+ t   8: train_loss = 0.013, test_acc = 92.689
+######### FMNIST 2 #################################
+
+training time: 00:00:04.44 
+ t   0: train_loss = 0.304, test_acc = 91.033
+
+training time: 00:00:07.61 
+ t   1: train_loss = 0.139, test_acc = 92.378
+
+training time: 00:00:10.89 
+ t   2: train_loss = 0.068, test_acc = 92.222
+
+training time: 00:00:14.12 
+ t   3: train_loss = 0.035, test_acc = 92.744
+
+training time: 00:00:17.35 
+ t   4: train_loss = 0.020, test_acc = 92.900
+
+training time: 00:00:20.59 
+ t   5: train_loss = 0.013, test_acc = 92.889
+
+training time: 00:00:23.71 
+ t   6: train_loss = 0.008, test_acc = 92.989
+
+training time: 00:00:27.79 
+ t   7: train_loss = 0.006, test_acc = 92.489
+
+training time: 00:00:31.63 
+ t   8: train_loss = 0.004, test_acc = 92.833
+
+training time: 00:00:34.84 
+ t   9: train_loss = 0.003, test_acc = 93.000

@@ -62,6 +62,9 @@ import logging
 from neo4j.exceptions import ServiceUnavailable
 
 
+nodes =11
+node_index = 1
+
 casandra_cluster = Cluster([cassandra_addr],port=9042)
 
 
@@ -90,7 +93,7 @@ async def raise_me():
     await task
 
 
-nodes = 11 # 10 nodes (11 for loop)
+#nodes = 11 # 10 nodes (11 for loop)
 
 local_updates = []
 loss_locals = []
@@ -187,8 +190,7 @@ def serve_cassandra(args):
     local_updates = []
     delta_norms = []
     
-    nodes = 11
-    node_index = 1
+
     #num_selected_users = 2
     
         
@@ -613,8 +615,7 @@ def serve_mongodb(args):
     local_updates = []
     delta_norms = []
     
-    nodes = 11
-    node_index = 1
+
     num_selected_users = 2
     
     #mconn = MongoClient('mongodb+srv://jahanxb:phdunr@flmongo.7repipw.mongodb.net/?retryWrites=true&w=majority')
@@ -855,7 +856,7 @@ def serve_scp(args):
     print('num. of users:{}'.format(len(dict_users)))
     
     sample_per_users = int(sum([ len(dict_users[i]) for i in range(len(dict_users))])/len(dict_users))
-    sample_per_users = 5
+    sample_per_users = 25000
     print('num. of samples per user:{}'.format(sample_per_users))
        
     if args.dataset == 'fmnist' or args.dataset == 'cifar':
@@ -888,8 +889,6 @@ def serve_scp(args):
     local_updates = []
     delta_norms = []
     
-    nodes = 2
-    node_index = 1
     #num_selected_users = 2
     
     mconn = MongoClient(mongodb_url)
@@ -916,12 +915,24 @@ def serve_scp(args):
         print(selected_idxs)
         num_selected_users = len(selected_idxs)
         
-        for nodeid in range(1,11):    
+        for nodeid in range(node_index,nodes):    
             if t==0:
                 print('Initial Global Model...')
                 print('Queue Preparation for Global Model')
                 master_global_for_round = f'master_global_for_node[{nodeid}]_round[{t}]'
-            
+                #tensor = global_model.keys()
+                #num_values = tensor.numel()
+                #num_value = global_model.numel()
+                #num_values = torch.numel(global_model)
+                
+                #sum_of_values = sum([sum(v) for v in global_model.values()])
+                #print(sum_of_values)
+                total_values = sum([v.numel() for v in global_model.values()])
+                print(total_values)
+        
+                print("num_value on global model before aggregation: ",total_values) 
+                
+                #print("num_value on global model: ",sum_of_values)
                 msg = pickle.dumps(global_model)
             
                 torch.save(msg,f"/mydata/flcode/models/nodes_trained_model/global_models/{master_global_for_round}.pkl")
@@ -943,7 +954,7 @@ def serve_scp(args):
         print(" [x] Sent Round=",t)
         print(f'Round Process Started... Current Round on Master t={t}')
         
-        for n in range(1,11):    
+        for n in range(node_index,nodes):    
             ######################### Check status of Queues through MongoDB ############################
             '''GLOBAL ROUND CHECK'''
             
@@ -994,8 +1005,16 @@ def serve_scp(args):
             }
             
         print("global_model: ",global_model.keys())
-            
-            
+        
+        #tensor = global_model.keys()
+        #num_values = torch.numel(global_model)
+        #num_value = global_model.numel()
+        #sum_of_values = sum([sum(v) for v in global_model.values()])
+        total_values = sum([v.numel() for v in global_model.values()])
+        print(total_values)
+        
+        print("num_value on global model after aggregation: ",total_values)    
+        
         net_glob.load_state_dict(global_model)
         net_glob.eval()
         test_acc_, _ = test_img(net_glob, dataset_test, args)
@@ -1008,7 +1027,7 @@ def serve_scp(args):
         print('Submitting new global model: .....')
     
         # send model to nodes from here
-        for nn in range(1,11):
+        for nn in range(node_index,nodes):
             master_global_for_round = f'master_global_for_node[{nn}]_round[{t+1}]'
             
             msg = pickle.dumps(global_model)
@@ -1096,8 +1115,7 @@ def serve_postgres(args):
     local_updates = []
     delta_norms = []
     
-    nodes = 11
-    node_index = 1
+  
     #num_selected_users = 2
     
         
@@ -1617,9 +1635,7 @@ def test_neo4j(args):
     loss_locals = []
     local_updates = []
     delta_norms = []
-    
-    nodes = 11
-    node_index = 1
+
     num_selected_users = 2
     
     
@@ -1986,7 +2002,277 @@ def test_neo4j(args):
 
     
     
+def serve_mongodb_test(args):
     
+    
+    torch.manual_seed(args.seed+args.repeat)
+    torch.cuda.manual_seed(args.seed+args.repeat)
+    np.random.seed(args.seed+args.repeat)
+    
+    args, dataset_train, dataset_test, dict_users = data_setup(args)
+    print("{:<50}".format("=" * 15 + " data setup " + "=" * 50)[0:60])
+    print('length of dataset:{}'.format(len(dataset_train) + len(dataset_test)))
+    print('num. of training data:{}'.format(len(dataset_train)))
+    print('num. of testing data:{}'.format(len(dataset_test)))
+    print('num. of classes:{}'.format(args.num_classes))
+    print('num. of users:{}'.format(len(dict_users)))
+    
+    sample_per_users = int(sum([ len(dict_users[i]) for i in range(len(dict_users))])/len(dict_users))
+    sample_per_users = 25000
+    print('num. of samples per user:{}'.format(sample_per_users))
+       
+    if args.dataset == 'fmnist' or args.dataset == 'cifar':
+        dataset_test, val_set = torch.utils.data.random_split(
+            dataset_test, [9000, 1000])
+        print(len(dataset_test), len(val_set))
+    elif args.dataset == 'svhn':
+        dataset_test, val_set = torch.utils.data.random_split(
+            dataset_test, [len(dataset_test)-2000, 2000])
+        print(len(dataset_test), len(val_set))
+
+    print("{:<50}".format("=" * 15 + " log path " + "=" * 50)[0:60])
+    log_path = set_log_path(args)
+    print(log_path)
+
+    args, net_glob = model_setup(args)
+    print("{:<50}".format("=" * 15 + " model setup " + "=" * 50)[0:60])
+    
+    # ###################################### model initialization ###########################
+    print("{:<50}".format("=" * 15 + " training... " + "=" * 50)[0:60])
+    t1 = time.time()
+    net_glob.train()
+    # copy weights
+    global_model = copy.deepcopy(net_glob.state_dict())
+    local_m = []
+    train_local_loss = []
+    test_acc = []
+    norm_med = []
+    loss_locals = []
+    local_updates = []
+    delta_norms = []
+    
+
+    num_selected_users = 2
+    
+    #mconn = MongoClient('mongodb+srv://jahanxb:phdunr@flmongo.7repipw.mongodb.net/?retryWrites=true&w=majority')
+    mconn = MongoClient(mongodb_url)
+    
+    mdb = mconn['iteration_status']
+    
+    try:
+        mdb.create_collection('master_global')
+    except Exception as e:
+        print(e)
+        pass
+    try:
+        mdb.create_collection('master_global')
+    except Exception as e:
+        print(e)
+        pass
+    
+    
+    for t in range(args.round):
+        seconds_to_match = 0
+        loss_locals = []
+        local_updates = []
+        delta_norms = []
+        m = max(int(args.frac * args.num_users), 1)
+        args.local_lr = args.local_lr * args.decay_weight
+        selected_idxs = list(np.random.choice(range(args.num_users), m, replace=False))
+        print(selected_idxs)
+        num_selected_users = len(selected_idxs)
+        
+        print("num_selected_users: ",num_selected_users)
+                
+        for nodeid in range(node_index,nodes):    
+            if t==0:
+                print('Initial Global Model...')
+                print('Queue Preparation for Global Model')
+                master_global_for_round = f'master_global_for_node[{nodeid}]_round[{t}]'
+            
+                msg = pickle.dumps(global_model)
+                
+
+                
+                ####################################################################
+                
+                ######## Encryption Step 2 - Save encrypt data #####################
+                
+                encrypt_key_path = f'/mydata/flcode/models/node_encrypted/global_models/{master_global_for_round}'
+
+                key = Fernet.generate_key()
+                fernet = Fernet(key=key)
+                
+                encmsg = fernet.encrypt(msg)
+                
+                print("key: ",key)
+ 
+                torch.save(msg,f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl")
+                
+                model_path = f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl"
+
+                # send model to nodes from here 
+                print("mongodb_client_cluster.get() =",client_nodes_addr.get(nodeid))
+                #send_global_round(client_nodes_addr.get(nodeid),model_path)
+                
+                #compressed_pickle = blosc.compress(encmsg)
+                
+                #compressed_encmsg = zlib.compress(encmsg)
+                compressed_encmsg = encmsg
+                size = sys.getsizeof(compressed_encmsg)
+                print(f'Size of msg: {size} bytes')
+               
+                mdb_msg = {'task_id':master_global_for_round,'state-ready':True,'consumed':False,
+                        
+                        "data":compressed_encmsg,
+                        "key":key
+                           }
+                
+                mdb.master_global.insert_one(mdb_msg)
+            
+            else:
+                pass
+            
+            
+        print(" [x] Sent Round=",t)
+        print(f'Round Process Started... Current Round on Master t={t}')
+        
+        for n in range(node_index,nodes):    
+            
+            '''LOCAL ROUND CHECK'''
+            while True:
+                task_id = f'node[{n}]_local_round[{t}]'
+                try:
+                    time.sleep(5)
+                    seconds_to_match = seconds_to_match + 5
+                    t1 = t1 + 5
+                    status = mdb.mongodb_client_cluster.find_one({'task_id':task_id})
+                    if status.get('state-ready') == True:
+                        print('status: ',200,' For :',status.get('task_id'))
+                        local_model_key = status.get('key')
+                        local_model = status.get('data')
+                        local_model = zlib.decompress(local_model)
+                        
+                        break
+                    else:
+                        pass
+                except Exception as e:
+                    print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+                    
+            
+            
+            '''LOCAL LOSS ROUND CHECK '''
+            while True:
+                task_id = f'node[{n}]_local_loss_round[{t}]'
+                try:
+                    time.sleep(5)
+                    seconds_to_match = seconds_to_match + 5
+                    t1 = t1 + 5
+                    status = mdb.mongodb_client_cluster.find_one({'task_id':task_id})
+                    if status.get('state-ready') == True:
+                        print('status: ',200,' For :',status.get('task_id'))
+                        local_model_loss_key = status.get('key')
+                        local_model_loss = status.get('data')
+                        local_model_loss = zlib.decompress(local_model_loss)
+                        break
+                    else:
+                        pass
+                except Exception as e:
+                    print(f'@ [{task_id}] | MongoDB Exception Thrown :',e)
+            ############################################################################################
+            print('################## TrainingTest onum_selected_usersn aggregated Model ######################')
+            
+            
+            #lp = torch.load(f'/mydata/flcode/models/nodes_sftp/nodes_local/node[{n}]_local_round[{t}].pkl')
+            fernet = Fernet(local_model_key)
+            lp = fernet.decrypt(local_model)
+            
+            
+            
+            lp = list(pickle.loads(lp))
+            local_updates.append(lp)
+            
+            #lp_loss = torch.load(f'/mydata/flcode/models/nodes_sftp/nodes_local_loss/node[{n}]_local_loss_round[{t}].pkl')
+            fernet = Fernet(local_model_loss_key)
+            lp_loss = fernet.decrypt(local_model_loss)
+            
+            lp_loss = list(pickle.loads(lp_loss))
+            loss_locals.append(lp_loss[0])
+        
+        print("num_selected_users: ",num_selected_users)
+        for i in range(num_selected_users):
+                print("i=",i)
+                global_model = {
+                    k: global_model[k] + local_updates[i][0][k] / num_selected_users
+                    for k in global_model.keys()
+                }
+
+                        
+       
+        
+        print("global_model: ",global_model.keys())
+            
+            
+        net_glob.load_state_dict(global_model)
+        net_glob.eval()
+        test_acc_, _ = test_img(net_glob, dataset_test, args)
+        test_acc.append(test_acc_)
+        train_local_loss.append(sum(loss_locals) / len(loss_locals))
+        print('t {:3d}: '.format(t, ))
+        print('t {:3d}: train_loss = {:.3f}, test_acc = {:.3f}'.
+                format(t, train_local_loss[-1], test_acc[-1]))
+            
+        print('Submitting new global model: .....')
+    
+        # send model to nodes from here
+        for nn in range(node_index,nodes):
+            master_global_for_round = f'master_global_for_node[{nn}]_round[{t+1}]'
+            
+            msg = pickle.dumps(global_model)
+            
+            torch.save(msg,f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl")
+            
+                
+            model_path = f"/mydata/flcode/models/nodes_sftp/global_models/{master_global_for_round}.pkl"
+
+            
+            key = Fernet.generate_key()
+            fernet = Fernet(key=key)
+                
+            encmsg = fernet.encrypt(msg)
+                
+            print("key: ",key)
+
+            compressed_encmsg = zlib.compress(encmsg)
+            #send_global_round(client_nodes_addr.get(nn),model_path)    
+            mdb_msg = {'task_id':master_global_for_round,'state-ready':True,'consumed':False,
+                       
+                        "data":compressed_encmsg,
+                        "key":key
+                       
+                       }
+            mdb.master_global.insert_one(mdb_msg)
+            print(" [x] Node=", nn," Sent Round=",t+1)
+
+            
+        
+        t2 = time.time()
+        
+        #dbs_time = datetime.timedelta(seconds=seconds_to_match)
+        dbs_time =  t2 - t1
+        #dbs_time = dbs_time - seconds_to_match
+        hours, rem = divmod(dbs_time, 3600)
+        minutes, seconds = divmod(rem, 60)
+         
+        print("training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))   
+        time_taken = "training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds)
+        result = '\n'+ time_taken+' \n '+'t {:3d}: train_loss = {:.3f}, test_acc = {:.3f}'.format(t, train_local_loss[-1], test_acc[-1]) + '\n'
+    
+        with open('/mydata/flcode/output/mongodb-10nodes-results-log.txt', 'a') as the_file:
+            the_file.write(result)
+            the_file.close()
+            
+
     
 
     
@@ -1996,7 +2282,7 @@ if __name__ == '__main__':
     args = call_parser()
     if args.db == 'mongodb':
         print('Mongodb selected...!')
-        serve_mongodb(args)
+        serve_mongodb_test(args)
     elif args.db == 'cassandra':
         print('Cassandra Selected...!')
         serve_cassandra(args)
