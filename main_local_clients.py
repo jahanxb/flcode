@@ -905,6 +905,7 @@ def client_node_scp():
                 
                 print(f'Moving to next iteration round t+1:[{t}+1] = {t+1} ')
                 
+                
                 ################################################
                 t2 = time.time()
                 dbs_time =  t2 - t1
