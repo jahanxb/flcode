@@ -15,6 +15,7 @@ do
   sleep 10
   #ssh jahanxb@10.10.1.$x -f "/mydata/flcode/venv/bin/pip install -r /mydata/flcode/reqpy38.txt"
 
+
   #scp pkg-git.sh jahanxb@10.10.1.$x:/users/jahanxb/pkg-git.sh
   #ssh jahanxb@10.10.1.$x -f "chmod +x /users/jahanxb/pkg-git.sh"
   #ssh jahanxb@10.10.1.$x -f "./pkg-git.sh"
