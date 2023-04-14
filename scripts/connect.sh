@@ -2,6 +2,7 @@
 #!/bin/bash
 
 rm -rf /mydata/flcode/models/nodes_trained_model/global_models/* && rm -rf /mydata/flcode/models/nodes_trained_model/nodes_local/* && rm -rf /mydata/flcode/models/nodes_trained_model/nodes_local_loss/*
+rm -rf /mydata/flcode/models/nodes_sftp/global_models/* && rm -rf /mydata/flcode/models/nodes_sftp/nodes_local/* && rm -rf /mydata/flcode/models/nodes_sftp/nodes_local_loss/*
 #scp -r cassandra.yaml jahanxb@10.10.1.2:/users/jahanxb/cassandra.yaml.1
 #scp -r cassandra.yaml jahanxb@10.10.1.3:/users/jahanxb/cassandra.yaml.1
 #scp -r cassandra.yaml jahanxb@10.10.1.4:/users/jahanxb/cassandra.yaml.1
@@ -20,6 +21,7 @@ do
   ssh jahanxb@10.10.1.$x -f 'killall screen'
   ssh jahanxb@10.10.1.$x -f "screen -ls | grep '(Detached)' | awk '{print $1}' | xargs -I % -t screen -X -S % quit"
   
+  #ssh jahanxb@10.10.1.$x -f 'cd /mydata/flcode && git stash && git pull origin main_local_clients --force'
   #ssh jahanxb@10.10.1.$x -f "sudo rm -rf /mydata/flcode/models/nodes_trained_model"
   
   ssh jahanxb@10.10.1.$x -f "mkdir /mydata/flcode/models/nodes_trained_model"
@@ -49,7 +51,9 @@ do
   #ssh jahanxb@10.10.1.$x -f "sudo rm -rf /var/lib/cassandra/*"
   #ssh jahanxb@10.10.1.$x -f "sudo systemctl start cassandra"
 
-
+  #ssh jahanxb@10.10.1.$x -f "sudo /mydata/flcode/venv/bin/pip install -r /mydata/flcode/reqpy38.txt"
+  #ssh jahanxb@10.10.1.$x -f "sudo /mydata/flcode/venv/bin/pip install blosc"
+  #sleep 10
 
   #ssh jahanxb@10.10.1.$x -f 'rm -rf /mydata/flcode/global_models && rm -rf /mydata/flcode/nodes_local && rm -rf /mydata/flcode/nodes_local_loss'
   

@@ -190,3 +190,33 @@ training time: 00:00:31.63
 
 training time: 00:00:34.84 
  t   9: train_loss = 0.003, test_acc = 93.000
+
+training time: 00:00:13.14 
+ t   0: train_loss = 0.436, test_acc = 88.311
+
+training time: 00:00:21.21 
+ t   1: train_loss = 0.222, test_acc = 91.122
+
+training time: 00:00:29.40 
+ t   2: train_loss = 0.135, test_acc = 92.011
+
+training time: 00:00:37.14 
+ t   3: train_loss = 0.086, test_acc = 92.244
+
+training time: 00:00:45.26 
+ t   4: train_loss = 0.058, test_acc = 92.544
+
+training time: 00:00:53.08 
+ t   5: train_loss = 0.041, test_acc = 92.589
+
+training time: 00:01:00.93 
+ t   6: train_loss = 0.030, test_acc = 92.711
+
+training time: 00:01:08.96 
+ t   7: train_loss = 0.022, test_acc = 92.667
+
+training time: 00:01:16.97 
+ t   8: train_loss = 0.016, test_acc = 92.822
+
+training time: 00:01:25.21 
+ t   9: train_loss = 0.013, test_acc = 92.856

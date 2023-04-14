@@ -429,3 +429,33 @@ training time: 00:10:29.05
 
 training time: 00:04:31.84 
  t   0: train_loss = 0.436, test_acc = 88.311
+#### FMNIST #########
+training time: 00:04:59.52 
+ t   0: train_loss = 0.436, test_acc = 88.222
+
+training time: 00:09:30.46 
+ t   1: train_loss = 0.221, test_acc = 91.056
+
+training time: 00:13:51.37 
+ t   2: train_loss = 0.135, test_acc = 92.033
+
+training time: 00:18:32.37 
+ t   3: train_loss = 0.086, test_acc = 92.233
+
+training time: 00:23:18.49 
+ t   4: train_loss = 0.058, test_acc = 92.389
+
+training time: 00:27:39.38 
+ t   5: train_loss = 0.041, test_acc = 92.722
+
+training time: 00:32:15.13 
+ t   6: train_loss = 0.029, test_acc = 92.744
+
+training time: 00:37:01.06 
+ t   7: train_loss = 0.022, test_acc = 92.911
+
+training time: 00:41:11.81 
+ t   8: train_loss = 0.016, test_acc = 92.922
+
+training time: 00:46:03.54 
+ t   9: train_loss = 0.013, test_acc = 92.800

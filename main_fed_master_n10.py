@@ -54,6 +54,8 @@ from declared_nodes import client_nodes_addr
 
 mongodb_url = 'mongodb://jahanxb:phdunr@130.127.133.239:27017/?authMechanism=DEFAULT&authSource=flmongo&tls=false'
 
+mongodb_url = 'mongodb://jahanxb:phdunr@10.10.1.1:27017/?authMechanism=DEFAULT&authSource=flmongo&tls=false'
+
 casandra_cluster = Cluster(['10.10.1.2'],port=9042)
 
 

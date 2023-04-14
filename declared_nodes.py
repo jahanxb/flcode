@@ -15,7 +15,8 @@ client_nodes_addr = {
 
 # mongodb_url = 'mongodb://jahanxb:phdunr@10.10.1.1:27017/?authMechanism=DEFAULT&authSource=flmongo&tls=false'
 
-mongodb_url = 'mongodb://jahanxb:phdunr@10.10.1.1:27017/iteration_status?authMechanism=DEFAULT&authSource=admin&tls=false'
+#mongodb_url = 'mongodb://jahanxb:phdunr@10.10.1.1:27017/iteration_status?authMechanism=DEFAULT&authSource=admin&tls=false'
 
+mongodb_url = 'mongodb://jahanxb:phdunr@10.10.1.1:27017/?authMechanism=DEFAULT&authSource=admin&tls=false'
 
 cassandra_addr = '10.10.1.2'
