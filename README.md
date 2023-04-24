@@ -19,3 +19,6 @@ sudo apt install python3.7
  python main_fed.py --gpu -1 --dataset cifar --round 50
  
  python -m grpc_tools.protoc -I/home/jahanxb/PycharmProjects/FLcode/proto --python_out=. --grpc_python_out=. /home/jahanxb/PycharmProjects/FLcode/proto/pingpong.proto
+
+
+### Heterogenous client Federated learning branch 
