@@ -62,3 +62,10 @@ sudo nodetool status
 
 # ## running on master node for 10 clients 
 python main_fed_master_n10.py --dataset cifar --round 10 --gpu -1 --tau 10 --num_users 10 --frac 1
+
+
+### heterogenous server federated learning
+
+```
+python hserver.py --dataset fmnist --round 10 --gpu -1 --tau 10 --num_users 10 --frac 1
+```
