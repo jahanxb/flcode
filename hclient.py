@@ -128,7 +128,7 @@ class MetaDataEtlClient:
         
         
     @staticmethod
-    def client_training_status(task_id,status,consumed):
+    def client_training_status(task_id,status,consumed,encryption_key):
         mdb = mongodb_connection['client_model']
         try:
             mdb.create_collection('local_model_training_status')
@@ -140,7 +140,8 @@ class MetaDataEtlClient:
             "metadata_id":"",
             "task_id":task_id,
             "status": status,
-            "consumed":consumed
+            "consumed":consumed,
+            "key":encryption_key
         }
         mdb.local_model_training_status.insert_one(training_status)
         
@@ -196,8 +197,20 @@ class ReplicationEngineClient:
         session.execute(insert_cql)
         
     
-            
-
+    @staticmethod
+    def data_storage_global_model(task_id):
+        '''
+        Get Global Model from Data Storage
+        '''
+        session = casandra_cluster.connect('iteration_status')
+        session.row_factory = dict_factory
+        select_str = f"select task_id,consumed,state_ready,key,data from iteration_status.master_global where task_id = '{task_id}'; "
+        print("select_Str: ",select_str)
+        stn = session.execute(select_str)
+        print(type(stn))
+        #print("stn: ",stn[0].get('key'))
+        return stn[0]
+    
 
 
 class DataLakeStorageEngineClient:
@@ -318,37 +331,52 @@ def serve_local_model(args):
                     seconds_to_match = seconds_to_match + 5
                     #row = mdb.master_global.find_one({'task_id':new_global_model_queue_id})
                     row = MetaDataEtlClient.get_global_model_status(task_id=new_global_model_queue_id)
-                
+                    print("row: ",row)
+                    #global_model_key = b''
                     if row.get('status') == True:
                         print('status: ',200,' For :',row.get('task_id'))
                         
                         '''
                         Write function for Cassandra Cluster
                         '''
+                        dbcass = ReplicationEngineClient.data_storage_global_model(task_id=new_global_model_queue_id)
                         
-                        # session = casandra_cluster.connect('iteration_status')
-                        # session.row_factory = dict_factory
-                        # select_str = f"select task_id,consumed,state_ready,key,data from iteration_status.master_global where task_id = '{new_global_model_queue_id}'; "
-                        # print("select_Str: ",select_str)
-                        # stn = session.execute(select_str)
-                        
-                        dbcass = stn[0]
-                        keystr = str(dbcass.get('key')).replace('\"',"\'")
-                        datastr = str(dbcass.get('data')).replace('\"',"\'")
-                        print("key: ",keystr)
-                        datastr = zlib.decompress(datastr)
+                        #keystr = str(dbcass.get('key')).replace('\"',"\'")
+                        print('its throwing up here....')
+                        #datastr = zlib.decompress(dbcass.get('data'))
+                        #datastr = str(dbcass.get('data')).replace('\"',"\'")
+                        #print("key: ",keystr)
+                        #datastr = zlib.decompress(datastr)
                         #keystr = keystr.replace("b'","")
                         #keystr = keystr.replace("'","")
-                            
+                        datastr = dbcass.get('data')
+                        #datastr = str(datastr,encoding='utf-8')
+                        print('data here: ',type(datastr))   
+                        print('data here: ',datastr)  
                         datastr = datastr.replace("b'","")
                         datastr = datastr.replace("'","")
-                            
-                            
+                        global_model = bytes(datastr, encoding='utf-8')
+                        #print("key: ",keystr)
+                        #global_model_key = bytes(keystr, 'utf-8')
+                        #global_model_key = keystr
                         
-                        global_model = bytes(datastr, 'utf-8')
-                        print("key: ",keystr)
-                        global_model_key = bytes(keystr, 'utf-8')
-                        global_model_key = keystr
+                        print('It will throw up')
+                        key_value = bytes(str(row.get('key'),encoding="utf-8"))                        
+                        print("It did not throw up")
+                        if isinstance(key_value, bytes):
+                            global_model_key = key_value
+                            if Fernet.is_valid(global_model_key):
+                                f = Fernet(global_model_key)
+                            else:
+                                raise ValueError('Invalid Fernet key')
+                        else:
+                            raise TypeError('Key must be a byte-like object')
+                            #global_model_key = bytes(key_value, 'utf-8')
+                        
+                        
+                        #keystr = str(row.get('key'))
+                        #print("keystr: ",keystr)
+                        #global_model_key = bytes(row.get('key'),'utf-8')
                             
                         print('global_model_key: ',global_model_key)
                             
@@ -438,7 +466,7 @@ def serve_local_model(args):
                            "data":compressed_encmsg, "key":key
                            
                            }
-                MetaDataEtlClient.client_training_status(task_id=local_model_node,status=True,consumed=False)
+                MetaDataEtlClient.client_training_status(task_id=local_model_node,status=True,consumed=False,encryption_key=key)
                 ReplicationEngineClient.data_storage(mode=True,data=compressed_encmsg,key=key,task_id=local_model_node)
                 
                 
