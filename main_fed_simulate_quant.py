@@ -1,10 +1,4 @@
-  
-    
-    
 
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# Python version: 3.6
 import copy
 import numpy as np
 import time, math
@@ -19,53 +13,19 @@ from models.test import test_img
 from torch.utils.data import DataLoader
 
 
+
+
+
 # from utils.rdp_accountant import compute_rdp, get_privacy_spent
 import warnings
 warnings.filterwarnings("ignore")
 torch.cuda.is_available()
 
 
-
-
-import mxnet as mx
-import numpy as np
-from copy import deepcopy
-import time
-from numpy import random
-from mxnet import nd, autograd, gluon
-
-
-
-
-
-def partial_trim(v, f):
-    '''
-    Partial-knowledge Trim attack. w.l.o.g., we assume the first f worker devices are compromised. 
-    v: the list of squeezed gradients
-    f: the number of compromised worker devices
-    '''
-    # first compute the statistics
-    vi_shape = v[0].shape
-    all_grads = nd.concat(*v, dim=1)
-    adv_grads = all_grads[:, :f]
-    e_mu = nd.mean(adv_grads, axis=1)  # mean
-    e_sigma = nd.sqrt(nd.sum(nd.square(nd.subtract(adv_grads, e_mu.reshape(-1, 1))), axis=1) / f)  # standard deviation
-
-    for i in range(f):
-        # apply attack to compromised worker devices with randomness
-        #norm = nd.norm(v[i])
-        v[i] = (e_mu - nd.multiply(e_sigma, nd.sign(e_mu)) * 3.5).reshape(vi_shape)
-        #v[i] = v[i]*norm / nd.norm(v[i])
-
-    return v
-
-
-
-
-
-
-
-
+def quantize_updates(state_dict, num_decimal_places=4):
+    for key in state_dict:
+        state_dict[key] = torch.round(state_dict[key] * (10**num_decimal_places)) / (10**num_decimal_places)
+    return state_dict
 
 
 if __name__ == '__main__':
@@ -165,6 +125,13 @@ if __name__ == '__main__':
             loss_locals.append(loss)
         norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
 
+        
+        # Apply simulated quantization
+        # Apply to local updates
+        for i in range(len(local_updates)):
+            local_updates[i] = quantize_updates(local_updates[i], num_decimal_places=4)
+        
+        
         ##################### communication: avg for all groups #######################
         model_update = {
             k: local_updates[0][k] * 0.0

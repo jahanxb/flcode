@@ -1,0 +1,113 @@
+=============== data setup =================================
+length of dataset:70000
+num. of training data:60000
+num. of testing data:10000
+num. of classes:10
+num. of users:10
+num. of samples per user:25000
+9000 1000
+=============== log path ===================================
+./log/fmnist/fedavg/cnn/round_10_tau_10_frac_1.0
+=============== model setup ================================
+=============== training... ================================
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+t   0: train_loss = 0.546, norm = 5.632, test_acc = 51.856
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+t   1: train_loss = 0.383, norm = 3.995, test_acc = 53.644
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+t   2: train_loss = 0.382, norm = 4.738, test_acc = 73.689
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+t   3: train_loss = 0.326, norm = 3.998, test_acc = 63.700
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+t   4: train_loss = 0.356, norm = 4.586, test_acc = 78.933
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+t   5: train_loss = 0.319, norm = 3.989, test_acc = 70.022
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+t   6: train_loss = 0.350, norm = 4.470, test_acc = 81.156
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+t   7: train_loss = 0.319, norm = 3.960, test_acc = 65.789
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+t   8: train_loss = 0.350, norm = 4.403, test_acc = 85.178
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+WARNING: The input does not fit in a single ciphertext, and some operations will be disabled.
+The following operations are disabled in this setup: matmul, matmul_plain, enc_matmul_plain, conv2d_im2col.
+If you need to use those operations, try increasing the poly_modulus parameter, to fit your input.
+t   9: train_loss = 0.318, norm = 3.932, test_acc = 61.689
+training time: 00:28:03.37

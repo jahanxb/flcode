@@ -48,22 +48,61 @@ class MLP(nn.Module):
 #         x = self.fc2(x)
 #         return x
 
+from torch.quantization import QuantStub, DeQuantStub
+
+
+# class CNNFmnist(nn.Module):
+#     def __init__(self, args):
+#         super(CNNFmnist, self).__init__()
+#         self.conv1 = nn.Conv2d(1, 32, kernel_size=5, padding=2)
+#         self.conv2 = nn.Conv2d(32, 64, kernel_size=5, padding=2)
+#         self.fc1 = nn.Linear(7*7*64, 512)
+#         self.fc2 = nn.Linear(512, args.num_classes)
+
+#     def forward(self, x):
+#         x = F.relu(F.max_pool2d(self.conv1(x), 2))
+#         x = F.relu(F.max_pool2d(self.conv2(x), 2))
+#         x = x.view(-1, x.shape[1]*x.shape[2]*x.shape[3])
+#         x = F.relu(self.fc1(x))
+#         x = F.dropout(x, training=self.training)
+#         x = self.fc2(x)
+#         return x
+    
 class CNNFmnist(nn.Module):
-    def __init__(self, args):
+    def __init__(self,args):  
         super(CNNFmnist, self).__init__()
+        self.quant = QuantStub()  # Quantization stub for input
         self.conv1 = nn.Conv2d(1, 32, kernel_size=5, padding=2)
         self.conv2 = nn.Conv2d(32, 64, kernel_size=5, padding=2)
         self.fc1 = nn.Linear(7*7*64, 512)
         self.fc2 = nn.Linear(512, args.num_classes)
+        self.dequant = DeQuantStub()  # Dequantization stub for output
 
+    # def forward(self, x):
+    #     x = self.quant(x)  # Quantize input
+    #     x = F.relu(F.max_pool2d(self.conv1(x), 2))
+    #     x = F.relu(F.max_pool2d(self.conv2(x), 2))
+    #     x = x.view(-1, 7*7*64)
+    #     x = F.relu(self.fc1(x))
+    #     x = F.dropout(x, training=self.training)
+    #     x = self.fc2(x)
+    #     x = self.dequant(x)  # Dequantize output
+    #     return x
+    
     def forward(self, x):
+        x = self.quant(x)  # Quantize input
         x = F.relu(F.max_pool2d(self.conv1(x), 2))
         x = F.relu(F.max_pool2d(self.conv2(x), 2))
-        x = x.view(-1, x.shape[1]*x.shape[2]*x.shape[3])
+        # Use .reshape(...) instead of .view(...)
+        x = x.reshape(-1, 7*7*64)
         x = F.relu(self.fc1(x))
         x = F.dropout(x, training=self.training)
         x = self.fc2(x)
+        x = self.dequant(x)  # Dequantize output
         return x
+
+
+
 
 class CNNSvhn(nn.Module):
     def __init__(self, args):

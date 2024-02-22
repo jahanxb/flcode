@@ -1,14 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# Python version: 3.6
-from asyncore import read
 import copy
-from fileinput import filename
-import sys
-import threading
-from collections import OrderedDict
-
-import grpc
 import numpy as np
 import time, math
 import torch
@@ -20,21 +10,42 @@ from options import call_parser
 from models.Update import LocalUpdate
 from models.test import test_img
 from torch.utils.data import DataLoader
-from concurrent import futures
+import tenseal as ts
+
+from tqdm import tqdm
+
 # from utils.rdp_accountant import compute_rdp, get_privacy_spent
 import warnings
-import glob
-import statistics
-
 warnings.filterwarnings("ignore")
 torch.cuda.is_available()
 
 
+context = ts.context(
+                ts.SCHEME_TYPE.CKKS,
+                poly_modulus_degree=8192,
+                coeff_mod_bit_sizes=[60, 40, 40, 60],
+                #n_threads=1,
+            )
+context.generate_galois_keys()
+context.global_scale = 2**40
 
-def serve(args):
+
+# Example aggregation (simplified for demonstration)
+def aggregate_quantized_updates(local_updates):
+    """Aggregate quantized updates from local models."""
+    aggregated_update = copy.deepcopy(local_updates[0])
+    for k in aggregated_update.keys():
+        for i in range(1, len(local_updates)):
+            aggregated_update[k] += local_updates[i][k]
+        aggregated_update[k] = aggregated_update[k] / len(local_updates)
+    return aggregated_update
+
+
+
+if __name__ == '__main__':
+    ################################### hyperparameter setup ########################################
+    args = call_parser()
     
-    
-        
     torch.manual_seed(args.seed+args.repeat)
     torch.cuda.manual_seed(args.seed+args.repeat)
     np.random.seed(args.seed+args.repeat)
@@ -47,7 +58,11 @@ def serve(args):
     print('num. of testing data:{}'.format(len(dataset_test)))
     print('num. of classes:{}'.format(args.num_classes))
     print('num. of users:{}'.format(len(dict_users)))
+    
     sample_per_users = int(sum([ len(dict_users[i]) for i in range(len(dict_users))])/len(dict_users))
+    
+    sample_per_users = 25000
+    
     print('num. of samples per user:{}'.format(sample_per_users))
     if args.dataset == 'fmnist' or args.dataset == 'cifar':
         dataset_test, val_set = torch.utils.data.random_split(
@@ -77,22 +92,29 @@ def serve(args):
     norm_med = []
     ####################################### run experiment ##########################
     
+    
+    
+    #print("global Model: empty state I guesss: ",global_model.get('fc2.bias'))
+    
+    
+    # import torch.quantization
+    # quantized_model = torch.quantization.quantize_dynamic(global_model, {torch.nn.Linear}, dtype=torch.qint8)
+    
+    # print('Quantized ModeL: ',quantized_model)
+    
+    
     # initialize data loader
     data_loader_list = []
-    print(len(dict_users))
     for i in range(args.num_users):
-
         dataset = DatasetSplit(dataset_train, dict_users[i])
         ldr_train = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
         data_loader_list.append(ldr_train)
     ldr_train_public = DataLoader(val_set, batch_size=args.batch_size, shuffle=True)
     
     m = max(int(args.frac * args.num_users), 1)
-    #m = 10
     for t in range(args.round):
         args.local_lr = args.local_lr * args.decay_weight
         selected_idxs = list(np.random.choice(range(args.num_users), m, replace=False))
-        print(selected_idxs)
         num_selected_users = len(selected_idxs)
 
         ###################### local training : SGD for selected users ######################
@@ -124,11 +146,17 @@ def serve(args):
             #     for k in model_update.keys():
             #         model_update[k] = model_update[k] / threshold
             
+            
+            
+            #print('model_update: ',model_update.get('fc2.bias'))
+            
+            
+            
             local_updates.append(model_update)
             loss_locals.append(loss)
-            print("local updates len",len(local_updates), "index",len(local_updates[0]))
         norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
 
+        #print('local_update : ',local_updates)
         ##################### communication: avg for all groups #######################
         model_update = {
             k: local_updates[0][k] * 0.0
@@ -144,12 +172,89 @@ def serve(args):
         ##################### testing on global model #######################
         net_glob.load_state_dict(global_model)
         net_glob.eval()
-        test_acc_, _ = test_img(net_glob, dataset_test, args)
+        
+        net_glob.qconfig = torch.quantization.get_default_qconfig('fbgemm')
+        # net_glob_prepared = torch.quantization.prepare(net_glob, inplace=False)
+        
+        # with torch.no_grad():
+        #     for data, _ in ldr_train:  # Use a part of the training data for calibration
+        #         net_glob_prepared(data)  # Forward pass for calibration
+        #         break
+
+        # net_glob_quantized = torch.quantization.convert(net_glob_prepared, inplace=False)
+        
+        model_prepared = torch.quantization.prepare(net_glob, inplace=False)
+        
+        for inputs, _ in ldr_train:
+            model_prepared(inputs)
+        
+        net_glob_quantized = torch.quantization.convert(model_prepared,inplace=False)        
+        
+        
+        '''
+        Now do Homomorphic Encryption on it 
+        '''
+        
+        start_time_he = time.time()
+
+        # Encrypt the model
+        state_dict_enc = net_glob_quantized.state_dict()
+        state_dict_dec = net_glob_quantized.state_dict()
+        #print("state_dict_enc: ",state_dict_enc)
+        
+        for name, tensor in tqdm(state_dict_enc.items()):
+            try:
+                
+                state_dict_enc[name] = ts.ckks_tensor(context, tensor)
+                print('state_dict_enc: ',state_dict_enc[name])
+            except:
+                # Skip non-tensor entries like num_batches_tracked
+                pass
+                #print(tensor)
+
+        #state_dict_dec = state_dict_enc.decrypt()
+
+        print(state_dict_enc)
+        print('*'*40)
+        print('Decryption Process....')
+        print('*'*40)
+        for name, tensor in tqdm(state_dict_enc.items()):
+            try:
+                state_dict_dec[name] = state_dict_enc[name].decrypt()
+                print('Success')
+                print('state_dict_dec: ',state_dict_dec[name])
+            except Exception as e:
+                #print(f'no success: {e}')
+                pass
+        
+        print(state_dict_dec)
+        
+        
+        # Print time to encrypt the model
+        print("Time to encrypt the model: {}s".format(time.time() - start_time_he))
+        
+        #print("net glob Quantization: ",net_glob_quantized)
+        #print("State_dict_encrypted : ",state_dict_enc.keys())
+        
+        
+        
+        '''
+        End of Homomorphic Encryption Module
+        '''
+        
+        net_glob_quantized = state_dict_dec
+        
+        test_acc_, _ = test_img(net_glob_quantized, dataset_test, args)
         test_acc.append(test_acc_)
+        
         train_local_loss.append(sum(loss_locals) / len(loss_locals))
         # print('t {:3d}: '.format(t, ))
         print('t {:3d}: train_loss = {:.3f}, norm = {:.3f}, test_acc = {:.3f}'.
                 format(t, train_local_loss[-1], norm_med[-1], test_acc[-1]))
+        #print(t,train_local_loss,test_acc)
+        
+        #print('t {:3d}: train_loss = {:.3f}, norm = {:.3f}, test_acc = {:.3f}'.
+        #        format(t, train_local_loss, norm_med, test_acc))
 
         if math.isnan(train_local_loss[-1]) or train_local_loss[-1] > 1e8 or t == args.round - 1:
             np.savetxt(log_path + "_test_acc_repeat_" + str(args.repeat) + ".csv",
@@ -161,86 +266,32 @@ def serve(args):
             np.savetxt(log_path + "_norm__repeat_" + str(args.repeat) + ".csv", norm_med, delimiter=",")
             break;
 
-        t2 = time.time()
-        hours, rem = divmod(t2-t1, 3600)
-        minutes, seconds = divmod(rem, 60)
-        print("training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours),int(minutes),seconds))
-
-    nodes = 2
-    local_updates = []
-    loss_locals = []
-    for n in range(nodes):
-        for t in range(args.round):
-            print(f'appending node{n}{t}')
-            localupdates = torch.load(f'/mydata/flcode/models/pickles/node{n}[{t}][0].pkl')
-            lossy = torch.load(f'/mydata/flcode/models/pickles/node{n}-loss[{t}][0].pkl')
-            local_updates.append(localupdates)
-            loss_locals.append(lossy[0])
-            
-    #print("len: ",len(local_updates))
-    #print("local update: ",local_updates[10][0].get('fc3.bias'))
-    num_selected_users = 2
-    #for t in range(args.round):
-    for i in range(num_selected_users):
-        global_model = {
-                    k: global_model[k] + local_updates[i][0][k] / num_selected_users
-                    for k in global_model.keys()
-                }
-
-    print('################## TrainingTest onum_selected_usersn aggregated Model ######################')
-    ##################### testing on global model #######################
-    net_glob.load_state_dict(global_model)
-    net_glob.eval()
-    test_acc_, _ = test_img(net_glob, dataset_test, args)
-    test_acc.append(test_acc_)
-    train_local_loss.append(sum(loss_locals) / len(loss_locals))
-    print('t {:3d}: '.format(t, ))
-    print('t {:3d}: train_loss = {:.3f}, norm = {:.3f}, test_acc = {:.3f}'.
-                  format(t, train_local_loss[-1], norm_med[-1], test_acc[-1]))
-
-    if math.isnan(train_local_loss[-1]) or train_local_loss[-1] > 1e8 or t == args.round - 1:
-        np.savetxt(log_path + "_test_acc_repeat_" + str(args.repeat) + ".csv",
-                           test_acc,
-                           delimiter=",")
-        np.savetxt(log_path + "_train_loss_repeat_" + str(args.repeat) + ".csv",
-                           train_local_loss,
-                           delimiter=",")
-        np.savetxt(log_path + "_norm__repeat_" + str(args.repeat) + ".csv", norm_med, delimiter=",")
-            #break;
-    #print(f't {t}: train_loss = {train_local_loss}, norm = {norm_med}, test_acc = {test_acc}')
-    
-
     t2 = time.time()
-    hours, rem = divmod(t2 - t1, 3600)
+    hours, rem = divmod(t2-t1, 3600)
     minutes, seconds = divmod(rem, 60)
-    print("training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
-
-
-def aggregation_avg(global_model, local_updates):
-    '''
-    simple average
-    '''
+    print("training time: {:0>2}:{:0>2}:{:05.2f}".format(int(hours),int(minutes),seconds))
     
-    model_update = {k: local_updates[0][k] *0.0 for k in local_updates[0].keys()}
-    for i in range(len(local_updates)):
-        model_update = {k: model_update[k] +  local_updates[i][k] for k in global_model.keys()}
-    global_model = {k: global_model[k] +  model_update[k]/ len(local_updates) for k in global_model.keys()}
-    return global_model
+    
+    #print('new Global model: ',global_model.get('fc2.bias'))
+    
+    
+    # Assume local_updates is a list of state_dicts from quantized local models
+    #global_model.load_state_dict(aggregate_quantized_updates(local_updates))
+    
+    #net_glob_quantized.eval()
+    
+    
+        # Measure time to encrypt the model
+    # start_time = time.time()
 
-if __name__ == '__main__':
-    args = call_parser()
+    # # Encrypt the model
+    # state_dict = net_glob_quantized.state_dict()
+    # for name, tensor in tqdm(state_dict.items()):
+    #     try:
+    #         state_dict[name] = ts.ckks_tensor(context, tensor)
+    #     except:
+    #         # Skip non-tensor entries like num_batches_tracked
+    #         print(tensor)
 
-    # #user_counter = int(args.num_users / 2)
-    # user_counter = 2
-    # print("user counter : ", user_counter)
-
-    # server_args = {
-    #     0: {
-    #         "user_index": user_counter, "dataset": "cifar", "gpu": -1, "round": 10
-    #     },
-    #     1: {
-    #         "user_index": args.num_users, "dataset": "cifar", "gpu": -1, "round": 10
-    #     }
-    # }
-    # args.num_users = user_counter
-    serve(args)
+    # # Print time to encrypt the model
+    # print("Time to encrypt the model: {}s".format(time.time() - start_time))
