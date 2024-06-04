@@ -79,57 +79,56 @@ if __name__ == '__main__':
     ldr_train_public = DataLoader(val_set, batch_size=args.batch_size, shuffle=True)
     
     m = max(int(args.frac * args.num_users), 1)
+    
+    
+    
+    
     for t in range(args.round):
         args.local_lr = args.local_lr * args.decay_weight
         selected_idxs = list(np.random.choice(range(args.num_users), m, replace=False))
         num_selected_users = len(selected_idxs)
 
-        ###################### local training : SGD for selected users ######################
+        # Local training
         loss_locals = []
         local_updates = []
         delta_norms = []
         for i in selected_idxs:
             l_solver = LocalUpdate(args=args)
             net_glob.load_state_dict(global_model)
-            # choose local solver
             if args.local_solver == 'local_sgd':
                 new_model, loss = l_solver.local_sgd(
-                    net=copy.deepcopy(net_glob).to(args.device),
-                    ldr_train=data_loader_list[i])
-            # compute local delta
+                net=copy.deepcopy(net_glob).to(args.device),
+                ldr_train=data_loader_list[i])
             model_update = {k: new_model[k] - global_model[k] for k in global_model.keys()}
-
-            # compute local model norm
-            delta_norm = torch.norm(
-                torch.cat([
-                    torch.flatten(model_update[k])
-                    for k in model_update.keys()
-                ]))
+            delta_norm = torch.norm(torch.cat([torch.flatten(model_update[k]) for k in model_update.keys()]))
             delta_norms.append(delta_norm)
-            
-            # clipping local model or not ? : no clip for cifar10
-            # threshold = delta_norm / args.clip
-            # if threshold > 1.0:
-            #     for k in model_update.keys():
-            #         model_update[k] = model_update[k] / threshold
-            
             local_updates.append(model_update)
             loss_locals.append(loss)
         norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
+
+        if len(local_updates) < 2:
+            raise RuntimeError("Not enough local updates for Bulyan aggregation")
+
+        
 
         ##################### communication: avg for all groups #######################
         # model_update = {
         #     k: local_updates[0][k] * 0.0
         #     for k in local_updates[0].keys()
         # }
+        
+        num_to_select = len(local_updates) - 2
+        
         # for i in range(num_selected_users):
         #     global_model = {
         #         k: global_model[k] + local_updates[i][k] / num_selected_users
         #         for k in global_model.keys()
         #     }
         
-        global_model = aggregation_avg(global_model=global_model, local_updates=local_updates)
+        # Bulyan Aggregation
         
+        
+        global_model = aggregation_bulyan(global_model, local_updates, num_to_select)
         
         ##################### testing on global model #######################
         net_glob.load_state_dict(global_model)

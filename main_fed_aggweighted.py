@@ -79,6 +79,10 @@ if __name__ == '__main__':
     ldr_train_public = DataLoader(val_set, batch_size=args.batch_size, shuffle=True)
     
     m = max(int(args.frac * args.num_users), 1)
+    
+    
+    
+    
     for t in range(args.round):
         args.local_lr = args.local_lr * args.decay_weight
         selected_idxs = list(np.random.choice(range(args.num_users), m, replace=False))
@@ -117,6 +121,11 @@ if __name__ == '__main__':
             loss_locals.append(loss)
         norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
 
+        
+        
+        weights = [1.0 / len(local_updates)] * len(local_updates)
+        
+        
         ##################### communication: avg for all groups #######################
         # model_update = {
         #     k: local_updates[0][k] * 0.0
@@ -128,7 +137,7 @@ if __name__ == '__main__':
         #         for k in global_model.keys()
         #     }
         
-        global_model = aggregation_avg(global_model=global_model, local_updates=local_updates)
+        global_model = aggregation_weighted(global_model, local_updates, weights)
         
         
         ##################### testing on global model #######################

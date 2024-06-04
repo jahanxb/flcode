@@ -1,3 +1,6 @@
+
+
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Python version: 3.6
@@ -79,6 +82,13 @@ if __name__ == '__main__':
     ldr_train_public = DataLoader(val_set, batch_size=args.batch_size, shuffle=True)
     
     m = max(int(args.frac * args.num_users), 1)
+    
+    # Initialize velocity for FedAvgM
+    velocity = {k: torch.zeros_like(v) for k, v in global_model.items()}
+
+    # Usage in your main script
+    momentum = 0.9  # Example momentum value
+    
     for t in range(args.round):
         args.local_lr = args.local_lr * args.decay_weight
         selected_idxs = list(np.random.choice(range(args.num_users), m, replace=False))
@@ -122,14 +132,21 @@ if __name__ == '__main__':
         #     k: local_updates[0][k] * 0.0
         #     for k in local_updates[0].keys()
         # }
+        
+        
+        
+        
         # for i in range(num_selected_users):
         #     global_model = {
         #         k: global_model[k] + local_updates[i][k] / num_selected_users
         #         for k in global_model.keys()
         #     }
         
-        global_model = aggregation_avg(global_model=global_model, local_updates=local_updates)
         
+        
+        # Communication: FedAvgM for all groups
+        global_model, velocity = aggregation_fedavgm(global_model, local_updates, momentum, velocity)
+    
         
         ##################### testing on global model #######################
         net_glob.load_state_dict(global_model)

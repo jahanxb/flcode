@@ -118,17 +118,19 @@ if __name__ == '__main__':
         norm_med.append(torch.median(torch.stack(delta_norms)).cpu())
 
         ##################### communication: avg for all groups #######################
-        # model_update = {
-        #     k: local_updates[0][k] * 0.0
-        #     for k in local_updates[0].keys()
-        # }
-        # for i in range(num_selected_users):
-        #     global_model = {
-        #         k: global_model[k] + local_updates[i][k] / num_selected_users
-        #         for k in global_model.keys()
-        #     }
+        model_update = {
+            k: local_updates[0][k] * 0.0
+            for k in local_updates[0].keys()
+        }
+        for i in range(num_selected_users):
+            global_model = {
+                k: global_model[k] + local_updates[i][k] / num_selected_users
+                for k in global_model.keys()
+            }
         
-        global_model = aggregation_avg(global_model=global_model, local_updates=local_updates)
+        
+        
+        global_model = aggregation_krum(global_model, local_updates)
         
         
         ##################### testing on global model #######################

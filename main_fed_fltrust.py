@@ -79,6 +79,14 @@ if __name__ == '__main__':
     ldr_train_public = DataLoader(val_set, batch_size=args.batch_size, shuffle=True)
     
     m = max(int(args.frac * args.num_users), 1)
+    
+    
+    # Initialize trust factors and trusted update
+    trust_factors = [1.0] * args.num_users  # Example trust factors
+    trusted_update = {k: torch.zeros_like(v) for k, v in global_model.items()}
+
+    
+    
     for t in range(args.round):
         args.local_lr = args.local_lr * args.decay_weight
         selected_idxs = list(np.random.choice(range(args.num_users), m, replace=False))
@@ -128,7 +136,8 @@ if __name__ == '__main__':
         #         for k in global_model.keys()
         #     }
         
-        global_model = aggregation_avg(global_model=global_model, local_updates=local_updates)
+        global_model = aggregation_fltrust(global_model, local_updates, trusted_update, trust_factors)
+
         
         
         ##################### testing on global model #######################

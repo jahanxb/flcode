@@ -128,7 +128,8 @@ if __name__ == '__main__':
         #         for k in global_model.keys()
         #     }
         
-        global_model = aggregation_avg(global_model=global_model, local_updates=local_updates)
+        
+        global_model = aggregation_trimmed_mean(global_model, local_updates)
         
         
         ##################### testing on global model #######################
