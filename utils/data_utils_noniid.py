@@ -164,7 +164,63 @@ def fmnist_noniid_old(dataset, num_users, flip_mapping=None, flip_fraction=0.1):
 #     return dict_users
 
 
-def fmnist_noniid(dataset, num_users, flip_mapping, flip_fraction):
+# def fmnist_noniid(dataset, num_users):
+#     """
+#     Sample non-I.I.D client data from FashionMNIST dataset
+#     :param dataset:
+#     :param num_users:
+#     :return: dict of image index
+#     """
+#     num_shards, num_imgs = 200, 300
+#     idx_shard = [i for i in range(num_shards)]
+#     dict_users = {i: np.array([], dtype='int64') for i in range(num_users)}
+#     idxs = np.arange(num_shards*num_imgs)
+#     labels = dataset.train_labels.numpy()
+
+#     # sort labels
+#     idxs_labels = np.vstack((idxs, labels))
+#     idxs_labels = idxs_labels[:, idxs_labels[1, :].argsort()]
+#     idxs = idxs_labels[0, :]
+
+#     # divide and assign
+#     for i in range(num_users):
+#         rand_set = set(np.random.choice(idx_shard, 2, replace=False))
+#         idx_shard = list(set(idx_shard) - rand_set)
+#         for rand in rand_set:
+#             dict_users[i] = np.concatenate((dict_users[i], idxs[rand*num_imgs:(rand+1)*num_imgs]), axis=0)
+#     return dict_users
+
+def fmnist_noniid(dataset, num_users):
+    """
+    Sample non-I.I.D client data from FashionMNIST dataset
+    :param dataset:
+    :param num_users:
+    :return: dict of image index
+    """
+    num_shards, num_imgs = 600, 100  # Increase the number of shards
+    idx_shard = [i for i in range(num_shards)]
+    dict_users = {i: np.array([], dtype='int64') for i in range(num_users)}
+    idxs = np.arange(num_shards * num_imgs)
+    labels = dataset.targets.numpy()
+
+    # sort labels
+    idxs_labels = np.vstack((idxs, labels))
+    idxs_labels = idxs_labels[:, idxs_labels[1, :].argsort()]
+    idxs = idxs_labels[0, :]
+
+    # divide and assign
+    for i in range(num_users):
+        num_user_shards = np.random.randint(1, 6)  # Randomly assign 1 to 5 shards to each user
+        rand_set = set(np.random.choice(idx_shard, num_user_shards, replace=False))
+        idx_shard = list(set(idx_shard) - rand_set)
+        for rand in rand_set:
+            dict_users[i] = np.concatenate((dict_users[i], idxs[rand*num_imgs:(rand+1)*num_imgs]), axis=0)
+    return dict_users
+
+
+
+
+def fmnist_noniid_labelflip_attack(dataset, num_users, flip_mapping, flip_fraction):
     """
     Sample non-I.I.D client data from FashionMNIST dataset with optional label flipping attack
     :param dataset: Dataset object containing the data
@@ -360,7 +416,7 @@ def fmnist_noniid(dataset, num_users, flip_mapping, flip_fraction):
 
 
 
-def data_setup_old(args):
+def data_setup(args):
     args.device = torch.device('cuda:{}'.format(args.gpu) if torch.cuda.is_available() and args.gpu != -1 else 'cpu')
     if args.dataset == 'mnist':
         path = './data/mnist'
@@ -478,7 +534,7 @@ def data_setup_old(args):
 
 
 
-def data_setup(args):
+def data_setup_fornoniid_attack_label_flip(args):
     args.device = torch.device('cuda:{}'.format(args.gpu) if torch.cuda.is_available() and args.gpu != -1 else 'cpu')
     if args.dataset == 'fmnist':
         path = './data/fmnist'
