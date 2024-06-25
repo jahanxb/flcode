@@ -99,6 +99,7 @@ def get_trainable_values(net, mydevice=None):
         N += params.numel()
     if mydevice:
         X = torch.empty(N, dtype=torch.float).to(mydevice)
+        print('Using GPU Device....')
     else:
         X = torch.empty(N, dtype=torch.float)
     X.fill_(0.0)
