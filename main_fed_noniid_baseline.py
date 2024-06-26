@@ -266,7 +266,7 @@ def fmnist_noniid(dataset, num_users):
     :param num_users:
     :return: dict of image index
     """
-    num_shards, num_imgs = 600, 100 #200, 300 #600, 100  # Increase the number of shards
+    num_shards, num_imgs = 200, 300 #600, 100 #200, 300 #600, 100  # Increase the number of shards
     idx_shard = [i for i in range(num_shards)]
     dict_users = {i: np.array([], dtype='int64') for i in range(num_users)}
     idxs = np.arange(num_shards * num_imgs)
@@ -279,7 +279,7 @@ def fmnist_noniid(dataset, num_users):
 
     # divide and assign
     for i in range(num_users):
-        num_user_shards = np.random.randint(1, 6)  # Randomly assign 1 to 5 shards to each user
+        num_user_shards = np.random.randint(1, num_users)  # Randomly assign 1 to 5 shards to each user
         rand_set = set(np.random.choice(idx_shard, num_user_shards, replace=False))
         idx_shard = list(set(idx_shard) - rand_set)
         for rand in rand_set:
