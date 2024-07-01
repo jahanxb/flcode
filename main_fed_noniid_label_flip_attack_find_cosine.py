@@ -87,7 +87,7 @@ def OLD_identify_malicious_users(updates, update_indices, z_score_threshold=2.0)
 
 
 
-def identify_malicious_users(updates, update_indices, z_score_threshold=2.0):
+def identify_malicious_users(updates, update_indices, z_score_threshold):
     """
     Identify potentially malicious users based on cosine similarity of their updates.
     :param updates: List of user updates (each update is a dictionary of model parameter tensors).
@@ -152,6 +152,111 @@ def flip_labels(labels, flip_mapping):
 
 
 
+def old_new_fmnist_noniid_label_flip_attack(dataset, num_users, flip_mapping, flip_fraction):
+    """
+    Sample non-I.I.D client data from FashionMNIST dataset with optional label flipping attack
+    :param dataset: Dataset object containing the data
+    :param num_users: Number of users (clients)
+    :param flip_mapping: Dictionary mapping original labels to flipped labels
+    :param flip_fraction: Fraction of users whose labels will be flipped
+    :return: dict of image index
+    """
+    num_shards, num_imgs = 600, 100 #200, 300 #600, 100  # Increase the number of shards
+    idx_shard = [i for i in range(num_shards)]
+    dict_users = {i: np.array([], dtype='int64') for i in range(num_users)}
+    idxs = np.arange(num_shards * num_imgs)
+    labels = dataset.targets.numpy()
+
+    # Sort labels
+    idxs_labels = np.vstack((idxs, labels))
+    idxs_labels = idxs_labels[:, idxs_labels[1, :].argsort()]
+    idxs = idxs_labels[0, :]
+
+    # Select random clients for label flipping
+    num_flip_users = int(flip_fraction * num_users)
+    
+    print('num_flip_users: ',num_flip_users)
+    #flip_users = np.random.randint(1,num_users, size=num_flip_users)
+    #flip_users = np.random.choice(num_users, size=num_flip_users, replace=False)
+    #print(flip_users)
+    #exit()
+    flip_users = np.random.choice(range(num_users), num_flip_users, replace=False)
+    #flip_users = [9]
+    print(f"Flipping labels for users: {flip_users}")
+    
+
+    # Divide and assign
+    for i in range(num_users):
+        num_user_shards = np.random.randint(1, 6)  # Randomly assign 1 to 5 shards to each user
+        ###num_user_shards = np.random.randint(1, num_users) 
+        rand_set = set(np.random.choice(idx_shard, num_user_shards, replace=False))
+        idx_shard = list(set(idx_shard) - rand_set)
+        user_data = []
+        for rand in rand_set:
+            user_data.extend(idxs[rand * num_imgs:(rand + 1) * num_imgs])
+
+        user_data = np.array(user_data)
+        if i in flip_users:
+            print(f"User {i} selected for label flipping.")
+            user_labels = labels[user_data]
+            print(f"Before flipping: User {i}, Labels: {np.unique(user_labels, ' | Count: ', return_counts=True)}")
+            flipped_labels = flip_labels(user_labels, flip_mapping)
+            #print('flipped labels: ',flipped_labels)
+            
+            labels[user_data] = flipped_labels
+            print(f"After flipping: User {i}, Labels: {np.unique(labels[user_data],' | Count: ', return_counts=True)}")
+
+            # Verify that labels were flipped correctly
+            for original_label, new_label in flip_mapping.items():
+                original_count = np.sum(user_labels == original_label)
+                new_count = np.sum(flipped_labels == new_label)
+                print(f"Label {original_label} flipped to {new_label}: {original_count} -> {new_count}")
+                if original_count > 0 and new_count == original_count:
+                    print(f"Label {original_label} was flipped correctly to {new_label}")
+                else:
+                    print(f"Label {original_label} flipping to {new_label} failed")
+
+        dict_users[i] = user_data
+    
+    
+    #  # Divide and assign
+    # for i in range(num_users):
+    #     num_user_shards = np.random.randint(1, 6)  # Randomly assign 1 to 5 shards to each user
+    #     rand_set = set(np.random.choice(idx_shard, num_user_shards, replace=False))
+    #     idx_shard = list(set(idx_shard) - rand_set)
+    #     user_data = []
+    #     for rand in rand_set:
+    #         user_data.extend(idxs[rand * num_imgs:(rand + 1) * num_imgs])
+
+    #     user_data = np.array(user_data)
+    #     if i in flip_users:
+    #         user_labels = labels[user_data]
+    #         print(f"Before flipping: User {i}, Labels: {np.unique(user_labels, ' | Count: ', return_counts=True)}")
+    #         flipped_labels = flip_labels(user_labels, flip_mapping)
+    #         #print('flipped labels: ',flipped_labels)
+            
+    #         labels[user_data] = flipped_labels
+    #         print(f"After flipping: User {i}, Labels: {np.unique(labels[user_data],' | Count: ', return_counts=True)}")
+
+    #         # Verify that labels were flipped correctly
+    #         for original_label, new_label in flip_mapping.items():
+    #             original_count = np.sum(user_labels == original_label)
+    #             new_count = np.sum(flipped_labels == new_label)
+    #             print(f"Label {original_label} flipped to {new_label}: {original_count} -> {new_count}")
+    #             if original_count > 0 and new_count == original_count:
+    #                 print(f"Label {original_label} was flipped correctly to {new_label}")
+    #             else:
+    #                 print(f"Label {original_label} flipping to {new_label} failed")
+
+    #     dict_users[i] = user_data
+    
+
+    # Update the dataset labels with the flipped labels
+    dataset.targets = torch.tensor(labels)
+    return dict_users
+
+
+
 def fmnist_noniid_label_flip_attack(dataset, num_users, flip_mapping, flip_fraction):
     """
     Sample non-I.I.D client data from FashionMNIST dataset with optional label flipping attack
@@ -161,7 +266,7 @@ def fmnist_noniid_label_flip_attack(dataset, num_users, flip_mapping, flip_fract
     :param flip_fraction: Fraction of users whose labels will be flipped
     :return: dict of image index
     """
-    num_shards, num_imgs = 200, 300 #600, 100  # Increase the number of shards
+    num_shards, num_imgs = 200, 300 #600, 100 ##200, 300 #600, 100  # Increase the number of shards
     idx_shard = [i for i in range(num_shards)]
     dict_users = {i: np.array([], dtype='int64') for i in range(num_users)}
     idxs = np.arange(num_shards * num_imgs)
@@ -212,7 +317,6 @@ def fmnist_noniid_label_flip_attack(dataset, num_users, flip_mapping, flip_fract
     # Update the dataset labels with the flipped labels
     dataset.targets = torch.tensor(labels)
     return dict_users
-
 
 
 
@@ -332,6 +436,7 @@ if __name__ == '__main__':
         
         num_selected_users = len(selected_idxs)
         
+        print('#'*15)
         print('selected_idxs : ',selected_idxs)
 
         ###################### local training : SGD for selected users ######################

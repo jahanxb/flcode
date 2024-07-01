@@ -1,0 +1,1106 @@
+Flipping labels for users: [83 30 56 24 16 23  2 27 28 13 99 92 76 14  0 21  3 29 61 79 35 11 84 44
+ 73  5 25 77 74 62 65  1 18 48 36 78  6 89 91 10]
+Before flipping: User 0, Labels: (array([2, 4, 7]), array([  0, 200, 100]), array([100, 100, 100]))
+After flipping: User 0, Labels: (array([3, 6, 8]), array([100, 200,   0]), array([100, 100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 100 -> 100
+Label 2 was flipped correctly to 8
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 100 -> 100
+Label 4 was flipped correctly to 6
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 100 -> 100
+Label 7 was flipped correctly to 3
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 1, Labels: (array([8, 9]), array([100,   0]), array([100, 200]))
+After flipping: User 1, Labels: (array([1, 2]), array([  0, 100]), array([200, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 100 -> 100
+Label 8 was flipped correctly to 2
+Label 9 flipped to 1: 200 -> 200
+Label 9 was flipped correctly to 1
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 2, Labels: (array([0, 3, 4]), array([  0, 200, 100]), array([100, 100, 100]))
+After flipping: User 2, Labels: (array([5, 6, 7]), array([  0, 100, 200]), array([100, 100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 100 -> 100
+Label 3 was flipped correctly to 7
+Label 4 flipped to 6: 100 -> 100
+Label 4 was flipped correctly to 6
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 100 -> 100
+Label 0 was flipped correctly to 5
+Before flipping: User 3, Labels: (array([2, 7]), array([  0, 200]), array([200, 100]))
+After flipping: User 3, Labels: (array([3, 8]), array([200,   0]), array([100, 200]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 200 -> 200
+Label 2 was flipped correctly to 8
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 100 -> 100
+Label 7 was flipped correctly to 3
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 5, Labels: (array([2, 5, 9]), array([  0, 200, 300]), array([300, 100, 100]))
+After flipping: User 5, Labels: (array([0, 1, 8]), array([200, 300,   0]), array([100, 100, 300]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 300 -> 300
+Label 2 was flipped correctly to 8
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 100 -> 100
+Label 9 was flipped correctly to 1
+Label 5 flipped to 0: 100 -> 100
+Label 5 was flipped correctly to 0
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 6, Labels: (array([5, 9]), array([  0, 100]), array([100, 100]))
+After flipping: User 6, Labels: (array([0, 1]), array([  0, 100]), array([100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 100 -> 100
+Label 9 was flipped correctly to 1
+Label 5 flipped to 0: 100 -> 100
+Label 5 was flipped correctly to 0
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 10, Labels: (array([3, 6, 7]), array([  0, 200, 100]), array([100, 100, 100]))
+After flipping: User 10, Labels: (array([3, 4, 7]), array([100, 200,   0]), array([100, 100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 100 -> 100
+Label 3 was flipped correctly to 7
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 100 -> 100
+Label 6 was flipped correctly to 4
+Label 7 flipped to 3: 100 -> 100
+Label 7 was flipped correctly to 3
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 11, Labels: (array([0, 7]), array([  0, 100]), array([100, 100]))
+After flipping: User 11, Labels: (array([3, 5]), array([100,   0]), array([100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 100 -> 100
+Label 7 was flipped correctly to 3
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 100 -> 100
+Label 0 was flipped correctly to 5
+Before flipping: User 13, Labels: (array([3, 5, 9]), array([100,   0, 200]), array([100, 100, 100]))
+After flipping: User 13, Labels: (array([0, 1, 7]), array([  0, 200, 100]), array([100, 100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 100 -> 100
+Label 3 was flipped correctly to 7
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 100 -> 100
+Label 9 was flipped correctly to 1
+Label 5 flipped to 0: 100 -> 100
+Label 5 was flipped correctly to 0
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 14, Labels: (array([0, 5]), array([100,   0]), array([100, 100]))
+After flipping: User 14, Labels: (array([0, 5]), array([  0, 100]), array([100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 100 -> 100
+Label 5 was flipped correctly to 0
+Label 0 flipped to 5: 100 -> 100
+Label 0 was flipped correctly to 5
+Before flipping: User 16, Labels: (array([2, 3, 5]), array([  0, 200, 100]), array([100, 100, 200]))
+After flipping: User 16, Labels: (array([0, 7, 8]), array([100, 200,   0]), array([200, 100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 100 -> 100
+Label 2 was flipped correctly to 8
+Label 3 flipped to 7: 100 -> 100
+Label 3 was flipped correctly to 7
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 200 -> 200
+Label 5 was flipped correctly to 0
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 18, Labels: (array([4, 7, 8, 9]), array([  0, 200, 100, 300]), array([100, 100, 100, 100]))
+After flipping: User 18, Labels: (array([1, 2, 3, 6]), array([300, 100, 200,   0]), array([100, 100, 100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 100 -> 100
+Label 4 was flipped correctly to 6
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 100 -> 100
+Label 7 was flipped correctly to 3
+Label 8 flipped to 2: 100 -> 100
+Label 8 was flipped correctly to 2
+Label 9 flipped to 1: 100 -> 100
+Label 9 was flipped correctly to 1
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 21, Labels: (array([1, 2, 9]), array([200,   0, 100]), array([100, 100, 100]))
+After flipping: User 21, Labels: (array([1, 8, 9]), array([100,   0, 200]), array([100, 100, 100]))
+Label 1 flipped to 9: 100 -> 100
+Label 1 was flipped correctly to 9
+Label 2 flipped to 8: 100 -> 100
+Label 2 was flipped correctly to 8
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 100 -> 100
+Label 9 was flipped correctly to 1
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 23, Labels: (array([3]), array([0]), array([100]))
+After flipping: User 23, Labels: (array([7]), array([0]), array([100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 100 -> 100
+Label 3 was flipped correctly to 7
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 24, Labels: (array([1, 5, 6]), array([  0, 100, 300]), array([100, 200, 100]))
+After flipping: User 24, Labels: (array([0, 4, 9]), array([100, 300,   0]), array([200, 100, 100]))
+Label 1 flipped to 9: 100 -> 100
+Label 1 was flipped correctly to 9
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 100 -> 100
+Label 6 was flipped correctly to 4
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 200 -> 200
+Label 5 was flipped correctly to 0
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 25, Labels: (array([4, 5, 9]), array([  0, 200, 100]), array([100, 100, 100]))
+After flipping: User 25, Labels: (array([0, 1, 6]), array([200, 100,   0]), array([100, 100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 100 -> 100
+Label 4 was flipped correctly to 6
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 100 -> 100
+Label 9 was flipped correctly to 1
+Label 5 flipped to 0: 100 -> 100
+Label 5 was flipped correctly to 0
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 27, Labels: (array([0, 5, 6]), array([100, 200,   0]), array([100, 100, 100]))
+After flipping: User 27, Labels: (array([0, 4, 5]), array([200,   0, 100]), array([100, 100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 100 -> 100
+Label 6 was flipped correctly to 4
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 100 -> 100
+Label 5 was flipped correctly to 0
+Label 0 flipped to 5: 100 -> 100
+Label 0 was flipped correctly to 5
+Before flipping: User 28, Labels: (array([0, 9]), array([100,   0]), array([200, 100]))
+After flipping: User 28, Labels: (array([1, 5]), array([  0, 100]), array([100, 200]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 100 -> 100
+Label 9 was flipped correctly to 1
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 200 -> 200
+Label 0 was flipped correctly to 5
+Before flipping: User 29, Labels: (array([6]), array([0]), array([100]))
+After flipping: User 29, Labels: (array([4]), array([0]), array([100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 100 -> 100
+Label 6 was flipped correctly to 4
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 30, Labels: (array([1]), array([0]), array([200]))
+After flipping: User 30, Labels: (array([9]), array([0]), array([200]))
+Label 1 flipped to 9: 200 -> 200
+Label 1 was flipped correctly to 9
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 35, Labels: (array([0, 4, 7]), array([  0, 200, 100]), array([200, 100, 100]))
+After flipping: User 35, Labels: (array([3, 5, 6]), array([100,   0, 200]), array([100, 200, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 100 -> 100
+Label 4 was flipped correctly to 6
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 100 -> 100
+Label 7 was flipped correctly to 3
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 200 -> 200
+Label 0 was flipped correctly to 5
+Before flipping: User 36, Labels: (array([0, 1, 3, 5, 6]), array([400, 200, 300, 100,   0]), array([100, 100, 100, 100, 100]))
+After flipping: User 36, Labels: (array([0, 4, 5, 7, 9]), array([100,   0, 400, 300, 200]), array([100, 100, 100, 100, 100]))
+Label 1 flipped to 9: 100 -> 100
+Label 1 was flipped correctly to 9
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 100 -> 100
+Label 3 was flipped correctly to 7
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 100 -> 100
+Label 6 was flipped correctly to 4
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 100 -> 100
+Label 5 was flipped correctly to 0
+Label 0 flipped to 5: 100 -> 100
+Label 0 was flipped correctly to 5
+Before flipping: User 44, Labels: (array([1, 4, 7, 9]), array([200, 100, 300,   0]), array([100, 100, 200, 100]))
+After flipping: User 44, Labels: (array([1, 3, 6, 9]), array([  0, 300, 100, 200]), array([100, 200, 100, 100]))
+Label 1 flipped to 9: 100 -> 100
+Label 1 was flipped correctly to 9
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 100 -> 100
+Label 4 was flipped correctly to 6
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 200 -> 200
+Label 7 was flipped correctly to 3
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 100 -> 100
+Label 9 was flipped correctly to 1
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 48, Labels: (array([6]), array([0]), array([300]))
+After flipping: User 48, Labels: (array([4]), array([0]), array([300]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 300 -> 300
+Label 6 was flipped correctly to 4
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 56, Labels: (array([6]), array([0]), array([100]))
+After flipping: User 56, Labels: (array([4]), array([0]), array([100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 100 -> 100
+Label 6 was flipped correctly to 4
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 61, Labels: (array([5]), array([0]), array([100]))
+After flipping: User 61, Labels: (array([0]), array([0]), array([100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 100 -> 100
+Label 5 was flipped correctly to 0
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 62, Labels: (array([3]), array([0]), array([100]))
+After flipping: User 62, Labels: (array([7]), array([0]), array([100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 100 -> 100
+Label 3 was flipped correctly to 7
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 65, Labels: (array([4, 7, 8, 9]), array([200, 100,   0, 300]), array([100, 100, 200, 100]))
+After flipping: User 65, Labels: (array([1, 2, 3, 6]), array([300,   0, 100, 200]), array([100, 200, 100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 100 -> 100
+Label 4 was flipped correctly to 6
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 100 -> 100
+Label 7 was flipped correctly to 3
+Label 8 flipped to 2: 200 -> 200
+Label 8 was flipped correctly to 2
+Label 9 flipped to 1: 100 -> 100
+Label 9 was flipped correctly to 1
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 73, Labels: (array([2, 6, 8]), array([  0, 100, 200]), array([100, 100, 100]))
+After flipping: User 73, Labels: (array([2, 4, 8]), array([200, 100,   0]), array([100, 100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 100 -> 100
+Label 2 was flipped correctly to 8
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 100 -> 100
+Label 6 was flipped correctly to 4
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 100 -> 100
+Label 8 was flipped correctly to 2
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 74, Labels: (array([0, 5, 6, 8]), array([300, 100, 400,   0]), array([100, 200, 100, 100]))
+After flipping: User 74, Labels: (array([0, 2, 4, 5]), array([100,   0, 400, 300]), array([200, 100, 100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 100 -> 100
+Label 6 was flipped correctly to 4
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 100 -> 100
+Label 8 was flipped correctly to 2
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 200 -> 200
+Label 5 was flipped correctly to 0
+Label 0 flipped to 5: 100 -> 100
+Label 0 was flipped correctly to 5
+Before flipping: User 76, Labels: (array([0, 3, 7]), array([100,   0, 200]), array([100, 200, 100]))
+After flipping: User 76, Labels: (array([3, 5, 7]), array([200, 100,   0]), array([100, 100, 200]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 200 -> 200
+Label 3 was flipped correctly to 7
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 100 -> 100
+Label 7 was flipped correctly to 3
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 100 -> 100
+Label 0 was flipped correctly to 5
+Before flipping: User 77, Labels: (array([2, 9]), array([  0, 100]), array([100, 100]))
+After flipping: User 77, Labels: (array([1, 8]), array([100,   0]), array([100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 100 -> 100
+Label 2 was flipped correctly to 8
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 100 -> 100
+Label 9 was flipped correctly to 1
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 78, Labels: (array([3, 4, 6, 9]), array([  0, 200, 300, 400]), array([200, 100, 100, 100]))
+After flipping: User 78, Labels: (array([1, 4, 6, 7]), array([400, 300, 200,   0]), array([100, 100, 100, 200]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 200 -> 200
+Label 3 was flipped correctly to 7
+Label 4 flipped to 6: 100 -> 100
+Label 4 was flipped correctly to 6
+Label 6 flipped to 4: 100 -> 100
+Label 6 was flipped correctly to 4
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 100 -> 100
+Label 9 was flipped correctly to 1
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 79, Labels: (array([0]), array([0]), array([100]))
+After flipping: User 79, Labels: (array([5]), array([0]), array([100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 100 -> 100
+Label 0 was flipped correctly to 5
+Before flipping: User 83, Labels: (array([3, 5, 7]), array([200,   0, 100]), array([100, 100, 100]))
+After flipping: User 83, Labels: (array([0, 3, 7]), array([  0, 100, 200]), array([100, 100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 100 -> 100
+Label 3 was flipped correctly to 7
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 100 -> 100
+Label 7 was flipped correctly to 3
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 100 -> 100
+Label 5 was flipped correctly to 0
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 84, Labels: (array([0, 1, 7, 8]), array([200, 100,   0, 300]), array([100, 100, 200, 100]))
+After flipping: User 84, Labels: (array([2, 3, 5, 9]), array([300,   0, 200, 100]), array([100, 200, 100, 100]))
+Label 1 flipped to 9: 100 -> 100
+Label 1 was flipped correctly to 9
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 0 -> 0
+Label 6 flipping to 4 failed
+Label 7 flipped to 3: 200 -> 200
+Label 7 was flipped correctly to 3
+Label 8 flipped to 2: 100 -> 100
+Label 8 was flipped correctly to 2
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 100 -> 100
+Label 0 was flipped correctly to 5
+Before flipping: User 89, Labels: (array([3, 4, 6]), array([100,   0, 200]), array([100, 100, 100]))
+After flipping: User 89, Labels: (array([4, 6, 7]), array([200,   0, 100]), array([100, 100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 100 -> 100
+Label 3 was flipped correctly to 7
+Label 4 flipped to 6: 100 -> 100
+Label 4 was flipped correctly to 6
+Label 6 flipped to 4: 100 -> 100
+Label 6 was flipped correctly to 4
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 91, Labels: (array([1, 4, 6, 9]), array([  0, 400, 100, 200]), array([200, 100, 100, 100]))
+After flipping: User 91, Labels: (array([1, 4, 6, 9]), array([200, 100, 400,   0]), array([100, 100, 100, 200]))
+Label 1 flipped to 9: 200 -> 200
+Label 1 was flipped correctly to 9
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 100 -> 100
+Label 4 was flipped correctly to 6
+Label 6 flipped to 4: 100 -> 100
+Label 6 was flipped correctly to 4
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 100 -> 100
+Label 9 was flipped correctly to 1
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 92, Labels: (array([6, 7, 8]), array([200, 100,   0]), array([100, 100, 100]))
+After flipping: User 92, Labels: (array([2, 3, 4]), array([  0, 100, 200]), array([100, 100, 100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 100 -> 100
+Label 6 was flipped correctly to 4
+Label 7 flipped to 3: 100 -> 100
+Label 7 was flipped correctly to 3
+Label 8 flipped to 2: 100 -> 100
+Label 8 was flipped correctly to 2
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+Before flipping: User 99, Labels: (array([6]), array([0]), array([100]))
+After flipping: User 99, Labels: (array([4]), array([0]), array([100]))
+Label 1 flipped to 9: 0 -> 0
+Label 1 flipping to 9 failed
+Label 2 flipped to 8: 0 -> 0
+Label 2 flipping to 8 failed
+Label 3 flipped to 7: 0 -> 0
+Label 3 flipping to 7 failed
+Label 4 flipped to 6: 0 -> 0
+Label 4 flipping to 6 failed
+Label 6 flipped to 4: 100 -> 100
+Label 6 was flipped correctly to 4
+Label 7 flipped to 3: 0 -> 0
+Label 7 flipping to 3 failed
+Label 8 flipped to 2: 0 -> 0
+Label 8 flipping to 2 failed
+Label 9 flipped to 1: 0 -> 0
+Label 9 flipping to 1 failed
+Label 5 flipped to 0: 0 -> 0
+Label 5 flipping to 0 failed
+Label 0 flipped to 5: 0 -> 0
+Label 0 flipping to 5 failed
+=============== data setup =================================
+length of dataset:70000
+num. of training data:60000
+num. of testing data:10000
+num. of classes:10
+num. of users:100
+num. of samples per user:25000
+9000 1000
+=============== log path ===================================
+./log/fmnist/fedavg/cnn/round_10_tau_10_frac_1.0
+=============== model setup ================================
+=============== verifying non-IID distribution =============
+ User 0: Label Distribution: [3 6 8] | counts: [100 100 100]
+ User 1: Label Distribution: [1 2] | counts: [200 100]
+ User 2: Label Distribution: [5 6 7] | counts: [100 100 100]
+ User 3: Label Distribution: [3 8] | counts: [100 200]
+ User 4: Label Distribution: [2 3 4 6 9] | counts: [100 100 100 100 100]
+ User 5: Label Distribution: [0 1 8] | counts: [100 100 300]
+ User 6: Label Distribution: [0 1] | counts: [100 100]
+ User 7: Label Distribution: [5] | counts: [100]
+ User 8: Label Distribution: [0 1 3 4 7] | counts: [100 100 100 100 100]
+ User 9: Label Distribution: [5 8] | counts: [100 100]
+ User 10: Label Distribution: [3 4 7] | counts: [100 100 100]
+ User 11: Label Distribution: [3 5] | counts: [100 100]
+ User 12: Label Distribution: [1 6 8 9] | counts: [200 100 100 100]
+ User 13: Label Distribution: [0 1 7] | counts: [100 100 100]
+ User 14: Label Distribution: [0 5] | counts: [100 100]
+ User 15: Label Distribution: [0 3 5 9] | counts: [100 100 200 100]
+ User 16: Label Distribution: [0 7 8] | counts: [200 100 100]
+ User 17: Label Distribution: [5 7] | counts: [100 200]
+ User 18: Label Distribution: [1 2 3 6] | counts: [100 100 100 100]
+ User 19: Label Distribution: [3 4 8] | counts: [100 100 100]
+ User 20: Label Distribution: [8] | counts: [100]
+ User 21: Label Distribution: [1 8 9] | counts: [100 100 100]
+ User 22: Label Distribution: [1 4 6 9] | counts: [100 100 100 200]
+ User 23: Label Distribution: [7] | counts: [100]
+ User 24: Label Distribution: [0 4 9] | counts: [200 100 100]
+ User 25: Label Distribution: [0 1 6] | counts: [100 100 100]
+ User 26: Label Distribution: [3 5 9] | counts: [200 100 200]
+ User 27: Label Distribution: [0 4 5] | counts: [100 100 100]
+ User 28: Label Distribution: [1 5] | counts: [100 200]
+ User 29: Label Distribution: [4] | counts: [100]
+ User 30: Label Distribution: [9] | counts: [200]
+ User 31: Label Distribution: [5 7] | counts: [100 100]
+ User 32: Label Distribution: [1 8] | counts: [100 100]
+ User 33: Label Distribution: [1 3 9] | counts: [100 200 100]
+ User 34: Label Distribution: [6 7] | counts: [100 100]
+ User 35: Label Distribution: [3 5 6] | counts: [100 200 100]
+ User 36: Label Distribution: [0 4 5 7 9] | counts: [100 100 100 100 100]
+ User 37: Label Distribution: [1 3 7 8] | counts: [200 100 100 100]
+ User 38: Label Distribution: [9] | counts: [100]
+ User 39: Label Distribution: [0 3 4 9] | counts: [200 100 100 100]
+ User 40: Label Distribution: [5] | counts: [100]
+ User 41: Label Distribution: [6 8] | counts: [100 100]
+ User 42: Label Distribution: [2 6] | counts: [200 100]
+ User 43: Label Distribution: [1 2 9] | counts: [300 100 100]
+ User 44: Label Distribution: [1 3 6 9] | counts: [100 200 100 100]
+ User 45: Label Distribution: [2 6] | counts: [100 200]
+ User 46: Label Distribution: [6 8 9] | counts: [100 100 100]
+ User 47: Label Distribution: [0 1 3] | counts: [100 200 100]
+ User 48: Label Distribution: [4] | counts: [300]
+ User 49: Label Distribution: [8 9] | counts: [200 100]
+ User 50: Label Distribution: [0 8] | counts: [100 100]
+ User 51: Label Distribution: [0 2 3 4 9] | counts: [100 100 100 100 100]
+ User 52: Label Distribution: [0 4 9] | counts: [100 100 100]
+ User 53: Label Distribution: [5 7 9] | counts: [100 200 100]
+ User 54: Label Distribution: [2 4 5 8] | counts: [100 100 100 100]
+ User 55: Label Distribution: [0 7 9] | counts: [100 100 100]
+ User 56: Label Distribution: [4] | counts: [100]
+ User 57: Label Distribution: [0 1 2 4 8] | counts: [100 100 100 100 100]
+ User 58: Label Distribution: [0 8 9] | counts: [100 200 100]
+ User 59: Label Distribution: [2 9] | counts: [100 100]
+ User 60: Label Distribution: [3 6 9] | counts: [200 100 100]
+ User 61: Label Distribution: [0] | counts: [100]
+ User 62: Label Distribution: [7] | counts: [100]
+ User 63: Label Distribution: [3 5 6 7] | counts: [100 100 100 100]
+ User 64: Label Distribution: [0 1 2 6 7] | counts: [100 100 100 100 100]
+ User 65: Label Distribution: [1 2 3 6] | counts: [100 200 100 100]
+ User 66: Label Distribution: [2] | counts: [100]
+ User 67: Label Distribution: [1 6] | counts: [100 100]
+ User 68: Label Distribution: [2 3 7] | counts: [100 100 100]
+ User 69: Label Distribution: [0 2] | counts: [100 100]
+ User 70: Label Distribution: [1 4 8 9] | counts: [100 200 100 100]
+ User 71: Label Distribution: [4] | counts: [100]
+ User 72: Label Distribution: [4 5] | counts: [100 100]
+ User 73: Label Distribution: [2 4 8] | counts: [100 100 100]
+ User 74: Label Distribution: [0 2 4 5] | counts: [200 100 100 100]
+ User 75: Label Distribution: [3] | counts: [100]
+ User 76: Label Distribution: [3 5 7] | counts: [100 100 200]
+ User 77: Label Distribution: [1 8] | counts: [100 100]
+ User 78: Label Distribution: [1 4 6 7] | counts: [100 100 100 200]
+ User 79: Label Distribution: [5] | counts: [100]
+ User 80: Label Distribution: [0 4] | counts: [200 100]
+ User 81: Label Distribution: [1] | counts: [100]
+ User 82: Label Distribution: [2 9] | counts: [100 100]
+ User 83: Label Distribution: [0 3 7] | counts: [100 100 100]
+ User 84: Label Distribution: [2 3 5 9] | counts: [100 200 100 100]
+ User 85: Label Distribution: [0 2 8 9] | counts: [100 200 100 100]
+ User 86: Label Distribution: [1 4 7] | counts: [100 100 200]
+ User 87: Label Distribution: [2 4 5 7] | counts: [100 100 100 100]
+ User 88: Label Distribution: [5] | counts: [100]
+ User 89: Label Distribution: [4 6 7] | counts: [100 100 100]
+ User 90: Label Distribution: [4] | counts: [200]
+ User 91: Label Distribution: [1 4 6 9] | counts: [100 100 100 200]
+ User 92: Label Distribution: [2 3 4] | counts: [100 100 100]
+ User 93: Label Distribution: [2] | counts: [100]
+ User 94: Label Distribution: [2] | counts: [100]
+ User 95: Label Distribution: [2] | counts: [100]
+ User 96: Label Distribution: [3 4 5 9] | counts: [100 100 200 100]
+ User 97: Label Distribution: [9] | counts: [100]
+ User 98: Label Distribution: [0 2 7 8] | counts: [100 200 100 100]
+ User 99: Label Distribution: [4] | counts: [100]
+=============== training... ================================
+###############
+selected_idxs :  [3, 57, 93, 87, 6, 61, 22, 92, 52, 37, 49, 32, 45, 58, 34, 84, 53, 55, 88, 36, 11, 24, 8, 75, 1, 72, 63, 69, 67, 99, 46, 68, 47, 14, 40, 33, 25, 80, 74, 18, 27, 60, 65, 7, 95, 54, 79, 2, 78, 70, 39, 82, 19, 59, 90, 98, 15, 62, 41, 43, 77, 16, 71, 17, 44, 23, 76, 85, 4, 9, 35, 94, 10, 96, 73, 89, 91, 50, 31, 86, 83, 21, 26, 38, 30, 51, 64, 20, 97, 56, 42, 29, 12, 28, 66, 81, 5, 0, 48, 13]
+Updates:  [3, 57, 93, 87, 6, 61, 22, 92, 52, 37, 49, 32, 45, 58, 34, 84, 53, 55, 88, 36, 11, 24, 8, 75, 1, 72, 63, 69, 67, 99, 46, 68, 47, 14, 40, 33, 25, 80, 74, 18, 27, 60, 65, 7, 95, 54, 79, 2, 78, 70, 39, 82, 19, 59, 90, 98, 15, 62, 41, 43, 77, 16, 71, 17, 44, 23, 76, 85, 4, 9, 35, 94, 10, 96, 73, 89, 91, 50, 31, 86, 83, 21, 26, 38, 30, 51, 64, 20, 97, 56, 42, 29, 12, 28, 66, 81, 5, 0, 48, 13]
+Similarities:  [0.16823874413967133, 0.44018110632896423, 0.11334925144910812, 0.43151602149009705, 0.30907532572746277, 0.08666148036718369, 0.43834856152534485, 0.35217177867889404, 0.4455346465110779, 0.33116045594215393, 0.4198249876499176, 0.19269932806491852, 0.19223374128341675, 0.362498939037323, 0.12908007204532623, 0.2995731234550476, 0.35043567419052124, 0.36040762066841125, 0.16978774964809418, 0.36500832438468933, 0.14648154377937317, 0.4125231206417084, 0.46314412355422974, 0.004226612858474255, 0.25042110681533813, 0.3855128884315491, 0.34024959802627563, 0.302791029214859, 0.28768792748451233, 0.1357726752758026, 0.364016592502594, 0.4331504702568054, 0.25849419832229614, 0.2407151162624359, 0.17223019897937775, 0.38983872532844543, 0.35132554173469543, 0.3095739781856537, 0.42592155933380127, 0.40106844902038574, 0.3707163333892822, 0.3697183132171631, 0.30841585993766785, 0.17079821228981018, 0.11290203034877777, 0.4477001130580902, 0.11513186991214752, 0.24725055694580078, 0.38020628690719604, 0.46796920895576477, 0.40706735849380493, 0.3240794539451599, 0.36055147647857666, 0.3695344030857086, 0.1412118375301361, 0.3968851566314697, 0.42986348271369934, 0.04932130128145218, 0.2585011124610901, 0.3941730856895447, 0.29546302556991577, 0.3426845669746399, 0.13571913540363312, 0.2462695986032486, 0.303842157125473, 0.0450969897210598, 0.257438063621521, 0.4354032576084137, 0.4448760747909546, 0.331900954246521, 0.3304373025894165, 0.11473309993743896, 0.33031100034713745, 0.48997315764427185, 0.2564527690410614, 0.32362446188926697, 0.314395934343338, 0.3012934923171997, 0.2568581700325012, 0.40845462679862976, 0.28958141803741455, 0.2913977801799774, 0.36114954948425293, 0.12522070109844208, 0.026912469416856766, 0.468383252620697, 0.43129682540893555, 0.08693162351846695, 0.1205405443906784, 0.1349230259656906, 0.26818954944610596, 0.13484768569469452, 0.4238079786300659, 0.1589079648256302, 0.11345894634723663, 0.06698651611804962, 0.28974005579948425, 0.2543167471885681, 0.13940800726413727, 0.33729079365730286]
+Mean similarity:  0.2864344911556691
+Standard deviation of similarities:  0.12234447063598977
+Z-scores:  [-0.9660898151062695, 1.2566699122082585, -1.4147369211440677, 1.1858446040122852, 0.18505809419991448, -1.6328732287613388, 1.2416913455914498, 0.5373131060316768, 1.3004278373051923, 0.36557405948943555, 1.090286269586501, -0.7661577397285068, -0.7699632797670674, 0.6217236258103372, -1.2861588128368941, 0.10739048713096108, 0.523122808102004, 0.6046299365079901, -0.9534287974046065, 0.6422344452558068, -1.143925398906637, 1.030603416979828, 1.4443614123299693, -2.3066663890094796, -0.29436053916552724, 0.8098314272875224, 0.4398654601295555, 0.1336924993353835, 0.010245140808795218, -1.2314558647127505, 0.6341283831106198, 1.199204004385771, -0.22837397299714035, -0.3736938388434535, -0.9334650890442135, 0.8451892728395864, 0.530396267536242, 0.18913390126825805, 1.140117468758736, 0.9369770228994317, 0.6888896718869789, 0.6807322115053934, 0.17966785640357774, -0.9451696367211424, -1.4183923466651849, 1.3181275873286749, -1.4001664346008451, -0.32027548123896726, 0.766457162012047, 1.4837999368211254, 0.986009966049496, 0.3076964785886849, 0.6058057625131834, 0.679228995785889, -1.1869980953827692, 0.9027842852369139, 1.172337342361577, -1.9380785142280548, -0.2283174592964557, 0.8806167861433566, 0.07379601519638083, 0.4597680265120526, -1.2318934805027504, -0.32829348432037186, 0.14228404340067619, -1.9726065279456582, -0.23700644077672195, 1.2176174834739348, 1.2950449073149786, 0.371626628114055, 0.3596632623036027, -1.403425837928479, 0.3586309128919579, 1.6636523533146768, -0.2450598867178232, 0.3039775360526819, 0.22854684843798379, 0.12145216767286882, -0.24174628382811023, 0.9973490016235053, 0.02572185620965632, 0.04056815153563856, 0.6106941976224064, -1.3177039323410433, -2.121240301173606, 1.4871841818366942, 1.1840529735444592, -1.6306651751412693, -1.3559578614596586, -1.2384005946682215, -0.14912763621207803, -1.2390163991308543, 1.1228418150839259, -1.0423562721479032, -1.413840314231158, -1.793689358389892, 0.027018504609416825, -0.26251896632632116, -1.2017419596262604, 0.4156812501395832]
+Malicious indices:  [23, 84]
+Malicious user IDs:  [75, 30]
+Identified malicious users: [75, 30] | total: 2
+t   0: train_loss = 0.679, norm = 1.996, test_acc = 33.856
+###############
+selected_idxs :  [63, 10, 85, 16, 66, 45, 90, 23, 13, 33, 22, 50, 82, 42, 71, 12, 49, 91, 48, 89, 29, 18, 20, 19, 65, 58, 7, 70, 17, 73, 99, 37, 47, 83, 86, 36, 64, 31, 14, 68, 75, 1, 0, 5, 21, 6, 92, 39, 81, 98, 25, 67, 84, 87, 24, 35, 27, 46, 44, 74, 51, 34, 77, 8, 4, 96, 78, 80, 94, 38, 54, 56, 57, 93, 79, 11, 76, 15, 2, 40, 59, 32, 69, 30, 72, 62, 95, 28, 60, 97, 55, 53, 41, 52, 61, 9, 3, 26, 88, 43]
+Updates:  [63, 10, 85, 16, 66, 45, 90, 23, 13, 33, 22, 50, 82, 42, 71, 12, 49, 91, 48, 89, 29, 18, 20, 19, 65, 58, 7, 70, 17, 73, 99, 37, 47, 83, 86, 36, 64, 31, 14, 68, 75, 1, 0, 5, 21, 6, 92, 39, 81, 98, 25, 67, 84, 87, 24, 35, 27, 46, 44, 74, 51, 34, 77, 8, 4, 96, 78, 80, 94, 38, 54, 56, 57, 93, 79, 11, 76, 15, 2, 40, 59, 32, 69, 30, 72, 62, 95, 28, 60, 97, 55, 53, 41, 52, 61, 9, 3, 26, 88, 43]
+Similarities:  [0.3678705096244812, 0.2599165439605713, 0.49212390184402466, 0.2985564172267914, 0.25965532660484314, 0.1553836166858673, 0.24428771436214447, 0.1307143270969391, 0.2782650887966156, 0.32717186212539673, 0.42740675806999207, 0.21527604758739471, 0.39763307571411133, 0.13464929163455963, 0.23625053465366364, 0.45676952600479126, 0.38316965103149414, 0.26839935779571533, 0.24914789199829102, 0.23693566024303436, 0.24420398473739624, 0.3708575665950775, 0.1795988231897354, 0.3621658980846405, 0.36766523122787476, 0.3720770478248596, 0.18348680436611176, 0.4997017979621887, 0.2265915870666504, 0.1839739978313446, 0.2447085827589035, 0.3635181188583374, 0.273994505405426, 0.19200685620307922, 0.34404483437538147, 0.34775933623313904, 0.41202956438064575, 0.2485635131597519, 0.21288053691387177, 0.32906967401504517, 0.12936708331108093, 0.29269668459892273, 0.1796000450849533, 0.2816641926765442, 0.23597919940948486, 0.20431655645370483, 0.34231555461883545, 0.4365023076534271, 0.1658111810684204, 0.43621569871902466, 0.31963208317756653, 0.2081458568572998, 0.31984299421310425, 0.42026057839393616, 0.2640419006347656, 0.2726597189903259, 0.29699060320854187, 0.30402228236198425, 0.2615627944469452, 0.3838992714881897, 0.47364285588264465, 0.24871991574764252, 0.23345184326171875, 0.40621328353881836, 0.39080291986465454, 0.4613548219203949, 0.29088348150253296, 0.28560101985931396, 0.2582334280014038, 0.24177369475364685, 0.4292994737625122, 0.2473449558019638, 0.4862576425075531, 0.2580132782459259, 0.12542319297790527, 0.19190578162670135, 0.19941535592079163, 0.411161333322525, 0.26886430382728577, 0.18543174862861633, 0.40099847316741943, 0.2294130176305771, 0.26259079575538635, 0.07479090988636017, 0.35224395990371704, 0.13416244089603424, 0.2609942853450775, 0.2089766263961792, 0.3087974786758423, 0.24123826622962952, 0.2642858028411865, 0.3357952833175659, 0.2779931128025055, 0.43610209226608276, 0.13934142887592316, 0.31964319944381714, 0.1903901845216751, 0.36628276109695435, 0.18198734521865845, 0.39791059494018555]
+Mean similarity:  0.2901174034178257
+Standard deviation of similarities:  0.0958156526028831
+Z-scores:  [0.8114864752725787, -0.3151975552723593, 2.1082828633796784, 0.08807552398502097, -0.31792380457121644, -1.406177206665545, -0.4783110881228003, -1.6636433817504486, -0.12369914830443347, 0.3867265702520095, 1.4328489231417634, -0.7810973864637542, 1.1221096905940235, -1.6225753053900092, -0.5621927868864843, 1.739299561812419, 0.971159148697052, -0.22666490319825763, -0.4275868326998372, -0.5550423310814157, -0.47918494977769355, 0.8426615170267318, -1.1534501642038055, 0.7519491096661052, 0.8093440445628778, 0.8553888866855949, -1.112872439471392, 2.187371153364733, -0.6630004036445275, -1.1077877434744647, -0.47391860750688924, 0.7660618432014212, -0.16826998068074056, -1.0239511452411099, 0.5628248568223296, 0.6015920285406361, 1.272361640828105, -0.43368582407195816, -0.8060986321730682, 0.4065334790199756, -1.6777041719163512, 0.026919204858804086, -1.1534374116400572, -0.08822369322386858, -0.5650246336339395, -0.8954783966220058, 0.5447768687371972, 1.5277765193783868, -1.2973477607526613, 1.5247852655840788, 0.3080360980482714, -0.8555131059876471, 0.31023731496647017, 1.358266331655653, -0.2721424117532491, -0.1822007569040393, 0.07173358009888814, 0.1451211630503484, -0.2980161194458254, 0.97877398444544, 1.9154015808404214, -0.43205349591218606, -0.5914019120755004, 1.2116588153103005, 1.050825347546599, 1.787154956949243, 0.007995333370867143, -0.047136176979666586, -0.3327637452783212, -0.5045491769966215, 1.452602644387755, -0.44640355154847505, 2.0470584269007577, -0.3350613840199821, -1.7188654041997806, -1.0250060310935998, -0.9466307960449549, 1.2633001666896446, -0.2218123971729901, -1.092573623884699, 1.1572333615380217, -0.6335539563545385, -0.2872871698377503, -2.2472997645166206, 0.648396736839863, -1.627656424448324, -0.3039494830082896, -0.8468426067914188, 0.1949584932165299, -0.5101372882234632, -0.26959687561384843, 0.47672670027157704, -0.12653768237190297, 1.5235995881936346, -1.5736048385205663, 0.3081521152745662, -1.0408238757134949, 0.7949156073152582, -1.1285218569383686, 1.1250060777555704]
+Malicious indices:  [83]
+Malicious user IDs:  [30]
+Identified malicious users: [30] | total: 1
+t   1: train_loss = 0.414, norm = 1.623, test_acc = 51.933
+###############
+selected_idxs :  [26, 17, 58, 97, 51, 71, 40, 86, 96, 78, 90, 91, 32, 52, 33, 49, 53, 72, 64, 93, 77, 45, 50, 66, 13, 22, 15, 21, 41, 4, 27, 47, 84, 79, 3, 73, 12, 29, 31, 92, 67, 14, 7, 70, 88, 60, 48, 24, 37, 85, 35, 39, 8, 11, 59, 23, 69, 75, 43, 16, 38, 98, 36, 9, 57, 18, 28, 99, 34, 44, 6, 42, 54, 68, 55, 25, 61, 1, 20, 74, 10, 65, 76, 19, 2, 46, 5, 80, 81, 63, 89, 56, 62, 0, 83, 94, 87, 95, 30, 82]
+Updates:  [26, 17, 58, 97, 51, 71, 40, 86, 96, 78, 90, 91, 32, 52, 33, 49, 53, 72, 64, 93, 77, 45, 50, 66, 13, 22, 15, 21, 41, 4, 27, 47, 84, 79, 3, 73, 12, 29, 31, 92, 67, 14, 7, 70, 88, 60, 48, 24, 37, 85, 35, 39, 8, 11, 59, 23, 69, 75, 43, 16, 38, 98, 36, 9, 57, 18, 28, 99, 34, 44, 6, 42, 54, 68, 55, 25, 61, 1, 20, 74, 10, 65, 76, 19, 2, 46, 5, 80, 81, 63, 89, 56, 62, 0, 83, 94, 87, 95, 30, 82]
+Similarities:  [0.2669893205165863, 0.2213793694972992, 0.3338223397731781, 0.10533713549375534, 0.4118492901325226, -0.05017309635877609, 0.0871460810303688, 0.20115810632705688, 0.34123632311820984, 0.21441154181957245, -0.04611501470208168, 0.1683730185031891, 0.20685072243213654, 0.31343695521354675, 0.3014104962348938, 0.24593958258628845, 0.3157302141189575, 0.07317767292261124, 0.4125266969203949, 0.028013087809085846, 0.13261352479457855, 0.125534325838089, 0.2106185406446457, 0.031324602663517, 0.23896467685699463, 0.31266260147094727, 0.3646058440208435, 0.1496814787387848, 0.2619466781616211, 0.3223263919353485, 0.17601320147514343, 0.34812530875205994, 0.2613341808319092, 0.08871559053659439, 0.1245248019695282, 0.04211820662021637, 0.4209345877170563, -0.057054415345191956, 0.21247129142284393, 0.15363004803657532, 0.2533990442752838, 0.14056368172168732, 0.0888386219739914, 0.4017546474933624, 0.08173231780529022, 0.2338678240776062, -0.061189860105514526, 0.12431369721889496, 0.3657150864601135, 0.41931092739105225, 0.3085491955280304, 0.37698429822921753, 0.4342830777168274, 0.1407267153263092, 0.11285751312971115, 0.07146861404180527, 0.1938011646270752, 0.06775244325399399, 0.23418989777565002, 0.21256303787231445, 0.10075870156288147, 0.39931532740592957, 0.3121930956840515, 0.24047528207302094, 0.49125930666923523, 0.29822972416877747, 0.16068090498447418, -0.06066121160984039, 0.18315401673316956, 0.2524262070655823, 0.16259032487869263, 0.11435148119926453, 0.3157694637775421, 0.18048280477523804, 0.1951555609703064, 0.28254076838493347, 0.05753323808312416, 0.12212735414505005, 0.15581627190113068, 0.26320880651474, 0.10160504281520844, 0.2902461290359497, 0.22096450626850128, 0.27897775173187256, 0.30148008465766907, 0.34493356943130493, 0.22683240473270416, 0.22927060723304749, 0.15047910809516907, 0.33217766880989075, 0.13865940272808075, -0.058543235063552856, 0.07311234623193741, 0.18265210092067719, 0.19848622381687164, 0.033155541867017746, 0.28916993737220764, 0.030960749834775925, 0.01081877015531063, 0.10706428438425064]
+Mean similarity:  0.19984983680769802
+Standard deviation of similarities:  0.1259042429380453
+Z-scores:  [0.5332583091891997, 0.17099926251250624, 1.0640825109556076, -0.75067129676043, 1.6838150039879498, -1.9858181688881198, -0.8951545487850496, 0.010390988332320402, 1.1229684005175662, 0.11565698400680523, -1.9535866764300673, -0.2500060170331033, 0.05560484270481253, 0.9021706954049391, 0.806650014782834, 0.3660698377041207, 0.9203850053590463, -1.0060992459755256, 1.689195337263975, -1.3648209543118355, -0.5340273722642133, -0.5902542220612697, 0.08553090496121492, -1.3385191015930142, 0.3106713414618136, 0.8960203566671054, 1.308581850527613, -0.3984643956248557, 0.49320689998096057, 0.9727754384569748, -0.18932352696234447, 1.1776844726140405, 0.48834211293789553, -0.8826886503403252, -0.5982724098919813, -1.2527904263329546, 1.7559753805767226, -2.040473348299365, 0.10024645969521971, -0.36710270990522886, 0.42531694101791445, -0.4708829003894977, -0.881711467724982, 1.6036378598060217, -0.9381536018649571, 0.27018936356773676, -2.0733193006185218, -0.5999491186803985, 1.3173920575022569, 1.7430793868586794, 0.8633494486267704, 1.4068982687794205, 1.8619963508655446, -0.4695879987974829, -0.6909403658524349, -1.0196735214798625, -0.04804184544915809, -1.049189371788735, 0.2727474481130075, 0.10097515991476408, -0.7870357100957838, 1.5842634524746246, 0.8922912862566127, 0.32266938998484584, 2.3145325611062475, 0.7813865924239742, -0.3111009677608562, -2.069120486636262, -0.1326072869739911, 0.41759013859251687, -0.29593531607461376, -0.6790744585987094, 0.9206967475026682, -0.1538235057097327, -0.037284492784739394, 0.656776369466165, -1.1303558593700826, -0.6173142449289297, -0.34973853048173514, 0.5032314100662955, -0.7803136073883838, 0.7179765361262186, 0.1677041930286124, 0.6284769526243181, 0.807202723898519, 1.1523339423517236, 0.2143102352657302, 0.23367576611239999, -0.3921291892984353, 1.0510196393246916, -0.48600772024599465, -2.0522983645467803, -1.0066181060961172, -0.13659377544157478, -0.01083055629425756, -1.3239767862526035, 0.7094288363932426, -1.341409018725673, -1.5013875802851648, -0.7369533405566411]
+Malicious indices:  [37, 46, 67, 91]
+Malicious user IDs:  [29, 48, 99, 56]
+Identified malicious users: [29, 48, 99, 56] | total: 4
+t   2: train_loss = 0.278, norm = 1.466, test_acc = 63.133
+###############
+selected_idxs :  [63, 69, 11, 88, 80, 23, 35, 87, 50, 70, 57, 53, 45, 6, 86, 73, 77, 19, 61, 85, 13, 8, 54, 2, 74, 56, 30, 29, 65, 78, 14, 20, 47, 5, 1, 79, 51, 15, 12, 44, 55, 17, 25, 40, 92, 31, 27, 82, 90, 75, 67, 16, 33, 48, 10, 72, 64, 58, 52, 37, 26, 96, 7, 95, 91, 4, 89, 83, 99, 49, 41, 81, 36, 9, 39, 21, 24, 97, 46, 98, 22, 0, 28, 66, 71, 38, 18, 62, 32, 93, 84, 60, 68, 3, 42, 76, 59, 43, 94, 34]
+Updates:  [63, 69, 11, 88, 80, 23, 35, 87, 50, 70, 57, 53, 45, 6, 86, 73, 77, 19, 61, 85, 13, 8, 54, 2, 74, 56, 30, 29, 65, 78, 14, 20, 47, 5, 1, 79, 51, 15, 12, 44, 55, 17, 25, 40, 92, 31, 27, 82, 90, 75, 67, 16, 33, 48, 10, 72, 64, 58, 52, 37, 26, 96, 7, 95, 91, 4, 89, 83, 99, 49, 41, 81, 36, 9, 39, 21, 24, 97, 46, 98, 22, 0, 28, 66, 71, 38, 18, 62, 32, 93, 84, 60, 68, 3, 42, 76, 59, 43, 94, 34]
+Similarities:  [0.1527361124753952, 0.2286623865365982, 0.037036579102277756, 0.050183333456516266, 0.39124155044555664, 0.039459794759750366, 0.11449745297431946, 0.4155036211013794, 0.13326296210289001, 0.45564329624176025, 0.517530620098114, 0.2929929792881012, 0.018300876021385193, 0.033005960285663605, 0.2913837134838104, 0.162881538271904, -0.14580358564853668, 0.3523639738559723, 0.018366390839219093, 0.3921787440776825, 0.09132005274295807, 0.4489631950855255, 0.4076530933380127, 0.13875539600849152, 0.3251305818557739, 0.32729849219322205, 0.07304614037275314, 0.3283171057701111, 0.1816873997449875, 0.16462509334087372, 0.05036003887653351, 0.008720406331121922, 0.3079778850078583, -0.004030309617519379, 0.04227709025144577, 0.018423695117235184, 0.47257938981056213, 0.32972416281700134, 0.23134173452854156, 0.06801342219114304, 0.15844032168388367, 0.21412009000778198, -0.05596525967121124, 0.048021018505096436, 0.3260522186756134, 0.21565571427345276, 0.2914904057979584, 0.20326679944992065, 0.34302911162376404, 0.012591294944286346, -0.05615666136145592, 0.051074545830488205, 0.2889474928379059, 0.32565072178840637, 0.22475063800811768, 0.30243825912475586, 0.26488974690437317, 0.2587742209434509, 0.4391515552997589, 0.28631433844566345, 0.21791714429855347, 0.406909704208374, 0.05086680129170418, 0.13938497006893158, 0.16076457500457764, 0.3572867214679718, 0.16589146852493286, 0.1442653089761734, 0.3285697400569916, 0.13259495794773102, 0.12373753637075424, 0.008928057737648487, 0.36745789647102356, 0.10128676891326904, 0.4566729962825775, -0.0044641331769526005, 0.2834303677082062, 0.15121053159236908, 0.17023257911205292, 0.338166207075119, 0.2990373969078064, -0.06732285767793655, -0.013581578619778156, 0.1409706026315689, 0.3437608778476715, 0.14927738904953003, 0.08613072335720062, 0.034423261880874634, 0.03785298392176628, 0.13735927641391754, 0.24894513189792633, 0.058804869651794434, 0.16493616998195648, -0.0691988542675972, 0.045778777450323105, 0.14715318381786346, 0.21775667369365692, 0.25853076577186584, 0.13907602429389954, -0.13604091107845306]
+Mean similarity:  0.1843090904550627
+Standard deviation of similarities:  0.1497674516384184
+Z-scores:  [-0.21081334852310712, 0.29614776506057605, -0.983341238310865, -0.8955601202480529, 1.381691801033567, -0.9671613832691771, -0.46613357386415677, 1.543690088314293, -0.34083592792519884, 1.8117034296729317, 2.224926217263439, 0.7256843035256593, -1.108439868727078, -1.0102537534970433, 0.7149392064656117, -0.14307215585727504, -2.204168345606802, 1.1221055146657788, -1.1080024250961877, 1.3879494599699593, -0.6208894969823406, 1.7671002726908498, 1.4912719715774194, -0.3041628467883053, 0.9402676606976976, 0.9547428374716344, -0.7429047424198032, 0.9615441388608592, -0.0175050765796878, -0.13143040693322197, -0.8943802549429807, -1.1724088391906555, 0.825738791706008, -1.2575456016123412, -0.9483502500030709, -1.1076198033890732, 1.9247860346283159, 0.9709390843680266, 0.31403782036052247, -0.7765082933018769, -0.17272623983503207, 0.19904858650257065, -1.6043162082130178, -0.909997936527656, 0.946421446515357, 0.20930197766915212, 0.7156515929887232, 0.12658096794373797, 1.0597764696691043, -1.1465628454796197, -1.6055942007818356, -0.8896094790091035, 0.6986725168795042, 0.9437406444931903, 0.2700289489514216, 0.7887506088765593, 0.538038509487731, 0.49720503135867217, 1.701587775292852, 0.6810908970853741, 0.22440158709938032, 1.4863083488309135, -0.8909965930750193, -0.2999591693300012, -0.1572071581168936, 1.1549747900533605, -0.12297479678425226, -0.26737305763582375, 0.9632309825917015, -0.34529620382527726, -0.4044373688786904, -1.1710223469705177, 1.222887910639854, -0.5543415517427202, 1.8185787555835524, -1.2604422494132304, 0.6618345719899854, -0.22099967984100463, -0.09398912239619668, 1.0273067675045413, 0.7660429899664097, -1.6801510967851079, -1.3213195985507298, -0.2893718718545424, 1.0646624860625338, -0.23390730777812285, -0.6555387437244563, -1.0007904049543117, -0.9778900884745203, -0.31348476272732123, 0.43157602493573566, -0.8379939661807925, -0.12935334253985972, -1.6926771601529338, -0.9249694208538148, -0.24809066476542746, 0.22333012195030397, 0.4955794767476953, -0.30202200589196615, -2.13898278984497]
+Malicious indices:  [16, 99]
+Malicious user IDs:  [77, 34]
+Identified malicious users: [77, 34] | total: 2
+t   3: train_loss = 0.254, norm = 1.444, test_acc = 54.500
+###############
+selected_idxs :  [25, 83, 3, 98, 53, 52, 50, 20, 37, 19, 60, 9, 69, 77, 43, 45, 95, 76, 65, 55, 58, 62, 1, 22, 63, 75, 44, 30, 90, 36, 23, 92, 5, 72, 15, 89, 97, 29, 10, 38, 56, 74, 88, 85, 28, 93, 57, 73, 16, 87, 80, 17, 18, 12, 79, 40, 13, 32, 34, 49, 26, 84, 51, 4, 11, 46, 81, 59, 21, 86, 96, 91, 27, 68, 67, 48, 71, 2, 70, 7, 99, 39, 82, 66, 14, 78, 42, 47, 64, 24, 41, 54, 33, 8, 31, 61, 94, 6, 0, 35]
+Updates:  [25, 83, 3, 98, 53, 52, 50, 20, 37, 19, 60, 9, 69, 77, 43, 45, 95, 76, 65, 55, 58, 62, 1, 22, 63, 75, 44, 30, 90, 36, 23, 92, 5, 72, 15, 89, 97, 29, 10, 38, 56, 74, 88, 85, 28, 93, 57, 73, 16, 87, 80, 17, 18, 12, 79, 40, 13, 32, 34, 49, 26, 84, 51, 4, 11, 46, 81, 59, 21, 86, 96, 91, 27, 68, 67, 48, 71, 2, 70, 7, 99, 39, 82, 66, 14, 78, 42, 47, 64, 24, 41, 54, 33, 8, 31, 61, 94, 6, 0, 35]
+Similarities:  [0.375583678483963, 0.12798383831977844, 0.2994387745857239, 0.37214961647987366, 0.23256301879882812, 0.05329747498035431, 0.3278685212135315, 0.30963292717933655, 0.3894282877445221, 0.17833317816257477, 0.3585825264453888, 0.30018144845962524, 0.2545367181301117, 0.26009833812713623, 0.29902875423431396, 0.3816559910774231, 0.20129923522472382, 0.20301209390163422, 0.29546457529067993, 0.17954158782958984, 0.3473441004753113, 0.06147187948226929, 0.024980198591947556, 0.28540340065956116, 0.3939718008041382, 0.11807803064584732, 0.3044295907020569, 0.03594576194882393, -0.3732929229736328, 0.18133024871349335, 0.07300004363059998, -0.06751535087823868, 0.33147698640823364, -0.15563875436782837, 0.3277892470359802, 0.11959598958492279, 0.059766966849565506, -0.4039762616157532, -0.08652713894844055, 0.05412198230624199, -0.4087126553058624, 0.0639311671257019, 0.07069429755210876, 0.39949285984039307, 0.1545274257659912, 0.19609542191028595, 0.39045459032058716, -0.023893263190984726, 0.23612697422504425, 0.1682380586862564, 0.03436416760087013, 0.18654660880565643, 0.3319607675075531, 0.5308262705802917, 0.16320039331912994, 0.07152780890464783, 0.15088286995887756, 0.3463544547557831, 0.33849045634269714, 0.3147525191307068, 0.24434125423431396, 0.18177637457847595, 0.2667919397354126, 0.2787405848503113, 0.11746310442686081, 0.4849799573421478, 0.1981005221605301, 0.17617538571357727, 0.2362746000289917, 0.06536401063203812, 0.19275087118148804, 0.13340578973293304, -0.03658423572778702, 0.20677655935287476, 0.4793609380722046, -0.4137222170829773, -0.38224542140960693, 0.4469781219959259, 0.255517840385437, 0.07121431082487106, -0.406571626663208, 0.24859696626663208, 0.19383539259433746, 0.19847212731838226, 0.10248056054115295, 0.16220510005950928, 0.37799176573753357, 0.3666583001613617, 0.45809364318847656, -0.05734029412269592, 0.5048150420188904, 0.22965681552886963, 0.3207874894142151, 0.3109114170074463, 0.16022440791130066, -0.001530334702692926, 0.19077572226524353, 0.07215430587530136, 0.42406022548675537, 0.39710748195648193]
+Mean similarity:  0.18204142376431265
+Standard deviation of similarities:  0.20296479677212728
+Z-scores:  [0.9535754859841247, -0.2663397116359334, 0.5784123783456676, 0.9366559902947079, 0.2489180184839497, -0.6343166442232926, 0.7184846819172386, 0.6286385887808588, 1.0217873605591166, -0.018270388070800295, 0.8698114426182115, 0.5820715048824492, 0.3571816172988412, 0.384583512038591, 0.5763922233339084, 0.9834935441401781, 0.09488252035170565, 0.10332171130575794, 0.5588316463258886, -0.012316598614534232, 0.814440136121671, -0.5940416574673747, -0.7738348111111156, 0.5092606133628932, 1.0441730803089173, -0.3151452573831231, 0.6030019436087329, -0.7198078885547492, -2.7361116586214242, -0.003503933007741004, -0.5372428217497031, -1.2295569409641702, 0.7362634556360793, -1.6637376702880227, 0.7180941009947731, -0.30766633018384276, -0.6024416985573472, -2.8872873261760748, -1.3232273132285133, -0.6302543273141521, -2.9106233616139194, -0.5819248387749504, -0.5486031468659838, 1.0713751327045034, -0.13556044415530819, 0.06924352582064766, 1.0268439151557116, -1.0146325384027284, 0.2664774942299701, -0.06800866602277615, -0.727600345045268, 0.022196879030218466, 0.7386470271076514, 1.718449959613277, -0.09282905580092253, -0.5444964674526327, -0.153517034978324, 0.809564188492983, 0.7708185609844106, 0.6538626277905305, 0.3069489461265867, -0.0013058874743400585, 0.4175626380482675, 0.4764331678392719, -0.3181749759784956, 1.492566880541114, 0.07912258013022484, -0.028901751160923236, 0.26720484107186204, -0.574865272145054, 0.05276504885327037, -0.23962595881089577, -1.0771604877744152, 0.12186909248273604, 1.4648821817199098, -2.9353052860500037, -2.7802202852323004, 1.3053332520962395, 0.3620155701366175, -0.5460410608243037, -2.9000745931737537, 0.3279166809259179, 0.058108445491984226, 0.08095346491301494, -0.39199341210133254, -0.09773282864946288, 0.9654400422612123, 0.909600479162513, 1.3600990113280254, -1.179424815012464, 1.590293604545434, 0.2345992631323931, 0.6835967017752121, 0.6349376605826803, -0.10749162514870202, -0.9044512220171133, 0.04303356365161717, -0.541409740194423, 1.192417628925878, 1.0596224646465582]
+Malicious indices:  [28, 37, 40, 75, 76, 80]
+Malicious user IDs:  [90, 29, 56, 48, 71, 99]
+Identified malicious users: [90, 29, 56, 48, 71, 99] | total: 6
+t   4: train_loss = 0.231, norm = 1.411, test_acc = 63.667
+###############
+selected_idxs :  [80, 86, 53, 31, 72, 89, 24, 47, 13, 50, 2, 33, 37, 85, 35, 97, 4, 90, 84, 99, 69, 40, 48, 18, 88, 9, 49, 20, 44, 14, 73, 78, 29, 23, 25, 34, 58, 71, 63, 55, 32, 79, 3, 96, 11, 42, 93, 75, 65, 5, 59, 15, 16, 36, 98, 76, 51, 87, 26, 60, 6, 8, 22, 30, 67, 21, 81, 64, 0, 92, 77, 83, 17, 52, 45, 68, 38, 94, 57, 61, 95, 7, 43, 82, 74, 39, 70, 66, 91, 1, 41, 46, 10, 27, 19, 28, 54, 12, 62, 56]
+Updates:  [80, 86, 53, 31, 72, 89, 24, 47, 13, 50, 2, 33, 37, 85, 35, 97, 4, 90, 84, 99, 69, 40, 48, 18, 88, 9, 49, 20, 44, 14, 73, 78, 29, 23, 25, 34, 58, 71, 63, 55, 32, 79, 3, 96, 11, 42, 93, 75, 65, 5, 59, 15, 16, 36, 98, 76, 51, 87, 26, 60, 6, 8, 22, 30, 67, 21, 81, 64, 0, 92, 77, 83, 17, 52, 45, 68, 38, 94, 57, 61, 95, 7, 43, 82, 74, 39, 70, 66, 91, 1, 41, 46, 10, 27, 19, 28, 54, 12, 62, 56]
+Similarities:  [0.5471721887588501, 0.4966583549976349, 0.2384146749973297, 0.13607127964496613, 0.5941175222396851, 0.31648778915405273, 0.43278899788856506, 0.2370823174715042, 0.0484156459569931, 0.05054935812950134, 0.07814665883779526, 0.2649506628513336, 0.24513056874275208, 0.2761591970920563, 0.03998299315571785, 0.1805558055639267, 0.3841205835342407, 0.6876224875450134, 0.1486067920923233, 0.6797165870666504, 0.166603222489357, 0.042944442480802536, 0.6722356081008911, -0.01571843773126602, 0.04275444895029068, 0.06775412708520889, 0.1062287911772728, -0.02232876420021057, -0.031728457659482956, 0.040785375982522964, 0.28648850321769714, 0.23082546889781952, 0.673341691493988, 0.07688479125499725, -0.11747057735919952, -0.11039632558822632, 0.16724474728107452, 0.691320538520813, 0.12129196524620056, 0.1750798225402832, 0.04165468364953995, 0.03247347101569176, -0.06985432654619217, 0.5397684574127197, 0.030968479812145233, -0.023221630603075027, 0.14238187670707703, 0.06751429289579391, -0.004588432610034943, -0.04903581738471985, 0.22950813174247742, 0.27787894010543823, 0.037944942712783813, 0.4206753969192505, 0.2373751401901245, 0.1343117654323578, 0.5215963125228882, 0.49316883087158203, 0.23829235136508942, 0.0678015798330307, -0.05261707305908203, 0.5114200115203857, 0.37506967782974243, 0.04594448208808899, -0.08653665333986282, -0.07224038243293762, 0.02210145816206932, 0.14421655237674713, -0.12337900698184967, 0.4419647455215454, -0.16914810240268707, 0.11629311740398407, 0.14752638339996338, 0.6145943999290466, -0.050222355872392654, 0.17386764287948608, 0.17662188410758972, 0.1459585279226303, 0.47289368510246277, 0.0006749727763235569, 0.14862723648548126, 0.043530527502298355, 0.24397940933704376, 0.22613540291786194, 0.3465254306793213, 0.5296493172645569, 0.6121886372566223, 0.14981906116008759, 0.19470390677452087, -0.07606986910104752, -0.11016324162483215, 0.055442847311496735, 0.4294358491897583, 0.4406425952911377, 0.5011913776397705, -0.0379117913544178, 0.4481891393661499, 0.1503785103559494, 0.06848225742578506, 0.6790016293525696]
+Mean similarity:  0.2059228809410706
+Standard deviation of similarities:  0.22604205965628443
+Z-scores:  [1.509671732493843, 1.2862007827156217, 0.14374224914454217, -0.30902037170568875, 1.7173557960359076, 0.4891342274137175, 1.0036455927381969, 0.13784795881710726, -0.6968049894058664, -0.6873655418280452, -0.5652763131674239, 0.2611362770274683, 0.17345306382935982, 0.31072233308166525, -0.7341106696589035, -0.11222281116937548, 0.7883386961883748, 2.1310175961783693, -0.25356382319246756, 2.096042244731012, -0.1739484169959449, -0.7210093498001665, 2.0629467271218793, -0.9805313179740112, -0.7218498727134719, -0.6112524105733185, -0.4410422109734396, -1.0097751077315285, -1.0513589327664152, -0.7305609637854691, 0.3564187231311429, 0.11016793951804961, 2.0678399907683827, -0.5708587591277765, -1.4306782498443718, -1.3993820752221349, -0.1711103399022703, 2.147377608918577, -0.37440340007323564, -0.13644831606864147, -0.7267151854009558, -0.7673324609991741, -1.2200260779193248, 1.47691795491197, -0.7739904750246832, -1.0137251089137072, -0.2811025714887438, -0.6123134263408251, -0.9312926712453662, -1.1279259210143286, 0.10434009864035976, 0.31833039954503484, -0.7431269140075573, 0.9500555618044215, 0.13914339347677, -0.31680438418232176, 1.3965251956287474, 1.270763283467212, 0.14320109484597357, -0.6110424817313411, -1.1437692365451098, 1.3515056934264742, 0.7482978926394205, -0.707737308252464, -1.2938279483280333, -1.2305818828450703, -0.8132177837103276, -0.2729860480750929, -1.4568168792288076, 1.0442386914160837, -1.6592973180039325, -0.3965180801899256, -0.258343503106917, 1.8079445905306064, -1.1331751144143403, -0.1418109448760428, -0.12962630440562906, -0.26527962587856896, 1.1810669419989503, -0.9080076003414737, -0.25347337810809234, -0.7184165357796828, 0.16836038591154776, 0.08941929660137644, 0.6220194151126053, 1.4321513297823378, 1.797301603663107, -0.24820079885262727, -0.049632241820876666, -1.2475233612315837, -1.3983509221537695, -0.6657169637296314, 0.9888114123033455, 1.0383895577087634, 1.306254672903264, -1.0787137255175392, 1.0717751324397995, -0.2457258205379167, -0.6080311943904393, 2.092879303660806]
+Malicious indices:  []
+Malicious user IDs:  []
+Identified malicious users: [] | total: 0
+t   5: train_loss = 0.229, norm = 1.361, test_acc = 54.633
+###############
+selected_idxs :  [11, 1, 83, 45, 81, 78, 73, 70, 0, 19, 60, 34, 44, 80, 85, 28, 93, 8, 99, 64, 17, 54, 41, 50, 24, 32, 77, 97, 9, 79, 84, 57, 69, 30, 87, 35, 49, 20, 98, 68, 59, 18, 12, 66, 36, 72, 92, 7, 46, 25, 13, 56, 23, 14, 67, 15, 94, 58, 51, 86, 65, 6, 88, 29, 74, 5, 22, 38, 16, 48, 55, 91, 90, 4, 40, 53, 3, 82, 21, 2, 52, 26, 76, 37, 43, 42, 10, 71, 27, 47, 31, 63, 33, 62, 75, 96, 39, 89, 95, 61]
+Updates:  [11, 1, 83, 45, 81, 78, 73, 70, 0, 19, 60, 34, 44, 80, 85, 28, 93, 8, 99, 64, 17, 54, 41, 50, 24, 32, 77, 97, 9, 79, 84, 57, 69, 30, 87, 35, 49, 20, 98, 68, 59, 18, 12, 66, 36, 72, 92, 7, 46, 25, 13, 56, 23, 14, 67, 15, 94, 58, 51, 86, 65, 6, 88, 29, 74, 5, 22, 38, 16, 48, 55, 91, 90, 4, 40, 53, 3, 82, 21, 2, 52, 26, 76, 37, 43, 42, 10, 71, 27, 47, 31, 63, 33, 62, 75, 96, 39, 89, 95, 61]
+Similarities:  [0.13036605715751648, 0.08324744552373886, 0.10067509114742279, 0.5285756587982178, 0.23192931711673737, 0.14858543872833252, -0.010567083954811096, 0.1379966139793396, 0.5055649280548096, 0.13175217807292938, 0.3860045075416565, 0.37297412753105164, 0.3221403956413269, -0.008808142505586147, 0.4815830588340759, 0.14824748039245605, 0.41246315836906433, 0.22676493227481842, -0.5631785988807678, 0.530904233455658, 0.12510506808757782, 0.2322303056716919, 0.5623846650123596, 0.39461028575897217, -0.12868249416351318, 0.3839723467826843, 0.31757473945617676, 0.023575298488140106, 0.32261979579925537, 0.1717418134212494, 0.17591562867164612, 0.35660895705223083, 0.41370338201522827, -0.014462604187428951, 0.12477237731218338, 0.4237152934074402, 0.3143835663795471, 0.3476828336715698, 0.44049909710884094, 0.33369964361190796, 0.35589754581451416, 0.3899500370025635, 0.5474493503570557, 0.4111140966415405, 0.07863526046276093, -0.21737654507160187, -0.1454770863056183, 0.06317891925573349, 0.5267863273620605, 0.43941161036491394, 0.12515166401863098, -0.5575610995292664, 0.056001678109169006, 0.1313333511352539, 0.5199096202850342, 0.32618874311447144, 0.41116803884506226, 0.3639568090438843, 0.22465407848358154, -0.01307881623506546, 0.37163740396499634, 0.08221720159053802, 0.06250686198472977, -0.5574501156806946, 0.017602164298295975, 0.37954771518707275, 0.25726667046546936, 0.02413264289498329, 0.2703784704208374, -0.5621559619903564, 0.18010886013507843, 0.08268487453460693, -0.552960216999054, 0.30018165707588196, 0.0634053647518158, 0.16301952302455902, 0.3664869964122772, 0.3652275800704956, 0.2804267108440399, 0.46618086099624634, 0.009091794490814209, 0.22634708881378174, 0.16056714951992035, 0.38013118505477905, 0.3962275981903076, 0.5318566560745239, -0.15785609185695648, -0.5543619394302368, -0.1163824051618576, 0.37486201524734497, 0.11022210121154785, 0.4208133816719055, 0.2977399230003357, 0.044931620359420776, 0.1533498466014862, 0.1079983338713646, 0.15444235503673553, 0.1148848682641983, 0.41647982597351074, 0.02892427146434784]
+Mean similarity:  0.1881687922216952
+Standard deviation of similarities:  0.259483629489193
+Z-scores:  [-0.22276062338871394, -0.4043466900185551, -0.33718389574906243, 1.3118625912803485, 0.1686446462198291, -0.15254663105832364, -0.7658898427146567, -0.19335392502841944, 1.2231836607878699, -0.21741877998170767, 0.7624207959068985, 0.7122042175575983, 0.5163007920128209, -0.7591112206771604, 1.1307621493886992, -0.15384905748322664, 0.8643873472438482, 0.14874210033635546, -2.8955483341339465, 1.320836470141316, -0.2430354633865018, 0.16980459821967991, 1.442155998539591, 0.795585809955209, -1.2210839158098203, 0.7545892391995541, 0.4987056312154408, -0.6343116675898434, 0.5181483080155537, -0.06330641679701783, -0.04722133559704734, 0.6491359981441559, 0.8691669306364707, -0.7809024284422665, -0.24431758964644876, 0.9077509114907576, 0.48640746395567325, 0.6147364354502297, 0.9724324628257708, 0.5608479104315667, 0.6463943560640096, 0.7776261075817582, 1.3845981684571889, 0.8591883228191495, -0.4221211641541962, -1.5628937289478881, -1.2858070437203022, -0.4816869303547617, 1.3049668520783047, 0.9682414980775599, -0.24285589163029936, -2.8738995720807883, -0.509346637291547, -0.21903285844399817, 1.2784653456419892, 0.5319023445312356, 0.8593962056964929, 0.6774532064633014, 0.1406072758181683, -0.7755695758261398, 0.7070527420341262, -0.40831705198408225, -0.48427690981638205, -2.8734718616745853, -0.6573309779085813, 0.7375375600461459, 0.2662899327398685, -0.6321637694432808, 0.31682028789629707, -2.8916072882482218, -0.031061428046475055, -0.40651473040799846, -2.856168655724834, 0.4316760370382128, -0.4808142529664884, -0.09692044637514825, 0.6872040619348923, 0.6823505135848061, 0.3555442738486402, 1.0714050413193015, -0.6901283062958667, 0.14713181200387287, -0.10637142218223981, 0.7397861406940075, 0.8018186209981222, 1.3245069237292393, -1.3335133501863667, -2.8615706243728836, -1.1736817385477367, 0.7194797737073628, -0.30039155519594607, 0.896567501804192, 0.4222660635444978, -0.5520085106881086, -0.1341855194824887, -0.30896152681442873, -0.12997520210177382, -0.2824221477931386, 0.8798668116414807, -0.6136977545397698]
+Malicious indices:  [18, 51, 63, 69, 72, 87]
+Malicious user IDs:  [99, 56, 29, 48, 90, 71]
+Identified malicious users: [99, 56, 29, 48, 90, 71] | total: 6
+t   6: train_loss = 0.216, norm = 1.357, test_acc = 61.222
+###############
+selected_idxs :  [24, 70, 93, 40, 75, 52, 23, 90, 53, 59, 42, 26, 19, 82, 16, 56, 72, 85, 83, 71, 81, 44, 14, 69, 3, 54, 78, 74, 29, 41, 57, 22, 96, 9, 25, 2, 97, 11, 62, 43, 6, 39, 77, 55, 50, 33, 49, 47, 91, 28, 76, 87, 58, 10, 8, 0, 99, 94, 37, 68, 34, 15, 5, 7, 89, 63, 84, 21, 13, 45, 80, 64, 92, 65, 61, 1, 38, 30, 20, 46, 35, 31, 36, 12, 18, 17, 32, 67, 4, 95, 66, 79, 48, 27, 88, 98, 51, 73, 86, 60]
+Updates:  [24, 70, 93, 40, 75, 52, 23, 90, 53, 59, 42, 26, 19, 82, 16, 56, 72, 85, 83, 71, 81, 44, 14, 69, 3, 54, 78, 74, 29, 41, 57, 22, 96, 9, 25, 2, 97, 11, 62, 43, 6, 39, 77, 55, 50, 33, 49, 47, 91, 28, 76, 87, 58, 10, 8, 0, 99, 94, 37, 68, 34, 15, 5, 7, 89, 63, 84, 21, 13, 45, 80, 64, 92, 65, 61, 1, 38, 30, 20, 46, 35, 31, 36, 12, 18, 17, 32, 67, 4, 95, 66, 79, 48, 27, 88, 98, 51, 73, 86, 60]
+Similarities:  [0.4228045642375946, 0.6632818579673767, -0.12457224726676941, 0.05666232481598854, 0.026249414309859276, 0.6029039025306702, 0.06886319816112518, 0.7278612852096558, 0.23829610645771027, 0.08325927704572678, -0.038723740726709366, 0.22880691289901733, 0.5245555639266968, 0.0795183777809143, 0.02615344151854515, 0.7218894362449646, 0.6202028393745422, 0.16468359529972076, 0.06390338391065598, 0.7273120880126953, 0.045849066227674484, 0.023503288626670837, -0.004764475394040346, -0.08203152567148209, -0.05326371639966965, 0.41890260577201843, 0.29873624444007874, 0.3061334192752838, 0.7107486128807068, 0.13640867173671722, 0.3861500918865204, 0.4861181378364563, 0.5661251544952393, 0.12699048221111298, -0.049486998468637466, 0.1560959368944168, 0.20731888711452484, -0.004786424804478884, 0.06345370411872864, 0.18591119349002838, -0.12042504549026489, 0.4952324330806732, -0.1440594345331192, 0.14905254542827606, 0.03176215663552284, 0.2305615246295929, 0.1904529631137848, 0.1545039266347885, 0.23927663266658783, -0.07536918669939041, 0.08590739965438843, 0.44328227639198303, 0.162281334400177, 0.46691951155662537, 0.515754222869873, -0.009003793820738792, 0.7194244265556335, -0.11599881947040558, 0.2546967566013336, 0.07099176198244095, 0.1396379917860031, 0.22233915328979492, -0.05776366963982582, 0.05713735520839691, 0.4222269654273987, 0.21091468632221222, 0.022642744705080986, -0.0866931825876236, -0.02374490536749363, 0.025607453659176826, 0.4783872961997986, 0.09790780395269394, 0.3578242063522339, -0.01646791212260723, -0.06281406432390213, -0.17832930386066437, 0.20529340207576752, 0.009776263497769833, 0.06723084300756454, 0.21576349437236786, 0.09559664875268936, 0.1418171226978302, 0.3875217139720917, 0.27467554807662964, -0.04767075926065445, 0.15655723214149475, 0.10891072452068329, 0.1359742134809494, 0.3792192339897156, -0.11961206793785095, -0.12027230858802795, 0.0149086844176054, 0.7175184488296509, 0.4263875186443329, 0.058944087475538254, 0.12862572073936462, 0.4513767659664154, 0.25765353441238403, 0.5196847319602966, 0.1845441311597824]
+Mean similarity:  0.19812505077570677
+Standard deviation of similarities:  0.23612902172431768
+Z-scores:  [0.9515116431736322, 1.9699264571330155, -1.3666143013086616, -0.5990908060631233, -0.7278886568484306, 1.714227454122711, -0.547420438498643, 2.243418579239361, 0.17012333083268133, -0.48645343503809796, -1.0030482054803869, 0.12993685358647636, 1.382424365998094, -0.5022960419209571, -0.72829509901557, 2.2181279609109485, 1.7874879822761232, -0.1416236565576812, -0.568425117272351, 2.2410927440118655, -0.6448846627832795, -0.7395184246047828, -0.8592316382296374, -1.1864554996305097, -1.06462460793521, 0.9349869549456358, 0.42608567523663504, 0.45741250995262067, 2.170946876252643, -0.2613671906498807, 0.796280947330287, 1.2196429094471222, 1.558470454128147, -0.3012529677425417, -1.0486303099727956, -0.17799215689107142, 0.03893564743410464, -0.8593245933872806, -0.5703294989897849, -0.05172535420037507, -1.3490510143131882, 1.258241702503818, -1.4491420106264141, -0.20782072863844417, -0.7045423426791383, 0.1373675866567386, -0.03249108307778957, -0.18473427714381604, 0.17427583272218788, -1.158240674856154, -0.4752387076432022, 1.0382341985158396, -0.1517971662855469, 1.1383372480776126, 1.3451509254334717, -0.8771850367392364, 2.2076887117609267, -1.3303060672180067, 0.23957963918418598, -0.5384060284707182, -0.24769110786385132, 0.1025460671342563, -1.0836817878078726, -0.5970790652405022, 0.9490655278847193, 0.05416375951210875, -0.7431628047631631, -1.2061974901833865, -0.939613244162063, -0.7306073427854433, 1.1869030048805267, -0.4244173210526285, 0.67632159067248, -0.9087953752201321, -1.105070072260144, -1.5942739773676964, 0.030357773253428564, -0.7976520035636936, -0.5543334182824937, 0.07469833003947347, -0.43420500061496065, -0.23846254757967228, 0.8020897296457987, 0.3241892789878921, -1.0409385862078808, -0.17603858403624248, -0.3778202509947373, -0.26320710957469223, 0.7669289521956244, -1.3456080764376268, -1.3484041776764988, -0.775916340228639, 2.199616947807202, 0.9666853578681411, -0.5894276031120956, -0.2943277769451106, 1.0725141422318762, 0.2521015129863079, 1.3617965247830193, -0.05751482607580607]
+Malicious indices:  []
+Malicious user IDs:  []
+Identified malicious users: [] | total: 0
+t   7: train_loss = 0.217, norm = 1.295, test_acc = 55.911
+###############
+selected_idxs :  [38, 67, 60, 54, 81, 66, 69, 41, 36, 75, 88, 43, 8, 62, 6, 19, 35, 97, 44, 23, 31, 48, 80, 59, 21, 98, 57, 17, 99, 78, 91, 46, 92, 53, 11, 5, 34, 20, 15, 2, 32, 4, 30, 95, 45, 1, 65, 33, 9, 51, 61, 76, 94, 7, 84, 52, 77, 70, 55, 68, 27, 63, 56, 0, 40, 96, 64, 13, 22, 49, 83, 71, 39, 24, 3, 16, 14, 42, 72, 12, 73, 86, 28, 50, 90, 85, 74, 47, 87, 26, 25, 29, 82, 93, 89, 18, 79, 37, 58, 10]
+Updates:  [38, 67, 60, 54, 81, 66, 69, 41, 36, 75, 88, 43, 8, 62, 6, 19, 35, 97, 44, 23, 31, 48, 80, 59, 21, 98, 57, 17, 99, 78, 91, 46, 92, 53, 11, 5, 34, 20, 15, 2, 32, 4, 30, 95, 45, 1, 65, 33, 9, 51, 61, 76, 94, 7, 84, 52, 77, 70, 55, 68, 27, 63, 56, 0, 40, 96, 64, 13, 22, 49, 83, 71, 39, 24, 3, 16, 14, 42, 72, 12, 73, 86, 28, 50, 90, 85, 74, 47, 87, 26, 25, 29, 82, 93, 89, 18, 79, 37, 58, 10]
+Similarities:  [-0.02353832684457302, 0.21312958002090454, 0.1420670449733734, 0.310849130153656, 0.24533456563949585, 0.5298236012458801, 0.5517445802688599, 0.18982629477977753, 0.05632709711790085, 0.13347995281219482, 0.05810702592134476, 0.5057303309440613, 0.2436874508857727, -0.01159557607024908, 0.11826301366090775, 0.11332445591688156, 0.15733478963375092, -0.017133602872490883, 0.08075246214866638, -0.0045939851552248, 0.06900239735841751, -0.40262559056282043, 0.07962029427289963, 0.48611193895339966, 0.12618690729141235, 0.5247026085853577, 0.4385298788547516, 0.08211322128772736, -0.4106370806694031, 0.03593611717224121, -0.050976600497961044, 0.17957308888435364, -0.004624509252607822, 0.13557185232639313, 0.05430760607123375, 0.26521432399749756, -0.007494839373975992, 0.226037859916687, 0.30558109283447266, 0.2149394005537033, 0.31199395656585693, 0.265439510345459, -0.1323038637638092, 0.5336109399795532, 0.343099981546402, 0.18374498188495636, 0.24156510829925537, 0.28242307901382446, 0.22322843968868256, 0.3356863260269165, 0.08200504630804062, 0.09384803473949432, 0.531367301940918, 0.048617925494909286, 0.16464409232139587, 0.02933901734650135, 0.2043013721704483, 0.14476677775382996, 0.18338674306869507, 0.3949071764945984, -0.10948298871517181, 0.20897957682609558, -0.3858974874019623, 0.19936147332191467, 0.05575328692793846, 0.09954201430082321, 0.4641980528831482, 0.1311180740594864, 0.07454755902290344, 0.17963597178459167, 0.09829439967870712, -0.3568531274795532, 0.20178797841072083, -0.1215333342552185, 0.21336804330348969, 0.1557673066854477, 0.07869865000247955, 0.4254911541938782, -0.15041354298591614, 0.3052873909473419, 0.020198078826069832, -0.004686051048338413, 0.09418033063411713, 0.3570031225681305, -0.3633657991886139, 0.556372344493866, 0.06282678246498108, 0.4017205834388733, 0.24197471141815186, 0.17806799709796906, 0.19586151838302612, -0.4036025404930115, 0.4703316390514374, 0.5323789119720459, -0.07373430579900742, 0.2437145709991455, 0.07390203326940536, 0.3302851617336273, 0.3132571578025818, -0.1468171626329422]
+Mean similarity:  0.15253181336913257
+Standard deviation of similarities:  0.21765366561509752
+Z-scores:  [-0.8089463585008996, 0.2784137197070418, -0.048079908813781415, 0.7273818078694548, 0.4263780810127832, 1.7334501893662422, 1.8341651438377427, 0.17134782134382773, -0.44200825186818493, -0.08753291842384767, -0.4338304488506535, 1.6227547400903002, 0.4188104861869927, -0.7540759259695968, -0.1574464625320226, -0.18013644448141744, 0.022067058926138222, -0.7795201416072757, -0.329787008262025, -0.7219074306895494, -0.3837721536858006, -2.5506457810533862, -0.33498870276400916, 1.5326189184159016, -0.12104048881174831, 1.7099220183793198, 1.3140052784196288, -0.3235350614583017, -2.5874542128523266, -0.5356936942338532, -0.9350102755768946, 0.1242399269444941, -0.7220476722852825, -0.07792177997466733, -0.4512867128624436, 0.5177147387337582, -0.7352352752289614, 0.3377202324611605, 0.7031780467965794, 0.28672885893377686, 0.7326416614490654, 0.5187493473047879, -1.3086647372925484, 1.7508509472306684, 0.8755568974164369, 0.14340750213240924, 0.4090594784081, 0.5967795914560604, 0.32481247728936075, 0.8414951898015699, -0.3240320665483884, -0.26961998762481515, 1.7405426529398524, -0.4774276949600582, 0.055649322137688514, -0.566003773354718, 0.23785291488205812, -0.035676107697788284, 0.14176158996617536, 1.1135827298865095, -1.2038152509117668, 0.2593467162495954, -2.473789261712975, 0.21515677128818253, -0.44464459703765763, -0.243459254033504, 1.4319365521974325, -0.09838446436971389, -0.3582951572437003, 0.12452883960792353, -0.2491913634312037, -2.340346253343102, 0.22630524003530314, -1.2591800227661343, 0.27950932855843075, 0.014865328857069749, -0.33922315600795283, 1.254099443045685, -1.3918688458515671, 0.7018286466553011, -0.6080014052098897, -0.7223304233042313, -0.268093269047925, 0.9394342549717885, -2.3702684312703863, 1.8554271989100883, -0.41214573919828856, 1.144886622357238, 0.4109413815579455, 0.11732485026921213, 0.19907638537325872, -2.5551343336694434, 1.4601170386181663, 1.745190449834378, -1.0395695313869553, 0.4189350883309362, -0.3612609963517796, 0.816679782819908, 0.7384453828481744, -1.3753454376984793]
+Malicious indices:  [21, 28, 62, 71, 84, 91]
+Malicious user IDs:  [48, 99, 56, 71, 90, 29]
+Identified malicious users: [48, 99, 56, 71, 90, 29] | total: 6
+t   8: train_loss = 0.199, norm = 1.249, test_acc = 55.700
+###############
+selected_idxs :  [44, 71, 27, 3, 37, 13, 96, 7, 57, 33, 26, 72, 4, 51, 34, 48, 31, 88, 81, 86, 91, 54, 99, 9, 22, 5, 53, 19, 15, 47, 2, 30, 20, 84, 10, 46, 17, 50, 42, 82, 68, 28, 77, 69, 66, 41, 78, 98, 76, 23, 63, 32, 60, 6, 94, 89, 80, 24, 11, 14, 93, 18, 74, 85, 8, 83, 67, 75, 21, 65, 61, 0, 58, 36, 73, 29, 45, 56, 55, 90, 70, 39, 64, 1, 12, 49, 95, 25, 40, 62, 97, 59, 52, 79, 16, 43, 92, 35, 38, 87]
+Updates:  [44, 71, 27, 3, 37, 13, 96, 7, 57, 33, 26, 72, 4, 51, 34, 48, 31, 88, 81, 86, 91, 54, 99, 9, 22, 5, 53, 19, 15, 47, 2, 30, 20, 84, 10, 46, 17, 50, 42, 82, 68, 28, 77, 69, 66, 41, 78, 98, 76, 23, 63, 32, 60, 6, 94, 89, 80, 24, 11, 14, 93, 18, 74, 85, 8, 83, 67, 75, 21, 65, 61, 0, 58, 36, 73, 29, 45, 56, 55, 90, 70, 39, 64, 1, 12, 49, 95, 25, 40, 62, 97, 59, 52, 79, 16, 43, 92, 35, 38, 87]
+Similarities:  [0.04051138833165169, 0.647645890712738, 0.28160589933395386, 0.08429692685604095, 0.2642827033996582, -0.10908617079257965, 0.5235719084739685, 0.10899149626493454, 0.27326688170433044, 0.2391115128993988, 0.2894545793533325, 0.5462855696678162, 0.34051692485809326, 0.35295549035072327, 0.265647828578949, 0.6196216940879822, 0.18727341294288635, 0.11057176440954208, -0.01477914396673441, 0.4596599340438843, 0.17276598513126373, 0.292527973651886, 0.6150765419006348, 0.22648194432258606, 0.5238302946090698, -0.01475256122648716, 0.30141595005989075, 0.4722137153148651, 0.24206683039665222, 0.07441996783018112, 0.21293863654136658, 0.06727366149425507, 0.20263992249965668, -0.029080070555210114, 0.3548325002193451, 0.4272797703742981, 0.1837160587310791, 0.04814644530415535, -0.09512147307395935, 0.014765607193112373, -0.037297993898391724, -0.12059178203344345, -0.0643915981054306, -0.30920571088790894, -0.4164178669452667, 0.32742998003959656, 0.2642109990119934, 0.03726531192660332, 0.08034501224756241, 0.06009300798177719, 0.2958316504955292, 0.17643150687217712, 0.30782565474510193, -0.2510099411010742, -0.41615766286849976, 0.43400129675865173, 0.37494030594825745, 0.3276497423648834, 0.0007110938895493746, -0.025266515091061592, -0.4110291302204132, -0.09177254140377045, 0.17116202414035797, 0.07736282795667648, 0.40786099433898926, 0.00487938430160284, 0.2489822506904602, -0.010058554820716381, -0.02541138231754303, -0.10198117047548294, -0.14676205813884735, 0.11222001910209656, 0.2312355488538742, 0.3224262595176697, 0.18119728565216064, 0.6052289009094238, 0.004707929212599993, 0.6198599338531494, 0.1872205138206482, 0.6511706113815308, 0.6445248126983643, 0.4397159218788147, 0.07344850152730942, -0.36071133613586426, 0.39850300550460815, 0.36453157663345337, -0.41973304748535156, 0.0030454059597104788, 0.10181136429309845, 0.0689133033156395, 0.32382869720458984, 0.0654597207903862, 0.5312144160270691, 0.07106427103281021, 0.072926826775074, 0.11197448521852493, 0.15971896052360535, 0.16417798399925232, 0.3243825435638428, 0.30858826637268066]
+Mean similarity:  0.173371260096319
+Standard deviation of similarities:  0.2474929806888799
+Z-scores:  [-0.5368227874376917, 1.9163154821454242, 0.43732407657126715, -0.35990650317574946, 0.3673293806163446, -1.1412745125243453, 1.4149922450442425, -0.26012763534621375, 0.4036301204581995, 0.26562471638628404, 0.4690368144337002, 1.5067672163207035, 0.6753551728882801, 0.7256134285285334, 0.37284519433959057, 1.8030831935093894, 0.05617190761480041, -0.2537425324628553, -0.7602252134155464, 1.1567547214902831, -0.002445624774369491, 0.4814549213634357, 1.7847184214067775, 0.21459470922543772, 1.4160362590376177, -0.7601178053582622, 0.5173669556492796, 1.207478508629774, 0.27756573180024646, -0.3998145401567094, 0.15987272178352074, -0.4286893240638522, 0.11826057580247462, -0.8180083737648624, 0.733197521876948, 1.0259220668450557, 0.04179835163795777, -0.5059731974765865, -1.0848498911886189, -0.6408490958480462, -0.8512130461572169, -1.187763149126639, -0.960685258789776, -1.9498612430987243, -2.383053957328195, 0.622477128500637, 0.3670396577019201, -0.5499386196362985, -0.3758742877871702, -0.45770288837784207, 0.49480348920745143, 0.012364984119307657, 0.5432654868616404, -1.7147201509156218, -2.382002597907646, 1.0530805194429627, 0.8144434855925397, 0.6233650822707809, -0.6976366187282637, -0.8025996318541473, -2.3612806661833132, -1.0713184703747138, -0.008926459044663724, -0.38792385898141263, 0.947460140445131, -0.680794563650777, 0.3055076163521209, -0.7411515850125161, -0.8031849705820506, -1.112566626355936, -1.293504637360207, -0.2470827286657267, 0.23380173690782616, 0.6022595024976717, 0.03162120208039204, 1.744928844491098, -0.6814873311326086, 1.8040458057196593, 0.05595816772572995, 1.9305571816836573, 1.9037047082734282, 1.076170568721357, -0.4037397678547544, -2.157970681615295, 0.9096490121927912, 0.7723868208506464, -2.396449006072031, -0.6882047873136364, -0.28913909236552265, -0.4220643207331694, 0.6079260781032366, -0.4360185852769172, 1.4458719392150758, -0.4133732955930477, -0.4058476044115059, -0.24807481289732067, -0.05516237080628878, -0.037145603368135244, 0.6101639046375946, 0.5463468333525836]
+Malicious indices:  [44, 54, 60, 83, 86]
+Malicious user IDs:  [66, 94, 93, 1, 95]
+Identified malicious users: [66, 94, 93, 1, 95] | total: 5
+t   9: train_loss = 0.195, norm = 1.267, test_acc = 52.233
+training time: 00:05:45.82

@@ -248,7 +248,53 @@ from torch.utils.data import Dataset
 
 
 
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+import matplotlib.pyplot as plt
+import seaborn as sns
 
+
+criterion = nn.CrossEntropyLoss()
+
+
+def validate_model(model, data_loader, criterion, device):
+    model.eval()
+    running_loss = 0
+    total_predictions = 0
+    correct_predictions = 0
+    
+    all_labels = []
+    all_preds = []
+    
+    with torch.no_grad():
+        for data, labels in data_loader:
+            data, labels = data.to(device), labels.to(device)
+            outputs = model(data)
+            loss = criterion(outputs, labels)
+            running_loss += loss.item()
+            _, predicted = torch.max(outputs.data, 1)
+            total_predictions += labels.size(0)
+            correct_predictions += (predicted == labels).sum().item()
+            all_labels.extend(labels.cpu().numpy())
+            all_preds.extend(predicted.cpu().numpy())
+    
+    accuracy = 100.0 * correct_predictions / total_predictions
+    return running_loss / len(data_loader), accuracy, all_labels, all_preds
+
+
+
+def plot_confusion_matrix(labels, preds, classes):
+    cm = confusion_matrix(labels, preds)
+    plt.figure(figsize=(10, 10))
+    sns.heatmap(cm, annot=True, fmt="d", xticklabels=classes, yticklabels=classes, cmap=plt.cm.Blues)
+    plt.xlabel('Predicted Labels')
+    plt.ylabel('True Labels')
+    plt.title('Confusion Matrix')
+    plt.show()
+
+
+def print_classification_report(labels, preds):
+    report = classification_report(labels, preds, target_names=[str(i) for i in range(10)])  # Assuming 10 classes for FashionMNIST
+    print(report)
 
 
 
@@ -276,7 +322,7 @@ def fmnist_noniid(dataset, num_users):
     :param num_users:
     :return: dict of image index
     """
-    num_shards, num_imgs = 200, 300 #600, 100 #200, 300 #600, 100 #200, 300 #600, 100  # Increase the number of shards
+    num_shards, num_imgs = 600, 100 #200, 300 #600, 100 #200, 300 #600, 100  # Increase the number of shards
     idx_shard = [i for i in range(num_shards)]
     dict_users = {i: np.array([], dtype='int64') for i in range(num_users)}
     idxs = np.arange(num_shards * num_imgs)
@@ -289,8 +335,8 @@ def fmnist_noniid(dataset, num_users):
 
     # divide and assign
     for i in range(num_users):
-        #num_user_shards = np.random.randint(1, 6)
-        num_user_shards = np.random.randint(1, num_users)  # Randomly assign 1 to 5 shards to each user
+        num_user_shards = np.random.randint(1, 6)
+        #num_user_shards = np.random.randint(1, num_users)  # Randomly assign 1 to 5 shards to each user
         rand_set = set(np.random.choice(idx_shard, num_user_shards, replace=False))
         idx_shard = list(set(idx_shard) - rand_set)
         for rand in rand_set:
